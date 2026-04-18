@@ -1605,15 +1605,13 @@ function _buildPDF() {
 
     function newPage() {
       doc.addPage();
-      y = 36;
-      // subtle header stripe on continuation pages
+      // Simple thin header line on continuation pages
       doc.setFillColor(...NAVY);
-      doc.rect(0, 0, pw, 18, 'F');
-      doc.setFontSize(7.5);
-      doc.setTextColor(200, 200, 200);
-      doc.text('UK Visa Application Form — Confidential', ml, 12);
-      doc.text('Page ' + doc.internal.getCurrentPageInfo().pageNumber, pw - mr, 12, { align: 'right' });
-      y = 32;
+      doc.rect(0, 0, pw, 14, 'F');
+      doc.setFontSize(7); doc.setTextColor(200, 210, 220); doc.setFont('helvetica', 'normal');
+      doc.text('UK Visa Application Form  —  Confidential', ml, 10);
+      doc.text('Page ' + doc.internal.getCurrentPageInfo().pageNumber, pw - mr, 10, { align: 'right' });
+      y = 24;
     }
 
     function ensureSpace(needed) {
@@ -1629,70 +1627,47 @@ function _buildPDF() {
       });
     }
 
-    // ════ COVER PAGE ════
-    // Top bar
+    // ════ PAGE HEADER ════
+    // Simple clean top bar
     doc.setFillColor(...NAVY);
-    doc.rect(0, 0, pw, 80, 'F');
-    // Gold accent strip
-    doc.setFillColor(...GOLD);
-    doc.rect(0, 80, pw, 5, 'F');
+    doc.rect(0, 0, pw, 40, 'F');
+    doc.setFontSize(14); doc.setFont('helvetica', 'bold'); doc.setTextColor(255, 255, 255);
+    doc.text('UK VISA APPLICATION FORM', ml, 26);
+    doc.setFontSize(8); doc.setFont('helvetica', 'normal'); doc.setTextColor(180, 210, 230);
+    doc.text('Student / General  —  Generic Format  —  Confidential', pw - mr, 26, { align: 'right' });
 
-    // Title block
-    doc.setFontSize(22);
-    doc.setTextColor(255, 255, 255);
-    doc.setFont('helvetica', 'bold');
-    doc.text('UK VISA APPLICATION FORM', ml, 38);
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(180, 200, 220);
-    doc.text('Student / General — Generic Format', ml, 56);
-    doc.setTextColor(GOLD[0], GOLD[1], GOLD[2]);
-    doc.text('CONFIDENTIAL', pw - mr, 56, { align: 'right' });
+    y = 56;
 
-    y = 110;
-
-    // Applicant name banner
+    // Applicant name strip (simple, no rounded rect to avoid any rendering issues)
     const givenNames = (document.getElementById('givenNames').value || '').trim();
     const familyName = (document.getElementById('familyName').value || '').trim();
     const fullName = [givenNames, familyName].filter(Boolean).join(' ') || 'Applicant';
-    doc.setFillColor(...BGLIGHT);
-    doc.roundedRect(ml, y, usable, 46, 6, 6, 'F');
-    doc.setDrawColor(...BORDER);
-    doc.setLineWidth(0.8);
-    doc.roundedRect(ml, y, usable, 46, 6, 6);
-    doc.setFontSize(8);
-    doc.setTextColor(...GREY);
-    doc.setFont('helvetica', 'normal');
-    doc.text('APPLICANT NAME', ml + 14, y + 16);
-    doc.setFontSize(15);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(...NAVY);
-    doc.text(fullName, ml + 14, y + 34);
-    y += 60;
+    doc.setFillColor(245, 247, 252);
+    doc.rect(ml, y, usable, 26, 'F');
+    doc.setDrawColor(...BORDER); doc.setLineWidth(0.5);
+    doc.rect(ml, y, usable, 26);
+    doc.setFontSize(7.5); doc.setFont('helvetica', 'normal'); doc.setTextColor(...GREY);
+    doc.text('APPLICANT NAME', ml + 8, y + 10);
+    doc.setFontSize(12); doc.setFont('helvetica', 'bold'); doc.setTextColor(...NAVY);
+    doc.text(fullName, ml + 8, y + 22);
+    y += 36;
 
     // ════ SECTION RENDERER ════
-    function renderSection(title, icon, renderFn) {
-      ensureSpace(56);
-
-      // Section header bar
-      doc.setFillColor(...ROYAL);
-      doc.roundedRect(ml, y, usable, 30, 5, 5, 'F');
-      // Gold left accent
+    function renderSection(title, _icon, renderFn) {
+      ensureSpace(44);
+      y += 6;
+      // Clean simple section header: navy background bar
+      doc.setFillColor(...NAVY);
+      doc.rect(ml, y, usable, 18, 'F');
+      // Left accent strip in gold
       doc.setFillColor(...GOLD);
-      doc.rect(ml, y, 4, 30, 'F');
-
-      doc.setFontSize(11);
-      doc.setFont('helvetica', 'bold');
-      doc.setTextColor(255, 255, 255);
-      doc.text(title.toUpperCase(), ml + 18, y + 20);
-      y += 38;
-
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(...NAVY);
-      doc.setFontSize(10);
-
+      doc.rect(ml, y, 3, 18, 'F');
+      doc.setFontSize(9); doc.setFont('helvetica', 'bold'); doc.setTextColor(255, 255, 255);
+      doc.text(title.toUpperCase(), ml + 10, y + 12);
+      y += 24;
+      doc.setFont('helvetica', 'normal'); doc.setTextColor(...NAVY); doc.setFontSize(9.5);
       renderFn();
-      y += 12;
+      y += 6;
     }
 
     // ── Field row helper ──
@@ -1912,21 +1887,34 @@ function _buildPDF() {
       field('Name', getVal('declarationName'));
       field('Date', getVal('signatureDate'));
 
-      // Signature image — use SignaturePad if available, fall back to raw canvas
-      ensureSpace(110);
-      doc.setFontSize(8.5); doc.setTextColor(...GREY); doc.setFont('helvetica', 'bold');
-      doc.text('SIGNATURE', ml + 8, y); y += 10;
-      let sigImg;
-      if (window.signaturePad && !window.signaturePad.isEmpty()) {
-        sigImg = window.signaturePad.toDataURL('image/png');
+      // Signature — only embed the PNG image if the pad has actual drawn strokes.
+      // An empty/blank canvas produces a near-empty PNG that jsPDF rejects with
+      // "Incomplete or corrupt PNG file". Always draw the border box; embed image on top.
+      ensureSpace(95);
+      doc.setFontSize(8); doc.setTextColor(...GREY); doc.setFont('helvetica', 'bold');
+      doc.text('SIGNATURE', ml, y); y += 8;
+      const sigBoxW = 220, sigBoxH = 65;
+      doc.setDrawColor(...BORDER); doc.setLineWidth(0.5);
+      doc.setFillColor(250, 252, 255);
+      doc.rect(ml, y, sigBoxW, sigBoxH, 'FD');
+      // Only embed image when there are actual strokes (avoids the PNG error on empty canvas)
+      const hasSig = window.signaturePad && !window.signaturePad.isEmpty();
+      if (hasSig) {
+        try {
+          const sigImg = window.signaturePad.toDataURL('image/png');
+          // Validate it's a real PNG (must start with data:image/png;base64,)
+          if (sigImg && sigImg.startsWith('data:image/png;base64,') && sigImg.length > 100) {
+            doc.addImage(sigImg, 'PNG', ml + 2, y + 2, sigBoxW - 4, sigBoxH - 4);
+          }
+        } catch(imgErr) {
+          // silently skip — the border box is already drawn
+        }
       } else {
-        sigImg = document.getElementById('signatureBox').toDataURL('image/png');
+        // Show placeholder text inside the box
+        doc.setFontSize(8); doc.setTextColor(190, 200, 210); doc.setFont('helvetica', 'italic');
+        doc.text('No signature captured', ml + 8, y + sigBoxH / 2 + 3);
       }
-      const sigW = 200, sigH = 75;
-      doc.setDrawColor(...BORDER); doc.setFillColor(250, 252, 255);
-      doc.roundedRect(ml + 4, y, sigW + 8, sigH + 8, 4, 4, 'FD');
-      doc.addImage(sigImg, 'PNG', ml + 8, y + 4, sigW, sigH);
-      y += sigH + 20;
+      y += sigBoxH + 12;
     });
 
     // ══════ DOCUMENTS ══════
@@ -1959,15 +1947,12 @@ function _buildPDF() {
     const totalPages = doc.internal.getNumberOfPages();
     for (let i = 1; i <= totalPages; i++) {
       doc.setPage(i);
-      doc.setFillColor(...NAVY);
-      doc.rect(0, ph - 24, pw, 24, 'F');
-      doc.setFillColor(...GOLD);
-      doc.rect(0, ph - 26, pw, 2, 'F');
-      doc.setFontSize(7.5);
-      doc.setTextColor(180, 200, 210);
-      doc.setFont('helvetica', 'normal');
-      doc.text('UK Visa Application — Confidential. For official use.', ml, ph - 10);
-      doc.text(`Page ${i} of ${totalPages}`, pw - mr, ph - 10, { align: 'right' });
+      // Simple bottom line footer
+      doc.setDrawColor(...BORDER); doc.setLineWidth(0.5);
+      doc.line(ml, ph - 20, pw - mr, ph - 20);
+      doc.setFontSize(7.5); doc.setTextColor(...GREY); doc.setFont('helvetica', 'normal');
+      doc.text('UK Visa Application  —  For official use  —  Confidential', ml, ph - 12);
+      doc.text(`Page ${i} of ${totalPages}`, pw - mr, ph - 12, { align: 'right' });
     }
 
     // Save
