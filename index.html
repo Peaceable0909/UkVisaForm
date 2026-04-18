@@ -338,28 +338,122 @@
     }
 
     /* ───── SIGNATURE ───── */
-    .signature-wrap {
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius);
+    /* ── SIGNATURE DRAWING PAD ── */
+    .sig-pad-wrap {
+      border: 2px solid var(--blue);
+      border-radius: 10px;
       overflow: hidden;
-      background: var(--input-bg);
+      background: #fff;
+      box-shadow: 0 2px 12px rgba(30,95,163,0.10);
+      position: relative;
     }
-    .signature-label-bar {
+    .sig-pad-wrap.has-sig {
+      border-color: var(--success);
+    }
+    .sig-pad-toolbar {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      padding: 8px 14px;
-      background: var(--surface-2);
-      border-bottom: 1px solid var(--border);
-      font-size: 12px;
-      color: var(--text-muted);
+      justify-content: space-between;
+      padding: 9px 14px;
+      background: linear-gradient(90deg, var(--navy) 0%, var(--royal) 100%);
     }
+    .sig-pad-toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sig-pen-icon {
+      font-size: 15px;
+      line-height: 1;
+    }
+    .sig-pad-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .sig-pad-hint {
+      font-size: 10px;
+      color: rgba(255,255,255,0.55);
+      font-weight: 400;
+      margin-left: 2px;
+    }
+    .sig-clear-btn {
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 5px;
+      padding: 4px 12px;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: background 0.18s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .sig-clear-btn:hover { background: rgba(255,255,255,0.22); }
+
+    .sig-canvas-area {
+      position: relative;
+      background: #fff;
+    }
+    /* The dashed baseline guide */
+    .sig-canvas-area::before {
+      content: '';
+      position: absolute;
+      left: 20px; right: 20px;
+      bottom: 28px;
+      height: 1px;
+      border-bottom: 1.5px dashed #d0dce8;
+      pointer-events: none;
+      z-index: 1;
+    }
+    /* 'Sign here' watermark text */
+    .sig-watermark {
+      position: absolute;
+      left: 0; right: 0;
+      bottom: 10px;
+      text-align: center;
+      font-size: 10px;
+      color: #c8d4e0;
+      font-style: italic;
+      pointer-events: none;
+      z-index: 1;
+      letter-spacing: 0.04em;
+      transition: opacity 0.3s;
+    }
+    .sig-watermark.hidden { opacity: 0; }
     #signatureBox {
       display: block;
       width: 100%;
-      height: 130px;
+      height: 160px;
       cursor: crosshair;
+      touch-action: none;
+      position: relative;
+      z-index: 2;
     }
+    .sig-status-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: var(--surface-2);
+      border-top: 1px solid var(--border);
+      font-size: 10.5px;
+      color: var(--text-muted);
+    }
+    .sig-status-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #c8d4e0;
+      flex-shrink: 0;
+      transition: background 0.3s;
+    }
+    .sig-status-dot.active { background: var(--success); }
+    .sig-status-text { flex: 1; }
 
     /* ───── DOCUMENTS LIST ───── */
     .doc-list {
@@ -838,12 +932,28 @@ I currently hold the position of [Current Position Name] at [Current Company Nam
     </div>
     <div class="field" style="margin-bottom:18px">
       <label>Signature</label>
-      <div class="signature-wrap">
-        <div class="signature-label-bar">
-          <span>Draw your signature below</span>
-          <button class="btn btn-danger-sm" onclick="clearSignature()" type="button">Clear</button>
+      <div class="sig-pad-wrap" id="sigPadWrap">
+        <!-- Toolbar -->
+        <div class="sig-pad-toolbar">
+          <div class="sig-pad-toolbar-left">
+            <span class="sig-pen-icon">✍️</span>
+            <span class="sig-pad-title">Draw Signature</span>
+            <span class="sig-pad-hint">— use mouse or touch</span>
+          </div>
+          <button class="sig-clear-btn" onclick="clearSignature()" type="button">
+            ✕ Clear
+          </button>
         </div>
-        <canvas id="signatureBox"></canvas>
+        <!-- Canvas drawing area -->
+        <div class="sig-canvas-area">
+          <canvas id="signatureBox"></canvas>
+          <div class="sig-watermark" id="sigWatermark">Sign here ↑</div>
+        </div>
+        <!-- Status bar -->
+        <div class="sig-status-bar">
+          <span class="sig-status-dot" id="sigStatusDot"></span>
+          <span class="sig-status-text" id="sigStatusText">Awaiting signature…</span>
+        </div>
       </div>
     </div>
     <div class="field-grid">
@@ -1499,10 +1609,15 @@ window.signaturePad = null;
 
 function initSignaturePad() {
   const canvas = document.getElementById('signatureBox');
+  const watermark = document.getElementById('sigWatermark');
+  const statusDot = document.getElementById('sigStatusDot');
+  const statusText = document.getElementById('sigStatusText');
+  const wrap = document.getElementById('sigPadWrap');
+
   function resizeCanvas() {
     const ratio = Math.max(window.devicePixelRatio || 1, 1);
     const w = canvas.offsetWidth;
-    const h = 130;
+    const h = 160;
     canvas.width  = w * ratio;
     canvas.height = h * ratio;
     canvas.style.width  = w + 'px';
@@ -1514,15 +1629,45 @@ function initSignaturePad() {
   window.addEventListener('resize', resizeCanvas);
 
   window.signaturePad = new SignaturePad(canvas, {
-    minWidth: 1,
-    maxWidth: 3,
+    minWidth: 1.2,
+    maxWidth: 3.5,
     penColor: '#0D1B2A',
-    backgroundColor: 'rgba(0,0,0,0)'
+    backgroundColor: 'rgba(0,0,0,0)',
+    throttle: 16
+  });
+
+  // When drawing starts — hide watermark
+  canvas.addEventListener('pointerdown', () => {
+    if (watermark) watermark.classList.add('hidden');
+  });
+  canvas.addEventListener('mousedown', () => {
+    if (watermark) watermark.classList.add('hidden');
+  });
+  canvas.addEventListener('touchstart', () => {
+    if (watermark) watermark.classList.add('hidden');
+  }, { passive: true });
+
+  // After each stroke — update status
+  window.signaturePad.addEventListener('endStroke', () => {
+    if (!window.signaturePad.isEmpty()) {
+      if (statusDot) { statusDot.classList.add('active'); }
+      if (statusText) statusText.textContent = 'Signature captured ✓';
+      if (wrap) wrap.classList.add('has-sig');
+      if (watermark) watermark.classList.add('hidden');
+    }
   });
 }
 
 function clearSignature() {
   if (window.signaturePad) window.signaturePad.clear();
+  const watermark = document.getElementById('sigWatermark');
+  const statusDot = document.getElementById('sigStatusDot');
+  const statusText = document.getElementById('sigStatusText');
+  const wrap = document.getElementById('sigPadWrap');
+  if (watermark) watermark.classList.remove('hidden');
+  if (statusDot) statusDot.classList.remove('active');
+  if (statusText) statusText.textContent = 'Awaiting signature…';
+  if (wrap) wrap.classList.remove('has-sig');
 }
 
 /* ── DOCUMENT DETAILS ── */
