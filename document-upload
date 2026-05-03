@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UK Visa — Document Upload & Manager</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+const GAS_URL         = 'https://script.google.com/macros/s/AKfycbwPgDNyCEpPzY4txE_NQ98nlJWtigQwJ4uPM_Ld-gwo2caUoAZ14xNLaab-Gb11g23t/exec';
+const EJS_PUBLIC_KEY  = 'YdC-Vo2Q6n8q8imVs';
+const EJS_SERVICE_ID  = 'service_3jy0jkk';
+const EJS_TEMPLATE_ID = 'template_01ws52q';
+const DRIVE_FOLDER_ID = '1HZm7ac9QayGNV1na6ZS-rOa8uI8hG17z';
+const ADVISOR_EMAIL   = 'applications.whiterock@gmail.com';
+</script>
+<style>
+:root{
+  --navy:#0D1B2A;--royal:#1A3A5C;--blue:#1E5FA3;
+  --accent:#C8A96E;--accent-light:#F0E6D3;
+  --surface:#FFFFFF;--surface-2:#F6F8FB;--border:#D8E2EE;
+  --text:#1A2535;--muted:#607080;--danger:#C0392B;
+  --success:#1A7A4A;--warn:#B8860B;--radius:10px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#EDF1F7;color:var(--text);min-height:100vh;padding:28px 16px 80px;}
+
+/* HEADER */
+.page-header{max-width:980px;margin:0 auto 22px;display:flex;align-items:center;gap:16px;}
+.crest{width:50px;height:50px;background:var(--navy);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.crest svg{width:28px;height:28px;}
+.header-text h1{font-family:'Playfair Display',serif;font-size:21px;color:var(--navy);}
+.header-text p{font-size:12px;color:var(--muted);margin-top:3px;}
+.back-link{display:inline-flex;align-items:center;gap:5px;background:none;border:none;font-family:inherit;font-size:12px;color:var(--blue);cursor:pointer;margin-bottom:14px;padding:0;text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+
+/* NAV BAR */
+.nav-bar{max-width:980px;margin:0 auto 20px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:11px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;box-shadow:0 2px 8px rgba(13,27,42,.05);}
+.nav-bar-left{display:flex;align-items:center;gap:8px;}
+.page-badge{font-size:12px;padding:5px 12px;border-radius:999px;font-weight:600;text-decoration:none;}
+.page-badge.active{background:#e9f0fb;color:var(--blue);}
+.page-badge.inactive{background:var(--surface-2);color:var(--muted);border:1px solid var(--border);}
+.page-badge.inactive:hover{background:#e9f0fb;color:var(--blue);}
+
+/* CHECKLIST */
+.req-strip{max-width:980px;margin:0 auto 20px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;}
+.req-strip h3{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;}
+.chips{display:flex;flex-wrap:wrap;gap:7px;}
+.chip{padding:5px 11px;border-radius:999px;font-size:11.5px;font-weight:500;cursor:default;transition:all .2s;border:1.5px solid var(--border);background:var(--surface-2);color:var(--muted);}
+.chip.done{background:#e9f5f0;border-color:#1A7A4A;color:var(--success);}
+.chip.missing{background:#fff5f5;border-color:#e5b0a8;color:var(--danger);}
+
+/* STATS */
+.stats-bar{max-width:980px;margin:0 auto 18px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.stat-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:12px 14px;text-align:center;}
+.stat-num{font-size:22px;font-weight:600;color:var(--navy);}
+.stat-label{font-size:10.5px;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.04em;}
+
+/* MAIN GRID */
+.main-grid{max-width:980px;margin:0 auto;display:grid;grid-template-columns:330px 1fr;gap:18px;align-items:start;}
+
+/* PANELS */
+.panel{background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 2px 12px rgba(13,27,42,.06);overflow:hidden;margin-bottom:14px;}
+.panel:last-child{margin-bottom:0;}
+.panel-head{padding:14px 20px;background:linear-gradient(135deg,var(--navy),var(--royal));display:flex;align-items:center;gap:10px;}
+.panel-head h2{font-family:'Playfair Display',serif;font-size:15px;color:#fff;flex:1;}
+.panel-body{padding:16px 18px;}
+
+/* DROPZONE */
+.dropzone{border:2px dashed var(--border);border-radius:8px;background:var(--surface-2);padding:22px 14px;text-align:center;cursor:pointer;transition:all .25s;margin-bottom:12px;position:relative;}
+.dropzone.dragover{border-color:var(--blue);background:rgba(30,95,163,.06);}
+.dropzone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.drop-icon{font-size:26px;margin-bottom:6px;}
+.drop-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.drop-sub{font-size:11px;color:var(--muted);}
+
+/* CAT ROW */
+.cat-row{display:flex;gap:8px;margin-bottom:12px;}
+.cat-row select{flex:1;padding:8px 10px;border:1.5px solid var(--border);border-radius:7px;font-family:inherit;font-size:12.5px;color:var(--text);background:#fff;outline:none;cursor:pointer;}
+.cat-row select:focus{border-color:var(--blue);}
+
+/* BUTTONS */
+.btn{padding:9px 16px;border-radius:7px;font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;border:none;white-space:nowrap;transition:transform .15s,box-shadow .15s,opacity .15s;display:inline-flex;align-items:center;gap:6px;}
+.btn:hover:not(:disabled){transform:translateY(-1px);}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important;}
+.btn-navy{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;}
+.btn-navy:hover:not(:disabled){box-shadow:0 3px 10px rgba(13,27,42,.22);}
+.btn-green{background:linear-gradient(135deg,#1A7A4A,#0f5c36);color:#fff;}
+.btn-green:hover:not(:disabled){box-shadow:0 3px 10px rgba(26,122,74,.28);}
+.btn-gold{background:linear-gradient(135deg,var(--accent),#a8872e);color:var(--navy);}
+.btn-gold:hover:not(:disabled){box-shadow:0 3px 12px rgba(200,169,110,.38);}
+.btn-full{width:100%;justify-content:center;}
+
+/* FILE LIST */
+.file-list{display:flex;flex-direction:column;gap:7px;margin-top:4px;max-height:400px;overflow-y:auto;}
+.file-list::-webkit-scrollbar{width:4px;}
+.file-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+.file-item{display:flex;align-items:center;gap:9px;padding:9px 11px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface-2);cursor:pointer;transition:all .2s;}
+.file-item.active{border-color:var(--blue);background:rgba(30,95,163,.06);}
+.file-item:hover:not(.active){border-color:var(--blue);}
+.file-thumb{width:36px;height:44px;border-radius:4px;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;overflow:hidden;}
+.file-thumb img{width:100%;height:100%;object-fit:cover;}
+.file-info{flex:1;min-width:0;}
+.file-name{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.file-meta{font-size:10.5px;color:var(--muted);margin-top:2px;}
+.file-cat{font-size:9.5px;font-weight:600;padding:2px 7px;border-radius:999px;background:var(--accent-light);color:#7A5D20;}
+.pdf-ready-tag{margin-left:5px;font-size:9.5px;color:var(--success);font-weight:600;}
+.file-actions{display:flex;flex-direction:column;gap:3px;}
+.btn-icon{background:none;border:1px solid var(--border);border-radius:5px;width:24px;height:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);transition:all .18s;}
+.btn-icon:hover{background:var(--surface);color:var(--text);}
+.btn-icon.danger:hover{border-color:#e5b0a8;background:#fff5f5;color:var(--danger);}
+
+/* MERGE LIST */
+.merge-list{display:flex;flex-direction:column;gap:5px;margin-bottom:10px;max-height:200px;overflow-y:auto;}
+.merge-item{display:flex;align-items:center;gap:8px;padding:6px 9px;border-radius:6px;background:var(--surface-2);border:1px solid var(--border);font-size:11.5px;}
+.merge-item input[type=checkbox]{accent-color:var(--blue);width:14px;height:14px;cursor:pointer;}
+.merge-item label{flex:1;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text);}
+.order-badge{font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+
+/* PREVIEW PANEL */
+.preview-panel{background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 2px 12px rgba(13,27,42,.06);overflow:hidden;position:sticky;top:20px;}
+.preview-toolbar{padding:12px 18px;background:linear-gradient(135deg,var(--navy),var(--royal));display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.preview-toolbar h2{font-family:'Playfair Display',serif;font-size:15px;color:#fff;flex:1;min-width:100px;}
+.toolbar-btns{display:flex;gap:7px;flex-wrap:wrap;}
+.tbtn{padding:6px 12px;border-radius:6px;font-family:inherit;font-size:11.5px;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,.3);color:#fff;background:rgba(255,255,255,.1);transition:all .18s;display:flex;align-items:center;gap:5px;}
+.tbtn:hover:not(:disabled){background:rgba(255,255,255,.22);}
+.tbtn:disabled{opacity:.4;cursor:not-allowed;}
+.tbtn.primary{background:var(--accent);border-color:var(--accent);color:var(--navy);}
+.tbtn.primary:hover:not(:disabled){background:#d4b87a;}
+.preview-info{padding:9px 18px;background:var(--surface-2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.preview-filename{font-size:12.5px;font-weight:600;color:var(--text);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.preview-badge{font-size:10px;font-weight:600;padding:3px 9px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em;}
+.badge-pdf{background:#e9f0fb;color:var(--blue);}
+.badge-img{background:#e9f5f0;color:var(--success);}
+.badge-word{background:#f0eef9;color:#5240a8;}
+.badge-other{background:var(--surface-2);color:var(--muted);border:1px solid var(--border);}
+.page-nav{display:flex;align-items:center;gap:8px;padding:8px 18px;border-bottom:1px solid var(--border);background:#fff;}
+.page-nav button{padding:4px 10px;border-radius:5px;font-family:inherit;font-size:11.5px;cursor:pointer;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text);transition:all .15s;}
+.page-nav button:hover:not(:disabled){border-color:var(--blue);color:var(--blue);}
+.page-nav button:disabled{opacity:.4;cursor:not-allowed;}
+.page-nav span{font-size:12px;color:var(--muted);}
+.preview-canvas-wrap{min-height:480px;max-height:660px;overflow-y:auto;background:#9aa0a9;display:flex;flex-direction:column;align-items:center;padding:14px;gap:10px;}
+.preview-canvas-wrap::-webkit-scrollbar{width:5px;}
+.preview-canvas-wrap::-webkit-scrollbar-thumb{background:rgba(255,255,255,.3);border-radius:4px;}
+.preview-canvas-wrap canvas,.preview-canvas-wrap img{max-width:100%;border-radius:4px;box-shadow:0 2px 12px rgba(0,0,0,.3);}
+.preview-empty{min-height:480px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:32px;}
+.preview-empty p{font-size:13px;color:var(--muted);text-align:center;}
+
+/* SUBMIT PANEL */
+.submit-panel{max-width:980px;margin:18px auto 0;background:linear-gradient(135deg,var(--navy),var(--royal));border-radius:var(--radius);padding:22px 24px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:start;}
+.submit-panel h3{font-family:'Playfair Display',serif;font-size:16px;color:#fff;margin-bottom:7px;}
+.submit-panel>div>p{font-size:12px;color:rgba(255,255,255,.65);margin-bottom:14px;line-height:1.6;}
+.submit-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.submit-field label{display:block;font-size:10.5px;font-weight:600;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+.submit-field input{width:100%;padding:9px 12px;border:1.5px solid rgba(255,255,255,.2);border-radius:7px;background:rgba(255,255,255,.1);color:#fff;font-family:inherit;font-size:12.5px;outline:none;transition:border-color .2s;}
+.submit-field input::placeholder{color:rgba(255,255,255,.4);}
+.submit-field input:focus{border-color:var(--accent);}
+.submit-field.full{grid-column:1/-1;}
+.submit-right{display:flex;flex-direction:column;align-items:center;gap:10px;padding-top:6px;}
+.submit-counter{font-size:13px;font-weight:600;color:#fff;text-align:center;}
+.submit-counter span{display:block;font-size:10px;color:rgba(255,255,255,.5);font-weight:400;margin-top:2px;}
+.submit-note{font-size:10.5px;color:rgba(255,255,255,.45);text-align:center;max-width:140px;line-height:1.5;}
+
+/* UPLOAD LOG */
+.upload-log{max-width:980px;margin:12px auto 0;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;display:none;}
+.upload-log h4{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;}
+.log-entry{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.log-entry:last-child{border-bottom:none;}
+.log-icon{font-size:14px;flex-shrink:0;}
+.log-name{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text);}
+.log-status{font-size:11px;font-weight:600;flex-shrink:0;}
+.log-status.ok{color:var(--success);}
+.log-status.err{color:var(--danger);}
+.log-status.pending{color:var(--muted);}
+
+/* PROGRESS */
+.progress-overlay{position:fixed;inset:0;background:rgba(13,27,42,.72);z-index:9000;display:none;align-items:center;justify-content:center;}
+.progress-box{background:#fff;border-radius:12px;padding:28px 36px;min-width:320px;text-align:center;}
+.progress-title{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:4px;}
+.progress-sub{font-size:11.5px;color:var(--muted);margin-bottom:14px;min-height:18px;}
+.progress-track{height:7px;background:var(--border);border-radius:999px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--navy),var(--accent));border-radius:999px;width:0%;transition:width .35s;}
+.progress-pct{font-size:12px;color:var(--muted);margin-top:8px;}
+
+/* TOAST */
+.toast-wrap{position:fixed;bottom:24px;right:24px;z-index:999;display:flex;flex-direction:column;gap:8px;}
+.toast{padding:12px 18px;border-radius:8px;font-size:13px;font-weight:500;box-shadow:0 4px 18px rgba(0,0,0,.18);min-width:240px;max-width:340px;animation:toastIn .25s ease;display:flex;align-items:center;gap:9px;}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.toast.success{background:var(--success);color:#fff;}
+.toast.error{background:var(--danger);color:#fff;}
+.toast.info{background:var(--navy);color:#fff;}
+.toast.warn{background:var(--warn);color:#fff;}
+
+@media(max-width:740px){
+  .main-grid{grid-template-columns:1fr;}
+  .stats-bar{grid-template-columns:repeat(2,1fr);}
+  .preview-panel{position:static;}
+  .submit-panel{grid-template-columns:1fr;}
+  .submit-fields{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="crest">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="16" cy="16" r="14" stroke="#C8A96E" stroke-width="1.5"/>
+      <path d="M10 12h12M10 16h12M10 20h12" stroke="#C8A96E" stroke-width="1.5" stroke-linecap="round"/>
+      <rect x="14" y="6" width="4" height="4" rx="1" fill="#C8A96E"/>
+    </svg>
+  </div>
+  <div class="header-text">
+    <h1>Document Upload &amp; Manager</h1>
+    <p>Upload · Preview · Convert to PDF · Merge · Submit to Google Drive</p>
+  </div>
+</div>
+
+<!-- NAV BAR -->
+<div class="nav-bar">
+  <div class="nav-bar-left">
+    <span style="font-size:14px;">📋</span>
+    <span style="font-size:12.5px;font-weight:600;color:var(--text);">UK Visa Application</span>
+    <span style="font-size:11px;color:var(--muted);">— Complete both steps</span>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <a href="uk-visa-form.html" class="page-badge inactive">← Step 1: Application Form</a>
+    <span class="page-badge active">✦ Step 2: Upload Documents</span>
+  </div>
+</div>
+
+<!-- CHECKLIST -->
+<div class="req-strip">
+  <h3>Required Documents — chip turns green when that category is uploaded</h3>
+  <div class="chips" id="reqChips">
+    <span class="chip missing" data-cat="Account Statement">Account Statement</span>
+    <span class="chip missing" data-cat="Passport">Passport Data Page</span>
+    <span class="chip missing" data-cat="TB Test Certificate">TB Test Certificate</span>
+    <span class="chip missing" data-cat="Academic Documents">Academic Documents</span>
+    <span class="chip missing" data-cat="Employment Evidence">Employment Evidence</span>
+    <span class="chip missing" data-cat="CAS">CAS</span>
+    <span class="chip missing" data-cat="Passport Photo">Passport Photo</span>
+    <span class="chip missing" data-cat="Evidence for CAS">Evidence for CAS</span>
+    <span class="chip missing" data-cat="Birth Certificate">Birth Certificate (if applicable)</span>
+    <span class="chip missing" data-cat="Marriage Certificate">Marriage Certificate (if applicable)</span>
+    <span class="chip missing" data-cat="Family Photos">Family Photos (if applicable)</span>
+    <span class="chip missing" data-cat="Parental Consent">Parental Consent (if applicable)</span>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-card"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Files Uploaded</div></div>
+  <div class="stat-card"><div class="stat-num" id="statPdf">0</div><div class="stat-label">PDFs Ready</div></div>
+  <div class="stat-card"><div class="stat-num" id="statConverted">0</div><div class="stat-label">Converted</div></div>
+  <div class="stat-card"><div class="stat-num" id="statSize">0 KB</div><div class="stat-label">Total Size</div></div>
+</div>
+
+<!-- MAIN GRID -->
+<div class="main-grid">
+
+  <!-- LEFT COLUMN -->
+  <div>
+    <!-- UPLOAD PANEL -->
+    <div class="panel">
+      <div class="panel-head"><span style="font-size:16px;">⬆</span><h2>Upload Documents</h2></div>
+      <div class="panel-body">
+        <div class="dropzone" id="dropzone">
+          <input type="file" id="fileInput" multiple accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.bmp,.doc,.docx,.txt">
+          <div class="drop-icon">📄</div>
+          <div class="drop-title">Drop files here or click to browse</div>
+          <div class="drop-sub">PDF · JPG · PNG · WEBP · GIF · BMP · DOC/DOCX · TXT · Max 20 MB each</div>
+        </div>
+        <div class="cat-row">
+          <select id="catSelect">
+            <option value="">— Select Category —</option>
+            <option>Account Statement</option>
+            <option>Passport</option>
+            <option>TB Test Certificate</option>
+            <option>Academic Documents</option>
+            <option>Employment Evidence</option>
+            <option>CAS</option>
+            <option>Passport Photo</option>
+            <option>Evidence for CAS</option>
+            <option>Birth Certificate</option>
+            <option>Marriage Certificate</option>
+            <option>Family Photos</option>
+            <option>Parental Consent</option>
+            <option>Other</option>
+          </select>
+          <button class="btn btn-navy" onclick="triggerFileInput()">+ Add Files</button>
+        </div>
+        <div id="fileList" class="file-list">
+          <div style="text-align:center;padding:20px;color:var(--muted);font-size:12px;">No documents uploaded yet.<br>Drop files above to begin.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MERGE PANEL -->
+    <div class="panel">
+      <div class="panel-head"><span style="font-size:16px;">🗂</span><h2>Merge into One PDF</h2></div>
+      <div class="panel-body">
+        <p style="font-size:12px;color:var(--muted);margin-bottom:10px;">Tick files in order. Non-PDFs convert automatically before merging.</p>
+        <div id="mergeList" class="merge-list">
+          <div style="font-size:12px;color:var(--muted);padding:8px;text-align:center;">Upload files to see them here.</div>
+        </div>
+        <button class="btn btn-green btn-full" id="mergeBtn" onclick="mergeDocuments()" disabled>🗂&nbsp; Merge Selected into One PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PREVIEW PANEL -->
+  <div class="preview-panel">
+    <div class="preview-toolbar">
+      <h2 id="previewTitle">Document Preview</h2>
+      <div class="toolbar-btns">
+        <button class="tbtn" id="btnConvert" onclick="convertCurrentToPDF()" disabled>🔄 To PDF</button>
+        <button class="tbtn" id="btnDownload" onclick="downloadCurrent()" disabled>⬇ Original</button>
+        <button class="tbtn primary" id="btnDownloadPdf" onclick="downloadCurrentPDF()" disabled>⬇ PDF</button>
+      </div>
+    </div>
+    <div id="previewInfo" class="preview-info" style="display:none;">
+      <span class="preview-filename" id="previewFilename"></span>
+      <span class="preview-badge" id="previewBadge"></span>
+    </div>
+    <div id="pageNav" class="page-nav" style="display:none;">
+      <button onclick="changePage(-1)" id="prevBtn">◀ Prev</button>
+      <span id="pageLabel">Page 1 of 1</span>
+      <button onclick="changePage(1)" id="nextBtn">Next ▶</button>
+      <div style="flex:1;"></div>
+      <button onclick="changeZoom(-0.25)" style="padding:3px 9px;font-size:14px;">−</button>
+      <span id="zoomLabel" style="font-size:12px;color:var(--muted);min-width:40px;text-align:center;">100%</span>
+      <button onclick="changeZoom(0.25)" style="padding:3px 9px;font-size:14px;">+</button>
+    </div>
+    <div id="previewArea">
+      <div class="preview-empty">
+        <div style="font-size:44px;opacity:.3;">📋</div>
+        <p>Select a document from the left to preview it here.</p>
+        <p style="font-size:11px;">Supports PDF, images, and text files directly.</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end main grid -->
+
+<!-- UPLOAD LOG -->
+<div class="upload-log" id="uploadLog">
+  <h4>Submission Log</h4>
+  <div id="logEntries"></div>
+</div>
+
+<!-- SUBMIT PANEL -->
+<div class="submit-panel">
+  <div>
+    <h3>Submit Your Document Package</h3>
+    <p>Files are saved to a secure Google Drive folder and confirmation emails are sent automatically to you and your advisor.</p>
+    <div class="submit-fields">
+      <div class="submit-field">
+        <label>Your Full Name *</label>
+        <input type="text" id="studentName" placeholder="e.g. John Smith">
+      </div>
+      <div class="submit-field">
+        <label>Your Email Address *</label>
+        <input type="email" id="studentEmail" placeholder="e.g. john@example.com">
+      </div>
+      <div class="submit-field full">
+        <label>Application Reference (optional)</label>
+        <input type="text" id="appRef" placeholder="e.g. GWF-12345678  or  leave blank">
+      </div>
+    </div>
+  </div>
+  <div class="submit-right">
+    <div class="submit-counter" id="submitCounter">0 files<span>ready to submit</span></div>
+    <button class="btn btn-gold" id="submitBtn" onclick="submitPackage()" style="padding:13px 24px;font-size:13.5px;">
+      🚀&nbsp; Submit to Drive
+    </button>
+    <div class="submit-note">Files are uploaded securely. Nothing is shared publicly.</div>
+  </div>
+</div>
+
+<!-- PROGRESS OVERLAY -->
+<div class="progress-overlay" id="progressOverlay">
+  <div class="progress-box">
+    <div class="progress-title" id="progressTitle">Processing…</div>
+    <div class="progress-sub" id="progressSub"></div>
+    <div class="progress-track"><div class="progress-fill" id="progressFillBar"></div></div>
+    <div class="progress-pct" id="progressPct">0%</div>
+  </div>
+</div>
+
+<!-- TOASTS -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+emailjs.init(EJS_PUBLIC_KEY);
+
+const state={files:[],activeId:null,pdfDoc:null,currentPage:1,totalPages:1,zoom:1.0,convertedCount:0};
+let nextId=1,mergeOrder=[];
+
+const uid=()=>nextId++;
+const extOf=n=>(n.split('.').pop()||'').toLowerCase();
+const escHtml=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function fmtSize(b){if(b<1024)return b+' B';if(b<1048576)return(b/1024).toFixed(1)+' KB';return(b/1048576).toFixed(2)+' MB';}
+function kindOf(f){const e=extOf(f.name),t=f.type||'';if(t.startsWith('image/')||['jpg','jpeg','png','webp','gif','bmp'].includes(e))return'image';if(t==='application/pdf'||e==='pdf')return'pdf';if(['doc','docx'].includes(e)||t.includes('word'))return'word';if(e==='txt'||t==='text/plain')return'text';return'other';}
+function fileIcon(k){return{pdf:'📄',image:'🖼',word:'📝',text:'📃',other:'📎'}[k]||'📎';}
+
+function showToast(msg,type='info',dur=3800){const icons={success:'✓',error:'✕',info:'ℹ',warn:'⚠'};const el=document.createElement('div');el.className=`toast ${type}`;el.innerHTML=`<span>${icons[type]||'ℹ'}</span><span>${msg}</span>`;document.getElementById('toastWrap').appendChild(el);setTimeout(()=>el.remove(),dur);}
+
+function showProgress(title,sub,pct){document.getElementById('progressTitle').textContent=title;document.getElementById('progressSub').textContent=sub||'';document.getElementById('progressFillBar').style.width=(pct||0)+'%';document.getElementById('progressPct').textContent=Math.round(pct||0)+'%';document.getElementById('progressOverlay').style.display='flex';}
+function updateProgress(pct,sub){if(sub!==undefined)document.getElementById('progressSub').textContent=sub;if(pct!==undefined){document.getElementById('progressFillBar').style.width=pct+'%';document.getElementById('progressPct').textContent=Math.round(pct)+'%';}}
+function hideProgress(){document.getElementById('progressOverlay').style.display='none';}
+
+function updateStats(){const f=state.files;document.getElementById('statTotal').textContent=f.length;document.getElementById('statPdf').textContent=f.filter(x=>x.pdfBytes).length;document.getElementById('statConverted').textContent=state.convertedCount;document.getElementById('statSize').textContent=fmtSize(f.reduce((a,x)=>a+x.size,0));document.getElementById('submitCounter').innerHTML=`${f.length} file${f.length!==1?'s':''}<span>ready to submit</span>`;const cats=f.map(x=>x.cat);document.querySelectorAll('.chip').forEach(c=>{c.classList.toggle('done',cats.includes(c.dataset.cat));c.classList.toggle('missing',!cats.includes(c.dataset.cat));});}
+
+function triggerFileInput(){document.getElementById('fileInput').click();}
+const dropzone=document.getElementById('dropzone'),fileInput=document.getElementById('fileInput');
+dropzone.addEventListener('dragover',e=>{e.preventDefault();dropzone.classList.add('dragover');});
+dropzone.addEventListener('dragleave',()=>dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop',e=>{e.preventDefault();dropzone.classList.remove('dragover');handleFiles(e.dataTransfer.files);});
+fileInput.addEventListener('change',()=>{handleFiles(fileInput.files);fileInput.value='';});
+
+async function handleFiles(fileList){
+  const cat=document.getElementById('catSelect').value||'Other';
+  if(!fileList.length)return;
+  for(const raw of fileList){
+    if(raw.size>20*1024*1024){showToast(`"${raw.name}" is over 20 MB — skipped.`,'warn');continue;}
+    const kind=kindOf(raw);
+    const entry={id:uid(),name:raw.name,cat,size:raw.size,kind,rawFile:raw,pdfBytes:null,objectUrl:null,thumbUrl:null,pageCount:1};
+    if(kind==='image'||kind==='pdf')entry.objectUrl=URL.createObjectURL(raw);
+    if(kind==='pdf'){entry.pdfBytes=await raw.arrayBuffer();try{const d=await pdfjsLib.getDocument({data:new Uint8Array(entry.pdfBytes)}).promise;entry.pageCount=d.numPages;}catch(e){entry.pageCount=1;}}
+    entry.thumbUrl=await generateThumb(entry);
+    state.files.push(entry);
+    showToast(`"${raw.name}" added.`,'success',2000);
+  }
+  renderFileList();renderMergeList();updateStats();
+}
+
+async function generateThumb(entry){
+  const c=document.createElement('canvas');c.width=72;c.height=88;
+  const ctx=c.getContext('2d');ctx.fillStyle='#f0f2f5';ctx.fillRect(0,0,72,88);
+  if(entry.kind==='image'){return new Promise(res=>{const img=new Image();img.onload=()=>{const sc=Math.min(72/img.width,88/img.height);const w=img.width*sc,h=img.height*sc;ctx.drawImage(img,(72-w)/2,(88-h)/2,w,h);res(c.toDataURL('image/jpeg',0.6));};img.onerror=()=>res(null);img.src=entry.objectUrl;});}
+  if(entry.kind==='pdf'&&entry.pdfBytes){try{const doc=await pdfjsLib.getDocument({data:new Uint8Array(entry.pdfBytes)}).promise;const page=await doc.getPage(1);const vp=page.getViewport({scale:0.15});c.width=Math.round(vp.width);c.height=Math.round(vp.height);await page.render({canvasContext:ctx,viewport:vp}).promise;return c.toDataURL('image/jpeg',0.7);}catch(e){return null;}}
+  ctx.fillStyle='#d8e2ee';ctx.fillRect(12,14,48,60);ctx.fillStyle='#607080';ctx.font='24px sans-serif';ctx.textAlign='center';ctx.fillText(fileIcon(entry.kind),36,52);
+  return c.toDataURL('image/png');
+}
+
+function renderFileList(){
+  const el=document.getElementById('fileList');
+  if(!state.files.length){el.innerHTML=`<div style="text-align:center;padding:20px;color:var(--muted);font-size:12px;">No documents uploaded yet.<br>Drop files above to begin.</div>`;return;}
+  el.innerHTML='';
+  state.files.forEach(f=>{
+    const item=document.createElement('div');
+    item.className='file-item'+(f.id===state.activeId?' active':'');
+    item.onclick=()=>selectFile(f.id);
+    const thumbHtml=f.thumbUrl?`<img src="${f.thumbUrl}" alt="">`:`<span style="font-size:20px;">${fileIcon(f.kind)}</span>`;
+    const pdfTag=(f.kind!=='pdf'&&f.pdfBytes)?`<span class="pdf-ready-tag">✓ PDF ready</span>`:'';
+    item.innerHTML=`<div class="file-thumb">${thumbHtml}</div><div class="file-info"><div class="file-name" title="${f.name}">${f.name}</div><div class="file-meta">${fmtSize(f.size)} · ${f.pageCount>1?f.pageCount+' pages':f.kind.toUpperCase()}</div><span class="file-cat">${f.cat}</span>${pdfTag}</div><div class="file-actions"><button class="btn-icon" title="Preview" onclick="event.stopPropagation();selectFile(${f.id})">👁</button><button class="btn-icon" title="Download" onclick="event.stopPropagation();downloadFile(${f.id})">⬇</button><button class="btn-icon danger" title="Remove" onclick="event.stopPropagation();removeFile(${f.id})">✕</button></div>`;
+    el.appendChild(item);
+  });
+}
+
+function renderMergeList(){
+  const el=document.getElementById('mergeList');
+  if(!state.files.length){el.innerHTML=`<div style="font-size:12px;color:var(--muted);padding:8px;text-align:center;">Upload files to see them here.</div>`;document.getElementById('mergeBtn').disabled=true;return;}
+  mergeOrder=mergeOrder.filter(id=>state.files.find(f=>f.id===id));
+  el.innerHTML='';
+  state.files.forEach(f=>{const idx=mergeOrder.indexOf(f.id);const checked=idx>=0;const item=document.createElement('div');item.className='merge-item';item.innerHTML=`<input type="checkbox" id="mc${f.id}" ${checked?'checked':''} onchange="toggleMerge(${f.id},this.checked)"><label for="mc${f.id}" title="${f.name}">${f.name}</label>${checked?`<span class="order-badge">${idx+1}</span>`:''}<span style="font-size:10px;color:var(--muted);">${f.kind.toUpperCase()}</span>`;el.appendChild(item);});
+  document.getElementById('mergeBtn').disabled=mergeOrder.length<2;
+}
+function toggleMerge(id,checked){if(checked){if(!mergeOrder.includes(id))mergeOrder.push(id);}else{mergeOrder=mergeOrder.filter(x=>x!==id);}renderMergeList();}
+
+async function selectFile(id){
+  const f=state.files.find(x=>x.id===id);if(!f)return;
+  state.activeId=id;renderFileList();
+  document.getElementById('previewTitle').textContent=f.name.length>32?f.name.slice(0,30)+'…':f.name;
+  document.getElementById('previewInfo').style.display='flex';
+  document.getElementById('previewFilename').textContent=f.name;
+  const bm={pdf:'badge-pdf',image:'badge-img',word:'badge-word',text:'badge-other',other:'badge-other'};
+  document.getElementById('previewBadge').className='preview-badge '+(bm[f.kind]||'badge-other');
+  document.getElementById('previewBadge').textContent=f.kind.toUpperCase();
+  const conv=document.getElementById('btnConvert');
+  if(f.kind==='pdf'){conv.disabled=true;conv.textContent='🔄 To PDF';}
+  else if(f.pdfBytes){conv.disabled=true;conv.textContent='✓ Converted';}
+  else{conv.disabled=false;conv.textContent='🔄 To PDF';}
+  document.getElementById('btnDownload').disabled=false;
+  document.getElementById('btnDownloadPdf').disabled=!(f.pdfBytes||f.kind==='pdf');
+  await renderPreview(f);
+}
+
+async function renderPreview(f){
+  const area=document.getElementById('previewArea'),pageNav=document.getElementById('pageNav');
+  if(f.kind==='pdf'||f.pdfBytes){
+    const bytes=f.pdfBytes;if(!bytes){area.innerHTML=`<div class="preview-empty"><p>No PDF data.</p></div>`;return;}
+    try{showProgress('Loading PDF…','',15);state.pdfDoc=await pdfjsLib.getDocument({data:new Uint8Array(bytes)}).promise;state.totalPages=state.pdfDoc.numPages;state.currentPage=1;pageNav.style.display='flex';updateProgress(50);await renderPdfPage();hideProgress();}
+    catch(e){hideProgress();area.innerHTML=`<div class="preview-empty"><p>Error: ${escHtml(e.message)}</p></div>`;}
+    return;
+  }
+  if(f.kind==='image'){pageNav.style.display='none';state.pdfDoc=null;area.innerHTML=`<div class="preview-canvas-wrap"><img src="${f.objectUrl}" alt="${f.name}"></div>`;return;}
+  if(f.kind==='text'){pageNav.style.display='none';state.pdfDoc=null;const txt=await f.rawFile.text();area.innerHTML=`<div style="padding:18px;background:#fff;min-height:400px;overflow:auto;"><pre style="font-size:12px;color:var(--text);white-space:pre-wrap;word-break:break-word;line-height:1.75;">${escHtml(txt)}</pre></div>`;return;}
+  pageNav.style.display='none';state.pdfDoc=null;
+  area.innerHTML=`<div class="preview-empty"><div style="font-size:40px;">📝</div><p><strong>${f.name}</strong></p><p>Direct preview not available for this file type.</p><p style="margin-top:10px;"><button class="btn btn-navy" onclick="convertCurrentToPDF()" style="font-size:12px;">🔄 Convert to PDF to Preview</button></p></div>`;
+}
+
+async function renderPdfPage(){
+  if(!state.pdfDoc)return;
+  const area=document.getElementById('previewArea');
+  const page=await state.pdfDoc.getPage(state.currentPage);
+  const vp=page.getViewport({scale:state.zoom*1.2});
+  const canvas=document.createElement('canvas');canvas.width=vp.width;canvas.height=vp.height;
+  await page.render({canvasContext:canvas.getContext('2d'),viewport:vp}).promise;
+  area.innerHTML=`<div class="preview-canvas-wrap"></div>`;
+  area.querySelector('.preview-canvas-wrap').appendChild(canvas);
+  document.getElementById('pageLabel').textContent=`Page ${state.currentPage} of ${state.totalPages}`;
+  document.getElementById('prevBtn').disabled=state.currentPage<=1;
+  document.getElementById('nextBtn').disabled=state.currentPage>=state.totalPages;
+  document.getElementById('zoomLabel').textContent=Math.round(state.zoom*100)+'%';
+}
+async function changePage(d){state.currentPage=Math.max(1,Math.min(state.totalPages,state.currentPage+d));await renderPdfPage();}
+async function changeZoom(d){state.zoom=Math.max(0.4,Math.min(3.0,state.zoom+d));await renderPdfPage();}
+
+async function convertCurrentToPDF(){
+  const f=state.files.find(x=>x.id===state.activeId);if(!f||f.kind==='pdf')return;
+  showProgress('Converting…','Preparing…',5);
+  try{
+    let pdfBytes;
+    if(f.kind==='image'){updateProgress(20,'Embedding image…');pdfBytes=await imageToPDF(f);}
+    else if(f.kind==='text'){updateProgress(20,'Typesetting text…');pdfBytes=await textToPDF(f);}
+    else{updateProgress(20,'Building cover page…');pdfBytes=await genericToPDF(f);}
+    if(!pdfBytes)throw new Error('Conversion returned no data.');
+    f.pdfBytes=pdfBytes;state.convertedCount++;updateProgress(100,'Done!');setTimeout(hideProgress,600);
+    state.pdfDoc=await pdfjsLib.getDocument({data:new Uint8Array(pdfBytes)}).promise;
+    state.totalPages=state.pdfDoc.numPages;state.currentPage=1;
+    document.getElementById('pageNav').style.display='flex';
+    await renderPdfPage();
+    document.getElementById('btnConvert').textContent='✓ Converted';
+    document.getElementById('btnConvert').disabled=true;
+    document.getElementById('btnDownloadPdf').disabled=false;
+    renderFileList();renderMergeList();updateStats();
+    showToast(`"${f.name}" converted to PDF.`,'success');
+  }catch(err){hideProgress();showToast('Conversion failed: '+err.message,'error');}
+}
+
+async function imageToPDF(f){
+  const{PDFDocument}=PDFLib;const doc=await PDFDocument.create();
+  const bytes=await f.rawFile.arrayBuffer();const ext=extOf(f.name);let img;
+  if(['jpg','jpeg'].includes(ext)||f.rawFile.type==='image/jpeg'){img=await doc.embedJpg(bytes);}
+  else{const pngBuf=await imageViaCanvas(f.objectUrl);img=await doc.embedPng(pngBuf);}
+  const MAX=595,MAXH=842;let w=img.width,h=img.height;const r=Math.min(MAX/w,MAXH/h,1);w*=r;h*=r;
+  const page=doc.addPage([w,h]);page.drawImage(img,{x:0,y:0,width:w,height:h});return doc.save();
+}
+function imageViaCanvas(src){return new Promise((res,rej)=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=img.width;c.height=img.height;c.getContext('2d').drawImage(img,0,0);c.toBlob(blob=>{if(!blob)return rej(new Error('Canvas toBlob failed'));blob.arrayBuffer().then(res).catch(rej);},'image/png');};img.onerror=rej;img.src=src;});}
+
+async function textToPDF(f){
+  const{PDFDocument,rgb,StandardFonts}=PDFLib;const text=await f.rawFile.text();
+  const doc=await PDFDocument.create();const font=await doc.embedFont(StandardFonts.Courier);
+  const PW=595,PH=842,M=50,FS=11,LH=14,lpp=Math.floor((PH-M*2)/LH);const allLines=[];
+  for(const raw of text.split('\n')){const words=(raw===''?['']:raw.split(' '));let cur='';for(const w of words){const test=cur?cur+' '+w:w;if(font.widthOfTextAtSize(test,FS)>PW-M*2){if(cur)allLines.push(cur);cur=w;}else cur=test;}allLines.push(cur);}
+  for(let i=0;i<allLines.length;i+=lpp){const page=doc.addPage([PW,PH]);allLines.slice(i,i+lpp).forEach((line,idx)=>{page.drawText(line,{x:M,y:PH-M-idx*LH,size:FS,font,color:rgb(0.1,0.1,0.1)});});}
+  return doc.save();
+}
+
+async function genericToPDF(f){
+  const{PDFDocument,rgb,StandardFonts}=PDFLib;const doc=await PDFDocument.create();
+  const font=await doc.embedFont(StandardFonts.Helvetica);const bold=await doc.embedFont(StandardFonts.HelveticaBold);
+  const page=doc.addPage([595,842]);
+  page.drawText('Document: '+f.name,{x:48,y:794,size:14,font:bold,color:rgb(0.05,0.1,0.16)});
+  page.drawText('Category: '+f.cat,{x:48,y:772,size:11,font,color:rgb(0.37,0.44,0.5)});
+  page.drawText('Type: '+(f.rawFile.type||extOf(f.name).toUpperCase()),{x:48,y:754,size:11,font,color:rgb(0.37,0.44,0.5)});
+  page.drawText('Size: '+fmtSize(f.size),{x:48,y:736,size:11,font,color:rgb(0.37,0.44,0.5)});
+  page.drawLine({start:{x:48,y:724},end:{x:547,y:724},thickness:0.5,color:rgb(0.84,0.88,0.93)});
+  page.drawText('This document was included in the UK Visa application package.\nPlease refer to the original file.',{x:48,y:700,size:11,font,color:rgb(0.1,0.15,0.2),lineHeight:16});
+  return doc.save();
+}
+
+async function mergeDocuments(){
+  const selected=mergeOrder.filter(id=>state.files.find(f=>f.id===id));
+  if(selected.length<2){showToast('Select at least 2 documents to merge.','warn');return;}
+  showProgress('Preparing merge…','',0);
+  try{
+    const{PDFDocument}=PDFLib;const merged=await PDFDocument.create();let done=0;
+    for(const id of selected){
+      const f=state.files.find(x=>x.id===id);let bytes=f.pdfBytes;
+      if(!bytes){updateProgress(null,`Converting "${f.name}"…`);if(f.kind==='image')bytes=await imageToPDF(f);else if(f.kind==='text')bytes=await textToPDF(f);else bytes=await genericToPDF(f);f.pdfBytes=bytes;state.convertedCount++;}
+      const donor=await PDFDocument.load(bytes);const pages=await merged.copyPages(donor,donor.getPageIndices());pages.forEach(p=>merged.addPage(p));
+      done++;updateProgress((done/selected.length)*88,`Merged ${done} of ${selected.length}…`);
+    }
+    updateProgress(95,'Saving…');const mergedBytes=await merged.save();updateProgress(100,'Done!');setTimeout(hideProgress,500);
+    const blob=new Blob([mergedBytes],{type:'application/pdf'});const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download='UK_Visa_Documents_Merged.pdf';a.click();setTimeout(()=>URL.revokeObjectURL(url),12000);
+    const me={id:uid(),name:'UK_Visa_Documents_Merged.pdf',cat:'Merged',size:mergedBytes.byteLength,kind:'pdf',rawFile:new File([mergedBytes],'UK_Visa_Documents_Merged.pdf',{type:'application/pdf'}),pdfBytes:mergedBytes,objectUrl:URL.createObjectURL(blob),thumbUrl:null,pageCount:merged.getPageCount()};
+    me.thumbUrl=await generateThumb(me);state.files.push(me);
+    renderFileList();renderMergeList();updateStats();
+    showToast(`Merged ${selected.length} docs → ${merged.getPageCount()} pages.`,'success',4500);
+  }catch(err){hideProgress();showToast('Merge failed: '+err.message,'error');}
+}
+
+function downloadFile(id){const f=state.files.find(x=>x.id===id);if(!f)return;const url=f.objectUrl||URL.createObjectURL(f.rawFile);const a=document.createElement('a');a.href=url;a.download=f.name;a.click();if(!f.objectUrl)setTimeout(()=>URL.revokeObjectURL(url),6000);}
+function downloadCurrent(){if(state.activeId)downloadFile(state.activeId);}
+function downloadCurrentPDF(){const f=state.files.find(x=>x.id===state.activeId);if(!f||!f.pdfBytes)return;const blob=new Blob([f.pdfBytes],{type:'application/pdf'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=f.name.replace(/\.[^.]+$/,'')+'.pdf';a.click();setTimeout(()=>URL.revokeObjectURL(url),6000);}
+
+function removeFile(id){
+  const idx=state.files.findIndex(x=>x.id===id);if(idx<0)return;
+  const f=state.files[idx];if(f.objectUrl)URL.revokeObjectURL(f.objectUrl);
+  state.files.splice(idx,1);mergeOrder=mergeOrder.filter(x=>x!==id);
+  if(state.activeId===id){state.activeId=null;document.getElementById('previewArea').innerHTML=`<div class="preview-empty"><div style="font-size:44px;opacity:.3;">📋</div><p>Select a document to preview it here.</p></div>`;document.getElementById('previewInfo').style.display='none';document.getElementById('pageNav').style.display='none';['btnConvert','btnDownload','btnDownloadPdf'].forEach(id=>document.getElementById(id).disabled=true);}
+  renderFileList();renderMergeList();updateStats();showToast('Document removed.','info',1800);
+}
+
+async function submitPackage(){
+  const studentName=document.getElementById('studentName').value.trim();
+  const studentEmail=document.getElementById('studentEmail').value.trim();
+  const appRef=document.getElementById('appRef').value.trim()||'N/A';
+  if(!studentName){showToast('Please enter your full name.','warn');return;}
+  if(!studentEmail||!studentEmail.includes('@')){showToast('Please enter a valid email address.','warn');return;}
+  if(!state.files.length){showToast('Please upload at least one document first.','warn');return;}
+  if(!confirm(`Submit ${state.files.length} file(s) to Google Drive?\n\nName:  ${studentName}\nEmail: ${studentEmail}\nRef:   ${appRef}`))return;
+
+  const logPanel=document.getElementById('uploadLog');const logEntries=document.getElementById('logEntries');
+  logPanel.style.display='block';logEntries.innerHTML='';logPanel.scrollIntoView({behavior:'smooth',block:'nearest'});
+  showProgress('Submitting documents…','Starting…',0);
+  document.getElementById('submitBtn').disabled=true;
+  const fileResults=[];let successCount=0;
+
+  try{
+    for(let i=0;i<state.files.length;i++){
+      const f=state.files[i];
+      const logRow=document.createElement('div');logRow.className='log-entry';
+      logRow.innerHTML=`<span class="log-icon">${fileIcon(f.kind)}</span><span class="log-name">${f.name}</span><span class="log-status pending" id="ls${f.id}">Uploading…</span>`;
+      logEntries.appendChild(logRow);
+      updateProgress((i/state.files.length)*75,`Uploading ${i+1} of ${state.files.length}: ${f.name}`);
+
+      let uploadBytes,uploadName,uploadMime;
+      if(f.pdfBytes){uploadBytes=f.pdfBytes;uploadName=f.name.replace(/\.[^.]+$/,'')+'.pdf';uploadMime='application/pdf';}
+      else{uploadBytes=await f.rawFile.arrayBuffer();uploadName=f.name;uploadMime=f.rawFile.type||'application/octet-stream';}
+
+      const base64=arrayBufferToBase64(uploadBytes);
+      const payload={action:'uploadFile',studentName,studentEmail,appRef,folderId:DRIVE_FOLDER_ID,fileName:uploadName,mimeType:uploadMime,category:f.cat,fileData:base64};
+
+      try{
+        await fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),mode:'no-cors'});
+        document.getElementById('ls'+f.id).textContent='✓ Saved';document.getElementById('ls'+f.id).className='log-status ok';
+        fileResults.push({name:uploadName,category:f.cat});successCount++;
+      }catch(fetchErr){
+        document.getElementById('ls'+f.id).textContent='✕ Failed';document.getElementById('ls'+f.id).className='log-status err';
+        showToast(`Upload failed for "${f.name}": ${fetchErr.message}`,'error',5000);
+      }
+    }
+
+    updateProgress(80,'Sending summary email via Drive…');
+    try{await fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'submitSummary',studentName,studentEmail,appRef,fileList:fileResults}),mode:'no-cors'});}
+    catch(e){console.warn('Summary GAS call:',e.message);}
+
+    updateProgress(90,'Sending confirmation email…');
+    try{
+      const fileListText=fileResults.map((r,i)=>`${i+1}. ${r.name} (${r.category})`).join('\n');
+      await emailjs.send(EJS_SERVICE_ID,EJS_TEMPLATE_ID,{
+        to_name:studentName,to_email:studentEmail,advisor_email:ADVISOR_EMAIL,
+        app_ref:appRef,file_count:state.files.length,file_list:fileListText,
+        submit_date:new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'})
+      });
+    }catch(ejsErr){console.warn('EmailJS:',ejsErr);}
+
+    updateProgress(100,'Submission complete!');setTimeout(hideProgress,800);
+    showToast(`✓ ${successCount} of ${state.files.length} file(s) submitted. Confirmation sent to ${studentEmail}.`,'success',7000);
+  }catch(err){hideProgress();showToast('Submission error: '+err.message,'error',6000);console.error(err);}
+  finally{document.getElementById('submitBtn').disabled=false;}
+}
+
+function arrayBufferToBase64(buffer){const bytes=new Uint8Array(buffer);const CHUNK=8192;let binary='';for(let i=0;i<bytes.length;i+=CHUNK)binary+=String.fromCharCode.apply(null,bytes.subarray(i,i+CHUNK));return btoa(binary);}
+
+updateStats();
+</script>
+</body>
+</html>
