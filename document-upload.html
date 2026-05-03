@@ -259,14 +259,35 @@ body{font-family:'DM Sans',sans-serif;background:#EDF1F7;color:var(--text);min-h
   <div class="stat-card"><div class="stat-num" id="statSize">0 KB</div><div class="stat-label">Total Size</div></div>
 </div>
 
-<!-- MAIN GRID -->
-<div class="main-grid">
+  <!-- MAIN GRID -->
+  <div class="main-grid">
 
   <!-- LEFT COLUMN -->
   <div>
+    <!-- STUDENT INFO PANEL (Moved Up) -->
+    <div class="panel">
+      <div class="panel-head"><span style="font-size:16px;">👤</span><h2>1. Student Information</h2></div>
+      <div class="panel-body">
+        <div class="field-grid" style="grid-template-columns:1fr 1fr; gap:12px; display: grid;">
+          <div class="field" style="display: flex; flex-direction: column; gap: 4px;">
+            <label style="font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase;">Full Name *</label>
+            <input type="text" id="studentNameTop" placeholder="e.g. John Smith" style="padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 7px; font-size: 13px;">
+          </div>
+          <div class="field" style="display: flex; flex-direction: column; gap: 4px;">
+            <label style="font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase;">Email *</label>
+            <input type="email" id="studentEmailTop" placeholder="e.g. john@example.com" style="padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 7px; font-size: 13px;">
+          </div>
+          <div class="field full" style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 4px; margin-top: 8px;">
+            <label style="font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase;">Application Reference (Optional)</label>
+            <input type="text" id="appRefTop" placeholder="e.g. GWF-12345678" style="padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 7px; font-size: 13px;">
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- UPLOAD PANEL -->
     <div class="panel">
-      <div class="panel-head"><span style="font-size:16px;">⬆</span><h2>Upload Documents</h2></div>
+      <div class="panel-head"><span style="font-size:16px;">⬆</span><h2>2. Upload Documents</h2></div>
       <div class="panel-body">
         <div class="dropzone" id="dropzone">
           <input type="file" id="fileInput" multiple>
@@ -304,7 +325,7 @@ body{font-family:'DM Sans',sans-serif;background:#EDF1F7;color:var(--text);min-h
 
     <!-- MERGE PANEL -->
     <div class="panel">
-      <div class="panel-head"><span style="font-size:16px;">🗂</span><h2>Merge into One PDF</h2></div>
+      <div class="panel-head"><span style="font-size:16px;">🗂</span><h2>3. Merge into One PDF</h2></div>
       <div class="panel-body">
         <p style="font-size:12px;color:var(--muted);margin-bottom:10px;">Tick files in order. Non-PDFs convert automatically before merging.</p>
         <div id="mergeList" class="merge-list">
@@ -320,8 +341,7 @@ body{font-family:'DM Sans',sans-serif;background:#EDF1F7;color:var(--text);min-h
     <div class="preview-toolbar">
       <h2 id="previewTitle">Document Preview</h2>
       <div class="toolbar-btns">
-        <button class="tbtn" id="btnDownload" onclick="downloadCurrent()" disabled>⬇ Original</button>
-        <button class="tbtn primary" id="btnDownloadPdf" onclick="downloadCurrentPDF()" disabled>⬇ PDF</button>
+        <!-- Download buttons removed -->
       </div>
     </div>
     <div id="previewInfo" class="preview-info" style="display:none;">
@@ -357,21 +377,12 @@ body{font-family:'DM Sans',sans-serif;background:#EDF1F7;color:var(--text);min-h
 <!-- SUBMIT PANEL -->
 <div class="submit-panel">
   <div>
-    <h3>Submit Your Document Package</h3>
-    <p>Files are saved to a secure Google Drive folder and confirmation emails are sent automatically to you and your advisor.</p>
-    <div class="submit-fields">
-      <div class="submit-field">
-        <label>Your Full Name *</label>
-        <input type="text" id="studentName" placeholder="e.g. John Smith">
-      </div>
-      <div class="submit-field">
-        <label>Your Email Address *</label>
-        <input type="email" id="studentEmail" placeholder="e.g. john@example.com">
-      </div>
-      <div class="submit-field full">
-        <label>Application Reference (optional)</label>
-        <input type="text" id="appRef" placeholder="e.g. GWF-12345678  or  leave blank">
-      </div>
+    <h3>4. Final Submission</h3>
+    <p>Ensure all documents are uploaded and correctly named before submitting.</p>
+    <div class="submit-fields" style="display:none;">
+      <input type="hidden" id="studentName">
+      <input type="hidden" id="studentEmail">
+      <input type="hidden" id="appRef">
     </div>
   </div>
   <div class="submit-right">
@@ -436,7 +447,11 @@ async function handleFiles(fileList){
     const otherName=document.getElementById('otherCatName').value.trim();
     if(otherName) cat=otherName;
   }
-  const studentName=document.getElementById('studentName').value.trim()||'Student';
+  const studentName=document.getElementById('studentNameTop').value.trim();
+  if(!studentName){
+    showToast('Please fill out your Full Name at the top before uploading documents.','warn');
+    return;
+  }
 
   if(!fileList.length)return;
   showProgress('Processing Files…','Converting to PDF…',10);
@@ -504,7 +519,7 @@ function renderFileList(){
     item.onclick=()=>selectFile(f.id);
     const thumbHtml=f.thumbUrl?`<img src="${f.thumbUrl}" alt="">`:`<span style="font-size:20px;">${fileIcon(f.kind)}</span>`;
     const pdfTag=f.pdfBytes?`<span class="pdf-ready-tag">✓ PDF</span>`:'';
-    item.innerHTML=`<div class="file-thumb">${thumbHtml}</div><div class="file-info"><div class="file-name" title="${f.name}">${f.name}</div><div class="file-meta">${f.originalName} · ${fmtSize(f.size)}</div><span class="file-cat">${f.cat}</span>${pdfTag}</div><div class="file-actions"><button class="btn-icon" title="Preview" onclick="event.stopPropagation();selectFile(${f.id})">👁</button><button class="btn-icon" title="Download" onclick="event.stopPropagation();downloadFile(${f.id})">⬇</button><button class="btn-icon danger" title="Remove" onclick="event.stopPropagation();removeFile(${f.id})">✕</button></div>`;
+    item.innerHTML=`<div class="file-thumb">${thumbHtml}</div><div class="file-info"><div class="file-name" title="${f.name}">${f.name}</div><div class="file-meta">${f.originalName} · ${fmtSize(f.size)}</div><span class="file-cat">${f.cat}</span>${pdfTag}</div><div class="file-actions"><button class="btn-icon" title="Preview" onclick="event.stopPropagation();selectFile(${f.id})">👁</button><!-- Download icon removed --><button class="btn-icon danger" title="Remove" onclick="event.stopPropagation();removeFile(${f.id})">✕</button></div>`;
     el.appendChild(item);
   });
 }
@@ -678,11 +693,17 @@ function removeFile(id){
 }
 
 async function submitPackage(){
-  const studentName=document.getElementById('studentName').value.trim();
-  const studentEmail=document.getElementById('studentEmail').value.trim();
-  const appRef=document.getElementById('appRef').value.trim()||'N/A';
-  if(!studentName){showToast('Please enter your full name.','warn');return;}
-  if(!studentEmail||!studentEmail.includes('@')){showToast('Please enter a valid email address.','warn');return;}
+  const studentName=document.getElementById('studentNameTop').value.trim();
+  const studentEmail=document.getElementById('studentEmailTop').value.trim();
+  const appRef=document.getElementById('appRefTop').value.trim()||'N/A';
+  
+  // Sync with hidden fields just in case
+  document.getElementById('studentName').value = studentName;
+  document.getElementById('studentEmail').value = studentEmail;
+  document.getElementById('appRef').value = appRef;
+
+  if(!studentName){showToast('Please enter your full name at the top first.','warn');return;}
+  if(!studentEmail||!studentEmail.includes('@')){showToast('Please enter a valid email address at the top.','warn');return;}
   if(!state.files.length){showToast('Please upload at least one document first.','warn');return;}
   if(!confirm(`Submit ${state.files.length} file(s) to Google Drive?\n\nName:  ${studentName}\nEmail: ${studentEmail}\nRef:   ${appRef}`))return;
 
@@ -708,7 +729,7 @@ async function submitPackage(){
         const resJson = await resp.json();
         if(resJson.status === 'success') {
           document.getElementById('lsForm').textContent='✓ Saved';document.getElementById('lsForm').className='log-status ok';
-          fileResults.push({name:formPdf.name,category:'Application Form'});
+          fileResults.push({name:formPdf.name,category:'Application Form',fileId:resJson.fileId});
           folderUrl = resJson.folderUrl;
         }
       } catch(e) { console.warn('Form PDF upload failed:', e); }
@@ -741,7 +762,7 @@ async function submitPackage(){
         const resJson = await resp.json();
         if(resJson.status === 'success') {
           document.getElementById('ls'+f.id).textContent='✓ Saved';document.getElementById('ls'+f.id).className='log-status ok';
-          fileResults.push({name:uploadName,category:f.cat});successCount++;
+          fileResults.push({name:uploadName,category:f.cat,fileId:resJson.fileId});successCount++;
           if(!folderUrl) folderUrl = resJson.folderUrl;
         } else {
           throw new Error(resJson.message);
