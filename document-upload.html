@@ -275,7 +275,7 @@ body{font-family:'DM Sans',sans-serif;background:#EDF1F7;color:var(--text);min-h
           <div class="drop-sub">PDF · JPG · PNG · WEBP · GIF · BMP · DOC/DOCX · TXT · Max 20 MB each</div>
         </div>
         <div class="cat-row">
-          <select id="catSelect">
+          <select id="catSelect" onchange="checkOtherCat()">
             <option value="">— Select Category —</option>
             <option>Account Statement</option>
             <option>Passport</option>
@@ -289,9 +289,12 @@ body{font-family:'DM Sans',sans-serif;background:#EDF1F7;color:var(--text);min-h
             <option>Marriage Certificate</option>
             <option>Family Photos</option>
             <option>Parental Consent</option>
-            <option>Other</option>
+            <option value="Other">Other (Specify Name)</option>
           </select>
           <button class="btn btn-navy" onclick="triggerFileInput()">+ Add Files</button>
+        </div>
+        <div id="otherCatRow" style="display:none; margin-bottom:12px;">
+          <input type="text" id="otherCatName" placeholder="Enter document name..." style="width:100%; padding:8px 10px; border:1.5px solid var(--border); border-radius:7px; font-family:inherit; font-size:12.5px;">
         </div>
         <div id="fileList" class="file-list">
           <div style="text-align:center;padding:20px;color:var(--muted);font-size:12px;">No documents uploaded yet.<br>Drop files above to begin.</div>
@@ -317,7 +320,6 @@ body{font-family:'DM Sans',sans-serif;background:#EDF1F7;color:var(--text);min-h
     <div class="preview-toolbar">
       <h2 id="previewTitle">Document Preview</h2>
       <div class="toolbar-btns">
-        <button class="tbtn" id="btnConvert" onclick="convertCurrentToPDF()" disabled>🔄 To PDF</button>
         <button class="tbtn" id="btnDownload" onclick="downloadCurrent()" disabled>⬇ Original</button>
         <button class="tbtn primary" id="btnDownloadPdf" onclick="downloadCurrentPDF()" disabled>⬇ PDF</button>
       </div>
@@ -421,24 +423,67 @@ const dropzone=document.getElementById('dropzone'),fileInput=document.getElement
 dropzone.addEventListener('dragover',e=>{e.preventDefault();dropzone.classList.add('dragover');});
 dropzone.addEventListener('dragleave',()=>dropzone.classList.remove('dragover'));
 dropzone.addEventListener('drop',e=>{e.preventDefault();dropzone.classList.remove('dragover');handleFiles(e.dataTransfer.files);});
-fileInput.addEventListener('change',()=>{handleFiles(fileInput.files);fileInput.value='';});
 
-async function handleFiles(fileList){
-  const cat=document.getElementById('catSelect').value||'Other';
-  if(!fileList.length)return;
-  for(const raw of fileList){
-    if(raw.size>20*1024*1024){showToast(`"${raw.name}" is over 20 MB — skipped.`,'warn');continue;}
-    const kind=kindOf(raw);
-    const entry={id:uid(),name:raw.name,cat,size:raw.size,kind,rawFile:raw,pdfBytes:null,objectUrl:null,thumbUrl:null,pageCount:1};
-    if(kind==='image'||kind==='pdf')entry.objectUrl=URL.createObjectURL(raw);
-    if(kind==='pdf'){entry.pdfBytes=await raw.arrayBuffer();try{const d=await pdfjsLib.getDocument({data:new Uint8Array(entry.pdfBytes)}).promise;entry.pageCount=d.numPages;}catch(e){entry.pageCount=1;}}
-    entry.thumbUrl=await generateThumb(entry);
-    state.files.push(entry);
-    showToast(`"${raw.name}" added.`,'success',2000);
-  }
-  renderFileList();renderMergeList();updateStats();
+function checkOtherCat(){
+  const sel=document.getElementById('catSelect').value;
+  document.getElementById('otherCatRow').style.display=(sel==='Other'?'block':'none');
 }
 
+async function handleFiles(fileList){
+  let cat=document.getElementById('catSelect').value||'Other';
+  if(cat==='Other'){
+    const otherName=document.getElementById('otherCatName').value.trim();
+    if(otherName) cat=otherName;
+  }
+  const studentName=document.getElementById('studentName').value.trim()||'Student';
+
+  if(!fileList.length)return;
+  showProgress('Processing Files…','Converting to PDF…',10);
+  
+  for(let i=0; i<fileList.length; i++){
+    const raw = fileList[i];
+    if(raw.size>20*1024*1024){showToast(`"${raw.name}" is over 20 MB — skipped.`,'warn');continue;}
+    
+    updateProgress((i/fileList.length)*100, `Processing ${raw.name}…`);
+    
+    const kind=kindOf(raw);
+    // Rename: StudentName - DocName.pdf
+    const newName = `${studentName} - ${cat}.pdf`;
+    
+    const entry={id:uid(),name:newName,originalName:raw.name,cat,size:raw.size,kind,rawFile:raw,pdfBytes:null,objectUrl:null,thumbUrl:null,pageCount:1};
+    
+    try {
+      // Automatic conversion for all types
+      let pdfBytes;
+      if(kind==='pdf'){
+        pdfBytes = await raw.arrayBuffer();
+      } else if(kind==='image'){
+        pdfBytes = await imageToPDF(entry);
+      } else if(kind==='text'){
+        pdfBytes = await textToPDF(entry);
+      } else {
+        pdfBytes = await genericToPDF(entry);
+      }
+      
+      entry.pdfBytes = pdfBytes;
+      entry.kind = 'pdf'; // Mark as PDF after conversion
+      const blob = new Blob([pdfBytes], {type:'application/pdf'});
+      entry.objectUrl = URL.createObjectURL(blob);
+      
+      const d=await pdfjsLib.getDocument({data:new Uint8Array(pdfBytes)}).promise;
+      entry.pageCount=d.numPages;
+      entry.thumbUrl=await generateThumb(entry);
+      state.files.push(entry);
+    } catch(err) {
+      console.error('Conversion error:', err);
+      showToast(`Failed to process "${raw.name}"`,'error');
+    }
+  }
+  hideProgress();
+  renderFileList();renderMergeList();updateStats();
+  // Reset other field
+  document.getElementById('otherCatName').value = '';
+}
 async function generateThumb(entry){
   const c=document.createElement('canvas');c.width=72;c.height=88;
   const ctx=c.getContext('2d');ctx.fillStyle='#f0f2f5';ctx.fillRect(0,0,72,88);
@@ -457,8 +502,8 @@ function renderFileList(){
     item.className='file-item'+(f.id===state.activeId?' active':'');
     item.onclick=()=>selectFile(f.id);
     const thumbHtml=f.thumbUrl?`<img src="${f.thumbUrl}" alt="">`:`<span style="font-size:20px;">${fileIcon(f.kind)}</span>`;
-    const pdfTag=(f.kind!=='pdf'&&f.pdfBytes)?`<span class="pdf-ready-tag">✓ PDF ready</span>`:'';
-    item.innerHTML=`<div class="file-thumb">${thumbHtml}</div><div class="file-info"><div class="file-name" title="${f.name}">${f.name}</div><div class="file-meta">${fmtSize(f.size)} · ${f.pageCount>1?f.pageCount+' pages':f.kind.toUpperCase()}</div><span class="file-cat">${f.cat}</span>${pdfTag}</div><div class="file-actions"><button class="btn-icon" title="Preview" onclick="event.stopPropagation();selectFile(${f.id})">👁</button><button class="btn-icon" title="Download" onclick="event.stopPropagation();downloadFile(${f.id})">⬇</button><button class="btn-icon danger" title="Remove" onclick="event.stopPropagation();removeFile(${f.id})">✕</button></div>`;
+    const pdfTag=f.pdfBytes?`<span class="pdf-ready-tag">✓ PDF</span>`:'';
+    item.innerHTML=`<div class="file-thumb">${thumbHtml}</div><div class="file-info"><div class="file-name" title="${f.name}">${f.name}</div><div class="file-meta">${f.originalName} · ${fmtSize(f.size)}</div><span class="file-cat">${f.cat}</span>${pdfTag}</div><div class="file-actions"><button class="btn-icon" title="Preview" onclick="event.stopPropagation();selectFile(${f.id})">👁</button><button class="btn-icon" title="Download" onclick="event.stopPropagation();downloadFile(${f.id})">⬇</button><button class="btn-icon danger" title="Remove" onclick="event.stopPropagation();removeFile(${f.id})">✕</button></div>`;
     el.appendChild(item);
   });
 }
@@ -482,10 +527,6 @@ async function selectFile(id){
   const bm={pdf:'badge-pdf',image:'badge-img',word:'badge-word',text:'badge-other',other:'badge-other'};
   document.getElementById('previewBadge').className='preview-badge '+(bm[f.kind]||'badge-other');
   document.getElementById('previewBadge').textContent=f.kind.toUpperCase();
-  const conv=document.getElementById('btnConvert');
-  if(f.kind==='pdf'){conv.disabled=true;conv.textContent='🔄 To PDF';}
-  else if(f.pdfBytes){conv.disabled=true;conv.textContent='✓ Converted';}
-  else{conv.disabled=false;conv.textContent='🔄 To PDF';}
   document.getElementById('btnDownload').disabled=false;
   document.getElementById('btnDownloadPdf').disabled=!(f.pdfBytes||f.kind==='pdf');
   await renderPreview(f);
@@ -493,16 +534,41 @@ async function selectFile(id){
 
 async function renderPreview(f){
   const area=document.getElementById('previewArea'),pageNav=document.getElementById('pageNav');
-  if(f.kind==='pdf'||f.pdfBytes){
-    const bytes=f.pdfBytes;if(!bytes){area.innerHTML=`<div class="preview-empty"><p>No PDF data.</p></div>`;return;}
-    try{showProgress('Loading PDF…','',15);state.pdfDoc=await pdfjsLib.getDocument({data:new Uint8Array(bytes)}).promise;state.totalPages=state.pdfDoc.numPages;state.currentPage=1;pageNav.style.display='flex';updateProgress(50);await renderPdfPage();hideProgress();}
-    catch(e){hideProgress();area.innerHTML=`<div class="preview-empty"><p>Error: ${escHtml(e.message)}</p></div>`;}
+  // Since we convert everything to PDF on upload, we can always use the PDF renderer
+  if(f.pdfBytes || f.kind==='pdf'){
+    const bytes=f.pdfBytes;
+    if(!bytes){
+      area.innerHTML=`<div class="preview-empty"><p>No PDF data available for preview.</p></div>`;
+      return;
+    }
+    try{
+      showProgress('Loading Preview…','',15);
+      state.pdfDoc=await pdfjsLib.getDocument({data:new Uint8Array(bytes)}).promise;
+      state.totalPages=state.pdfDoc.numPages;
+      state.currentPage=1;
+      pageNav.style.display='flex';
+      updateProgress(50);
+      await renderPdfPage();
+      hideProgress();
+    } catch(e){
+      console.error('PDF Preview Error:', e);
+      hideProgress();
+      area.innerHTML=`<div class="preview-empty"><p>Error loading preview: ${escHtml(e.message)}</p></div>`;
+    }
     return;
   }
-  if(f.kind==='image'){pageNav.style.display='none';state.pdfDoc=null;area.innerHTML=`<div class="preview-canvas-wrap"><img src="${f.objectUrl}" alt="${f.name}"></div>`;return;}
-  if(f.kind==='text'){pageNav.style.display='none';state.pdfDoc=null;const txt=await f.rawFile.text();area.innerHTML=`<div style="padding:18px;background:#fff;min-height:400px;overflow:auto;"><pre style="font-size:12px;color:var(--text);white-space:pre-wrap;word-break:break-word;line-height:1.75;">${escHtml(txt)}</pre></div>`;return;}
-  pageNav.style.display='none';state.pdfDoc=null;
-  area.innerHTML=`<div class="preview-empty"><div style="font-size:40px;">📝</div><p><strong>${f.name}</strong></p><p>Direct preview not available for this file type.</p><p style="margin-top:10px;"><button class="btn btn-navy" onclick="convertCurrentToPDF()" style="font-size:12px;">🔄 Convert to PDF to Preview</button></p></div>`;
+  
+  // Fallback for images if somehow not converted
+  if(f.kind==='image'){
+    pageNav.style.display='none';
+    state.pdfDoc=null;
+    area.innerHTML=`<div class="preview-canvas-wrap"><img src="${f.objectUrl}" alt="${f.name}" style="max-width:100%; height:auto;"></div>`;
+    return;
+  }
+  
+  pageNav.style.display='none';
+  state.pdfDoc=null;
+  area.innerHTML=`<div class="preview-empty"><div style="font-size:40px;">📝</div><p><strong>${f.name}</strong></p><p>Preview not available.</p></div>`;
 }
 
 async function renderPdfPage(){
@@ -624,8 +690,30 @@ async function submitPackage(){
   showProgress('Submitting documents…','Starting…',0);
   document.getElementById('submitBtn').disabled=true;
   const fileResults=[];let successCount=0;
+  let folderUrl = '';
 
   try{
+    // 1. Upload the generated form PDF first (if available in localStorage)
+    const formPdfData = localStorage.getItem('uk_visa_form_pdf');
+    if(formPdfData) {
+      const formPdf = JSON.parse(formPdfData);
+      const logRow=document.createElement('div');logRow.className='log-entry';
+      logRow.innerHTML=`<span class="log-icon">📄</span><span class="log-name">${formPdf.name}</span><span class="log-status pending" id="lsForm">Uploading…</span>`;
+      logEntries.prepend(logRow);
+      
+      const payload={action:'uploadFile',studentName,studentEmail,appRef,folderId:DRIVE_FOLDER_ID,fileName:formPdf.name,mimeType:'application/pdf',category:'Application Form',fileData:formPdf.base64};
+      try {
+        const resp = await fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+        const resJson = await resp.json();
+        if(resJson.status === 'success') {
+          document.getElementById('lsForm').textContent='✓ Saved';document.getElementById('lsForm').className='log-status ok';
+          fileResults.push({name:formPdf.name,category:'Application Form'});
+          folderUrl = resJson.folderUrl;
+        }
+      } catch(e) { console.warn('Form PDF upload failed:', e); }
+    }
+
+    // 2. Upload other documents
     for(let i=0;i<state.files.length;i++){
       const f=state.files[i];
       const logRow=document.createElement('div');logRow.className='log-entry';
@@ -634,16 +722,29 @@ async function submitPackage(){
       updateProgress((i/state.files.length)*75,`Uploading ${i+1} of ${state.files.length}: ${f.name}`);
 
       let uploadBytes,uploadName,uploadMime;
-      if(f.pdfBytes){uploadBytes=f.pdfBytes;uploadName=f.name.replace(/\.[^.]+$/,'')+'.pdf';uploadMime='application/pdf';}
-      else{uploadBytes=await f.rawFile.arrayBuffer();uploadName=f.name;uploadMime=f.rawFile.type||'application/octet-stream';}
+      if(f.pdfBytes){
+        uploadBytes=f.pdfBytes;
+        uploadName=f.name;
+        uploadMime='application/pdf';
+      } else {
+        uploadBytes=await f.rawFile.arrayBuffer();
+        uploadName=f.name;
+        uploadMime=f.rawFile.type||'application/octet-stream';
+      }
 
       const base64=arrayBufferToBase64(uploadBytes);
       const payload={action:'uploadFile',studentName,studentEmail,appRef,folderId:DRIVE_FOLDER_ID,fileName:uploadName,mimeType:uploadMime,category:f.cat,fileData:base64};
 
       try{
-        await fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),mode:'no-cors'});
-        document.getElementById('ls'+f.id).textContent='✓ Saved';document.getElementById('ls'+f.id).className='log-status ok';
-        fileResults.push({name:uploadName,category:f.cat});successCount++;
+        const resp = await fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+        const resJson = await resp.json();
+        if(resJson.status === 'success') {
+          document.getElementById('ls'+f.id).textContent='✓ Saved';document.getElementById('ls'+f.id).className='log-status ok';
+          fileResults.push({name:uploadName,category:f.cat});successCount++;
+          if(!folderUrl) folderUrl = resJson.folderUrl;
+        } else {
+          throw new Error(resJson.message);
+        }
       }catch(fetchErr){
         document.getElementById('ls'+f.id).textContent='✕ Failed';document.getElementById('ls'+f.id).className='log-status err';
         showToast(`Upload failed for "${f.name}": ${fetchErr.message}`,'error',5000);
@@ -651,7 +752,7 @@ async function submitPackage(){
     }
 
     updateProgress(80,'Sending summary email via Drive…');
-    try{await fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'submitSummary',studentName,studentEmail,appRef,fileList:fileResults}),mode:'no-cors'});}
+    try{await fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'submitSummary',studentName,studentEmail,appRef,fileList:fileResults,folderUrl:folderUrl})});}
     catch(e){console.warn('Summary GAS call:',e.message);}
 
     updateProgress(90,'Sending confirmation email…');
