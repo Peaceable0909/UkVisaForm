@@ -269,7 +269,7 @@ body{font-family:'DM Sans',sans-serif;background:#EDF1F7;color:var(--text);min-h
       <div class="panel-head"><span style="font-size:16px;">⬆</span><h2>Upload Documents</h2></div>
       <div class="panel-body">
         <div class="dropzone" id="dropzone">
-          <input type="file" id="fileInput" multiple accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.bmp,.doc,.docx,.txt">
+          <input type="file" id="fileInput" multiple>
           <div class="drop-icon">📄</div>
           <div class="drop-title">Drop files here or click to browse</div>
           <div class="drop-sub">PDF · JPG · PNG · WEBP · GIF · BMP · DOC/DOCX · TXT · Max 20 MB each</div>
@@ -442,7 +442,7 @@ async function handleFiles(fileList){
   
   for(let i=0; i<fileList.length; i++){
     const raw = fileList[i];
-    if(raw.size>20*1024*1024){showToast(`"${raw.name}" is over 20 MB — skipped.`,'warn');continue;}
+    if(raw.size>50*1024*1024){showToast(`"${raw.name}" is over 50 MB — skipped.`,'warn');continue;}
     
     updateProgress((i/fileList.length)*100, `Processing ${raw.name}…`);
     
