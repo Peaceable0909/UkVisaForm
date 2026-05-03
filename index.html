@@ -971,6 +971,17 @@ function _buildPDF(){
   const sanitize=s=>s.replace(/[^a-zA-Z\s-]/g,'').trim();
   const fname=(givenNames||familyName)?`${sanitize(givenNames)}${familyName?' '+sanitize(familyName):''} - Visa Application.pdf`:'uk_visa_application.pdf';
   doc.save(fname);
+  // Save to localStorage for the upload page
+  const reader = new FileReader();
+  reader.onloadend = function() {
+    const base64data = reader.result.split(',')[1];
+    localStorage.setItem('uk_visa_form_pdf', JSON.stringify({
+      name: fname,
+      base64: base64data
+    }));
+  };
+  reader.readAsDataURL(doc.output('blob'));
+  return { blob: doc.output('blob'), name: fname };
 }
 </script>
 </body>
