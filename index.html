@@ -1044,23 +1044,43 @@ function clearSignature(){
   if(statusText)statusText.textContent='Awaiting signature...';
   if(wrap)wrap.classList.remove('has-sig');
 }
-  window.addEventListener('load',()=>{
-    if(typeof SignaturePad!=='undefined')initSignaturePad();
-    else console.error('SignaturePad library failed to load');
+  // Auto-save name and email for transfer to Step 2
+  const saveStudentInfo = () => {
+    const gn = document.getElementById('givenNames').value || '';
+    const fn = document.getElementById('familyName').value || '';
+    const email = document.getElementById('email').value || '';
+    localStorage.setItem('studentFullName', (gn + ' ' + fn).trim());
+    localStorage.setItem('studentEmail', email);
+  };
 
-    // Auto-save name and email for transfer to Step 2
-    const saveData = () => {
-      const gn = document.getElementById('givenNames').value || '';
-      const fn = document.getElementById('familyName').value || '';
-      const email = document.getElementById('email').value || '';
-      localStorage.setItem('studentFullName', (gn + ' ' + fn).trim());
-      localStorage.setItem('studentEmail', email);
-    };
+  window.addEventListener('load',()=>{
+    if(typeof SignaturePad!=='undefined') {
+      initSignaturePad();
+      // Restore signature if it was saved
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try {
+          const formData = JSON.parse(saved);
+          if (formData._signature && window.signaturePad) {
+            window.signaturePad.fromDataURL(formData._signature);
+            document.getElementById('sigWatermark')?.classList.add('hidden');
+            document.getElementById('sigStatusDot')?.classList.add('active');
+            document.getElementById('sigStatusText') && (document.getElementById('sigStatusText').textContent = 'Signature captured');
+            document.getElementById('sigPadWrap')?.classList.add('has-sig');
+          }
+        } catch(e) {}
+      }
+    } else {
+      console.error('SignaturePad library failed to load');
+    }
 
     ['givenNames', 'familyName', 'email'].forEach(id => {
       const el = document.getElementById(id);
-      if(el) el.addEventListener('input', saveData);
+      if(el) el.addEventListener('input', saveStudentInfo);
     });
+    
+    // Initial save in case data is restored from auto-save
+    setTimeout(saveStudentInfo, 500);
   });
 
 /* ── PDF GENERATION ── */
