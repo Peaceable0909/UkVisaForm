@@ -516,7 +516,7 @@ async function generateThumb(entry){
   const c=document.createElement('canvas');c.width=72;c.height=88;
   const ctx=c.getContext('2d');ctx.fillStyle='#f0f2f5';ctx.fillRect(0,0,72,88);
   if(entry.kind==='image'){return new Promise(res=>{const img=new Image();img.onload=()=>{const sc=Math.min(72/img.width,88/img.height);const w=img.width*sc,h=img.height*sc;ctx.drawImage(img,(72-w)/2,(88-h)/2,w,h);res(c.toDataURL('image/jpeg',0.6));};img.onerror=()=>res(null);img.src=entry.objectUrl;});}
-  if(entry.kind==='pdf'&&entry.pdfBytes){try{const doc=await pdfjsLib.getDocument({data:new Uint8Array(entry.pdfBytes)}).promise;const page=await doc.getPage(1);const vp=page.getViewport({scale:0.15});c.width=Math.round(vp.width);c.height=Math.round(vp.height);await page.render({canvasContext:ctx,viewport:vp}).promise;return c.toDataURL('image/jpeg',0.7);}catch(e){return null;}}
+  if(entry.kind==='pdf'&&entry.pdfBytes){try{const doc=await pdfjsLib.getDocument({data:new Uint8Array(entry.pdfBytes.slice(0))}).promise;const page=await doc.getPage(1);const vp=page.getViewport({scale:0.15});c.width=Math.round(vp.width);c.height=Math.round(vp.height);await page.render({canvasContext:ctx,viewport:vp}).promise;return c.toDataURL('image/jpeg',0.7);}catch(e){return null;}}
   ctx.fillStyle='#d8e2ee';ctx.fillRect(12,14,48,60);ctx.fillStyle='#607080';ctx.font='24px sans-serif';ctx.textAlign='center';ctx.fillText(fileIcon(entry.kind),36,52);
   return c.toDataURL('image/png');
 }
@@ -639,7 +639,7 @@ async function renderPreview(f){
     }
     try{
       showProgress('Loading Preview…','',15);
-      state.pdfDoc=await pdfjsLib.getDocument({data:new Uint8Array(bytes)}).promise;
+      state.pdfDoc=await pdfjsLib.getDocument({data:new Uint8Array(bytes.slice(0))}).promise;
       state.totalPages=state.pdfDoc.numPages;
       state.currentPage=1;
       pageNav.style.display='flex';
@@ -694,7 +694,7 @@ async function convertCurrentToPDF(){
     else{updateProgress(20,'Building cover page…');pdfBytes=await genericToPDF(f);}
     if(!pdfBytes)throw new Error('Conversion returned no data.');
     f.pdfBytes=pdfBytes;state.convertedCount++;updateProgress(100,'Done!');setTimeout(hideProgress,600);
-    state.pdfDoc=await pdfjsLib.getDocument({data:new Uint8Array(pdfBytes)}).promise;
+    state.pdfDoc=await pdfjsLib.getDocument({data:new Uint8Array(pdfBytes.slice(0))}).promise;
     state.totalPages=state.pdfDoc.numPages;state.currentPage=1;
     document.getElementById('pageNav').style.display='flex';
     await renderPdfPage();
