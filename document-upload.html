@@ -394,6 +394,7 @@ body{font-family:'DM Sans',sans-serif;background:#EDF1F7;color:var(--text);min-h
     <button class="btn btn-gold" id="submitBtn" onclick="submitPackage()" style="padding:13px 24px;font-size:13.5px;">
       🚀&nbsp; Submit to Drive
     </button>
+    <button onclick="testConnection()" style="padding:8px 16px;font-size:12px;background:#f0f4f8;border:1px solid #ccc;border-radius:6px;cursor:pointer;margin-top:6px;width:100%;">🔌 Test Drive Connection</button>
     <div class="submit-note">Files are uploaded securely. Nothing is shared publicly.</div>
   </div>
 </div>
@@ -858,11 +859,21 @@ async function submitPackage(){
           fileResults.push({name:uploadName,category:f.cat,fileId:resJson.fileId});successCount++;
           if(!folderUrl) folderUrl = resJson.folderUrl;
         } else {
-          throw new Error(resJson.message);
+          const errMsg = resJson.message||'Unknown GAS error';
+          const logEl = document.getElementById('ls'+f.id);
+          if(logEl){ logEl.innerHTML=`<span style="color:#c0392b;font-size:11px;">✕ ${errMsg}</span>`; logEl.className='log-status err'; }
+          console.error('GAS error for',f.name,':',errMsg);
+          if(errMsg.toLowerCase().includes('access denied')||errMsg.toLowerCase().includes('drive')){
+            showToast('⚠️ Drive access denied — run testDriveAccess() in GAS editor and redeploy.','error',15000);
+          } else {
+            showToast(`Failed: ${errMsg}`,'error',8000);
+          }
         }
       }catch(fetchErr){
-        document.getElementById('ls'+f.id).textContent='✕ Failed';document.getElementById('ls'+f.id).className='log-status err';
-        showToast(`Upload failed for "${f.name}": ${fetchErr.message}`,'error',5000);
+        const errMsg = fetchErr.message||'Unknown error';
+        const logEl = document.getElementById('ls'+f.id);
+        if(logEl){ logEl.innerHTML=`<span style="color:#c0392b;font-size:11px;">✕ ${errMsg}</span>`; logEl.className='log-status err'; }
+        console.error('Upload error for',f.name,':',errMsg);
       }
     }
 
@@ -884,6 +895,30 @@ async function submitPackage(){
     showToast(`✓ ${successCount} of ${state.files.length} file(s) submitted. Confirmation sent to ${studentEmail}.`,'success',7000);
   }catch(err){hideProgress();showToast('Submission error: '+err.message,'error',6000);console.error(err);}
   finally{document.getElementById('submitBtn').disabled=false;}
+}
+
+async function testConnection(){
+  const btn = event.target;
+  btn.textContent = '⏳ Testing…'; btn.disabled = true;
+  try {
+    // Test GET first
+    const getResp = await fetch(GAS_URL);
+    const getText = await getResp.text();
+    let getJson;
+    try { getJson = JSON.parse(getText); } catch(e){ getJson = {status:'parse_error',raw:getText.slice(0,200)}; }
+    
+    // Test POST (uploadFile ping)
+    const postResp = await fetch(GAS_URL, {method:'POST', body: JSON.stringify({action:'ping'})});
+    const postText = await postResp.text();
+    let postJson;
+    try { postJson = JSON.parse(postText); } catch(e){ postJson = {status:'parse_error',raw:postText.slice(0,200)}; }
+
+    const msg = `GET: ${getJson.status||getJson.message||JSON.stringify(getJson).slice(0,80)}\nPOST: ${postJson.status||postJson.message||JSON.stringify(postJson).slice(0,80)}`;
+    alert('Connection Test Result:\n\n' + msg + '\n\nIf you see errors, the GAS script needs to be reauthorized and redeployed.');
+  } catch(err) {
+    alert('Connection FAILED:\n' + err.message + '\n\nCheck your GAS_URL in the HTML and that the script is deployed.');
+  }
+  btn.textContent = '🔌 Test Drive Connection'; btn.disabled = false;
 }
 
 function arrayBufferToBase64(buffer){const bytes=new Uint8Array(buffer);const CHUNK=8192;let binary='';for(let i=0;i<bytes.length;i+=CHUNK)binary+=String.fromCharCode.apply(null,bytes.subarray(i,i+CHUNK));return btoa(binary);}
