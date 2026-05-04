@@ -736,6 +736,142 @@ I currently hold the position of [Current Position Name] at [Current Company Nam
 <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/4.1.5/signature_pad.umd.min.js"></script>
 
 <script>
+/* ── AUTO-SAVE FUNCTIONALITY ── */
+const STORAGE_KEY = 'uk_visa_form_data';
+const SAVE_DELAY = 1000;
+let saveTimeout;
+
+function autoSaveForm() {
+  clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(() => {
+    const formData = {};
+    
+    // Save all input fields
+    document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="date"], textarea, select').forEach(el => {
+      if (el.id) formData[el.id] = el.value;
+    });
+    
+    // Save radio button selections
+    document.querySelectorAll('input[type="radio"]:checked').forEach(el => {
+      if (el.name) formData[el.name] = el.value;
+    });
+    
+    // Save checkbox selections
+    document.querySelectorAll('input[type="checkbox"]').forEach(el => {
+      if (el.id) formData[el.id] = el.checked;
+    });
+    
+    // Save section collapse states
+    const sectionStates = {};
+    document.querySelectorAll('[id^="body-"]').forEach(body => {
+      sectionStates[body.id] = body.classList.contains('hidden');
+    });
+    formData._sectionStates = sectionStates;
+    
+    // Save dynamic entry counts
+    formData._dependentCount = window.dependentCount || 0;
+    formData._travelIssueCount = window.travelIssueCount || 0;
+    formData._travelEntryCount = window.travelEntryCount || 0;
+    
+    // Save signature if exists
+    if (window.signaturePad && !window.signaturePad.isEmpty()) {
+      formData._signature = window.signaturePad.toDataURL('image/png');
+    }
+    
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+  }, SAVE_DELAY);
+}
+
+function restoreFormData() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (!saved) return;
+  
+  try {
+    const formData = JSON.parse(saved);
+    
+    // Restore all input fields
+    Object.keys(formData).forEach(key => {
+      if (key.startsWith('_')) return;
+      const el = document.getElementById(key);
+      if (!el) return;
+      
+      if (el.type === 'checkbox') {
+        el.checked = formData[key];
+      } else if (el.type === 'radio') {
+        // Handled separately
+      } else {
+        el.value = formData[key];
+      }
+    });
+    
+    // Restore radio selections
+    document.querySelectorAll('input[type="radio"]').forEach(el => {
+      if (el.name && formData[el.name]) {
+        el.checked = (el.value === formData[el.name]);
+      }
+    });
+    
+    // Restore section states
+    if (formData._sectionStates) {
+      Object.keys(formData._sectionStates).forEach(bodyId => {
+        const body = document.getElementById(bodyId);
+        if (body) {
+          const isHidden = formData._sectionStates[bodyId];
+          if (isHidden) {
+            body.classList.add('hidden');
+            body.previousElementSibling?.classList.add('collapsed');
+          } else {
+            body.classList.remove('hidden');
+            body.previousElementSibling?.classList.remove('collapsed');
+          }
+        }
+      });
+    }
+    
+    // Restore dynamic entries
+    if (formData._dependentCount > 0) {
+      const depRadio = document.querySelector('input[name="dependents"][value="Yes"]');
+      if (depRadio) depRadio.checked = true;
+      document.getElementById('dependentsSection').classList.remove('hidden');
+      for (let i = 0; i < formData._dependentCount; i++) {
+        addDependent();
+      }
+    }
+    
+    if (formData._travelIssueCount > 0) {
+      document.getElementById('travelIssueDetailsField').classList.remove('hidden');
+      for (let i = 0; i < formData._travelIssueCount; i++) {
+        addTravelIssueEntry();
+      }
+    }
+    
+    if (formData._travelEntryCount > 0) {
+      document.getElementById('otherTravelDetailsField').classList.remove('hidden');
+      for (let i = 0; i < formData._travelEntryCount; i++) {
+        addTravelEntry();
+      }
+    }
+    
+    // Trigger conditional field visibility
+    document.querySelectorAll('input[type="radio"]:checked').forEach(el => {
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    
+    updateProgress();
+  } catch (e) {
+    console.warn('Failed to restore form data:', e);
+  }
+}
+
+function clearFormData() {
+  localStorage.removeItem(STORAGE_KEY);
+}
+
+// Restore on page load
+window.addEventListener('load', () => {
+  setTimeout(restoreFormData, 100);
+});
+
 /* ── SECTION TOGGLE ── */
 function toggleSection(id){
   const body=document.getElementById('body-'+id);
@@ -743,6 +879,7 @@ function toggleSection(id){
   body.classList.toggle('hidden');
   header.classList.toggle('collapsed');
   updateProgress();
+  autoSaveForm();
 }
 
 /* ── PROGRESS ── */
@@ -752,6 +889,12 @@ function updateProgress(){
   document.getElementById('progressFill').style.width=Math.min(100,(open/bodies.length)*100)+'%';
 }
 updateProgress();
+
+// Setup auto-save listeners
+window.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('input', autoSaveForm);
+  document.addEventListener('change', autoSaveForm);
+});
 
 /* ── RADIO CONDITIONAL ── */
 function watchRadio(groupName,yesId,targetId){
@@ -787,16 +930,17 @@ function toggleDependents(show){
   const sec=document.getElementById('dependentsSection');
   if(show){sec.classList.remove('hidden');if(window.dependentCount===0)addDependent();}
   else{sec.classList.add('hidden');window.dependentCount=0;document.getElementById('dependentsList').innerHTML='';}
+  autoSaveForm();
 }
 function addDependent(){
   if(window.dependentCount>=5)return;
   window.dependentCount++;
   const n=window.dependentCount;
-  const div=document.createElement('div');
-  div.className='dynamic-entry';div.id='dep-'+n;
+  const div=document.createElement('div');div.className='dynamic-entry';div.id='dep-'+n;
   div.innerHTML=`<div class="dynamic-entry-header"><span class="dynamic-entry-title">Dependent ${n}</span><button class="btn-remove" onclick="removeEntry('dep-${n}')" type="button">&#10005; Remove</button></div><div class="field-grid"><div class="field"><label>Full Name</label><input type="text" id="dependent${n}Name" name="dependent${n}Name"></div><div class="field"><label>Date of Birth</label><input type="date" id="dependent${n}Dob" name="dependent${n}Dob"></div><div class="field"><label>Relationship to You</label><input type="text" id="dependent${n}Relationship" name="dependent${n}Relationship"></div><div class="field"><label>Passport Number</label><input type="text" id="dependent${n}Passport" name="dependent${n}Passport"></div><div class="field"><label>Country of Nationality</label><input type="text" id="dependent${n}Nationality" name="dependent${n}Nationality"></div><div class="field full"><label>Travelling with you to the UK?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="dependent${n}Travel" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="dependent${n}Travel" value="No"> No</label></div></div><div class="field full"><label>Currently lives with you?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="dependent${n}Live" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="dependent${n}Live" value="No"> No</label></div></div></div>`;
   document.getElementById('dependentsList').appendChild(div);
   document.getElementById('addDependentBtn').disabled=window.dependentCount>=5;
+  autoSaveForm();
 }
 
 /* ── TRAVEL ENTRIES ── */
@@ -814,6 +958,7 @@ function addTravelEntry(){
   div.innerHTML=`<div class="dynamic-entry-header"><span class="dynamic-entry-title">Travel Entry ${n}</span><button class="btn-remove" onclick="removeEntry('travel-${n}')" type="button">&#10005; Remove</button></div><div class="field-grid"><div class="field full"><label>Explanation</label><textarea id="travelEntry${n}Explain" name="travelEntry${n}Explain" style="min-height:80px"></textarea></div><div class="field"><label>Date</label><input type="date" id="travelEntry${n}Date" name="travelEntry${n}Date"></div></div>`;
   document.getElementById('travelEntriesList').appendChild(div);
   document.getElementById('addTravelEntryBtn').disabled=window.travelEntryCount>=5;
+  autoSaveForm();
 }
 
 /* ── TRAVEL ISSUE ENTRIES ── */
@@ -826,9 +971,10 @@ function addTravelIssueEntry(){
   div.innerHTML=`<div class="dynamic-entry-header"><span class="dynamic-entry-title">Issue Entry ${n}</span><button class="btn-remove" onclick="removeEntry('issue-${n}')" type="button">&#10005; Remove</button></div><div class="field-grid"><div class="field full"><label>Explanation</label><textarea id="travelIssue${n}Explain" name="travelIssue${n}Explain" style="min-height:80px"></textarea></div><div class="field"><label>Date of Incident</label><input type="date" id="travelIssue${n}Date" name="travelIssue${n}Date"></div></div>`;
   document.getElementById('travelIssuesList').appendChild(div);
   document.getElementById('addTravelIssueBtn').disabled=window.travelIssueCount>=5;
+  autoSaveForm();
 }
 
-function removeEntry(id){const el=document.getElementById(id);if(el)el.remove();}
+function removeEntry(id){const el=document.getElementById(id);if(el){el.remove();autoSaveForm();}}
 
 /* ── DOCUMENT DETAILS ── */
 const DOC_REQ={
