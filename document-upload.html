@@ -411,6 +411,14 @@ body{font-family:'DM Sans',sans-serif;background:#EDF1F7;color:var(--text);min-h
 pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
 emailjs.init(EJS_PUBLIC_KEY);
 
+// Auto-load student info from localStorage
+window.addEventListener('load', () => {
+  const savedName = localStorage.getItem('studentFullName');
+  const savedEmail = localStorage.getItem('studentEmail');
+  if (savedName) document.getElementById('studentNameTop').value = savedName;
+  if (savedEmail) document.getElementById('studentEmailTop').value = savedEmail;
+});
+
 const state={files:[],activeId:null,pdfDoc:null,currentPage:1,totalPages:1,zoom:1.0,convertedCount:0};
 let nextId=1,mergeOrder=[];
 
