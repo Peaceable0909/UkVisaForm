@@ -1044,10 +1044,24 @@ function clearSignature(){
   if(statusText)statusText.textContent='Awaiting signature...';
   if(wrap)wrap.classList.remove('has-sig');
 }
-window.addEventListener('load',()=>{
-  if(typeof SignaturePad!=='undefined')initSignaturePad();
-  else console.error('SignaturePad library failed to load');
-});
+  window.addEventListener('load',()=>{
+    if(typeof SignaturePad!=='undefined')initSignaturePad();
+    else console.error('SignaturePad library failed to load');
+
+    // Auto-save name and email for transfer to Step 2
+    const saveData = () => {
+      const gn = document.getElementById('givenNames').value || '';
+      const fn = document.getElementById('familyName').value || '';
+      const email = document.getElementById('email').value || '';
+      localStorage.setItem('studentFullName', (gn + ' ' + fn).trim());
+      localStorage.setItem('studentEmail', email);
+    };
+
+    ['givenNames', 'familyName', 'email'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.addEventListener('input', saveData);
+    });
+  });
 
 /* ── PDF GENERATION ── */
 window.generatePDF=function(){
