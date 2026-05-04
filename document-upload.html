@@ -494,6 +494,7 @@ async function handleFiles(fileList){
       }
       
       entry.pdfBytes = pdfBytes;
+      entry.uploadBytes = pdfBytes.slice(0); // dedicated copy — never passed to PDF.js/pdf-lib
       entry.kind = 'pdf'; // Mark as PDF after conversion
       const blob = new Blob([pdfBytes], {type:'application/pdf'});
       entry.objectUrl = URL.createObjectURL(blob);
@@ -693,7 +694,7 @@ async function convertCurrentToPDF(){
     else if(f.kind==='text'){updateProgress(20,'Typesetting text…');pdfBytes=await textToPDF(f);}
     else{updateProgress(20,'Building cover page…');pdfBytes=await genericToPDF(f);}
     if(!pdfBytes)throw new Error('Conversion returned no data.');
-    f.pdfBytes=pdfBytes;state.convertedCount++;updateProgress(100,'Done!');setTimeout(hideProgress,600);
+    f.pdfBytes=pdfBytes;f.uploadBytes=pdfBytes.slice(0);state.convertedCount++;updateProgress(100,'Done!');setTimeout(hideProgress,600);
     state.pdfDoc=await pdfjsLib.getDocument({data:new Uint8Array(pdfBytes.slice(0))}).promise;
     state.totalPages=state.pdfDoc.numPages;state.currentPage=1;
     document.getElementById('pageNav').style.display='flex';
@@ -745,15 +746,15 @@ async function mergeDocuments(){
   try{
     const{PDFDocument}=PDFLib;const merged=await PDFDocument.create();let done=0;
     for(const id of selected){
-      const f=state.files.find(x=>x.id===id);let bytes=f.pdfBytes;
-      if(!bytes){updateProgress(null,`Converting "${f.name}"…`);if(f.kind==='image')bytes=await imageToPDF(f);else if(f.kind==='text')bytes=await textToPDF(f);else bytes=await genericToPDF(f);f.pdfBytes=bytes;state.convertedCount++;}
-      const donor=await PDFDocument.load(bytes);const pages=await merged.copyPages(donor,donor.getPageIndices());pages.forEach(p=>merged.addPage(p));
+      const f=state.files.find(x=>x.id===id);let bytes=f.uploadBytes||f.pdfBytes;
+      if(!bytes){updateProgress(null,`Converting "${f.name}"…`);if(f.kind==='image')bytes=await imageToPDF(f);else if(f.kind==='text')bytes=await textToPDF(f);else bytes=await genericToPDF(f);f.pdfBytes=bytes;f.uploadBytes=bytes.slice(0);state.convertedCount++;}
+      const donor=await PDFDocument.load(new Uint8Array(bytes));const pages=await merged.copyPages(donor,donor.getPageIndices());pages.forEach(p=>merged.addPage(p));
       done++;updateProgress((done/selected.length)*88,`Merged ${done} of ${selected.length}…`);
     }
     updateProgress(95,'Saving…');const mergedBytes=await merged.save();updateProgress(100,'Done!');setTimeout(hideProgress,500);
     const blob=new Blob([mergedBytes],{type:'application/pdf'});const url=URL.createObjectURL(blob);
     const a=document.createElement('a');a.href=url;a.download='UK_Visa_Documents_Merged.pdf';a.click();setTimeout(()=>URL.revokeObjectURL(url),12000);
-    const me={id:uid(),name:'UK_Visa_Documents_Merged.pdf',cat:'Merged',size:mergedBytes.byteLength,kind:'pdf',rawFile:new File([mergedBytes],'UK_Visa_Documents_Merged.pdf',{type:'application/pdf'}),pdfBytes:mergedBytes,objectUrl:URL.createObjectURL(blob),thumbUrl:null,pageCount:merged.getPageCount()};
+    const me={id:uid(),name:'UK_Visa_Documents_Merged.pdf',cat:'Merged',size:mergedBytes.byteLength,kind:'pdf',rawFile:new File([mergedBytes],'UK_Visa_Documents_Merged.pdf',{type:'application/pdf'}),pdfBytes:mergedBytes,uploadBytes:mergedBytes.slice(0),objectUrl:URL.createObjectURL(blob),thumbUrl:null,pageCount:merged.getPageCount()};
     me.thumbUrl=await generateThumb(me);state.files.push(me);
     renderFileList();renderMergeList();updateStats();
     showToast(`Merged ${selected.length} docs → ${merged.getPageCount()} pages.`,'success',4500);
@@ -836,8 +837,8 @@ async function submitPackage(){
       updateProgress((i/state.files.length)*75,`Uploading ${i+1} of ${state.files.length}: ${f.name}`);
 
       let uploadBytes,uploadName,uploadMime;
-      if(f.pdfBytes){
-        uploadBytes=f.pdfBytes.slice(0); // copy to avoid detached ArrayBuffer
+      if(f.uploadBytes||f.pdfBytes){
+        uploadBytes=(f.uploadBytes||f.pdfBytes).slice(0);
         uploadName=`${studentName} - ${f.docType||f.cat}.pdf`;
         uploadMime='application/pdf';
       } else {
