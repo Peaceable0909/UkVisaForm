@@ -106,6 +106,10 @@ body{font-family:'DM Sans',sans-serif;background:#EDF1F7;color:var(--text);min-h
 .file-name{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .file-meta{font-size:10.5px;color:var(--muted);margin-top:2px;}
 .file-cat{font-size:9.5px;font-weight:600;padding:2px 7px;border-radius:999px;background:var(--accent-light);color:#7A5D20;}
+.fi-dtype-sel{width:100%;height:32px;padding:0 28px 0 9px;border:1.5px solid var(--border,#dde3ec);border-radius:6px;font-family:inherit;font-size:12px;font-weight:500;color:var(--text,#1a2535);background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237a7a7a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 9px center;appearance:none;-webkit-appearance:none;outline:none;transition:border-color .2s,background-color .2s;cursor:pointer}
+.fi-dtype-sel:focus{border-color:var(--primary,#1e5fa3);box-shadow:0 0 0 2px rgba(30,95,163,.1)}
+.fi-dtype-sel.labelled{border-color:#a3d4b5;background-color:#eef6f1}
+.fi-dtype-sel.unlabelled{border-color:#e8c84a;background-color:#fff8e0}
 .pdf-ready-tag{margin-left:5px;font-size:9.5px;color:var(--success);font-weight:600;}
 .file-actions{display:flex;flex-direction:column;gap:3px;}
 .btn-icon{background:none;border:1px solid var(--border);border-radius:5px;width:24px;height:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);transition:all .18s;}
@@ -474,7 +478,7 @@ async function handleFiles(fileList){
     // Rename: StudentName - DocName.pdf
     const newName = `${studentName} - ${cat}.pdf`;
     
-    const entry={id:uid(),name:newName,originalName:raw.name,cat,size:raw.size,kind,rawFile:raw,pdfBytes:null,objectUrl:null,thumbUrl:null,pageCount:1};
+    const entry={id:uid(),name:newName,originalName:raw.name,cat,docType:cat,size:raw.size,kind,rawFile:raw,pdfBytes:null,objectUrl:null,thumbUrl:null,pageCount:1};
     
     try {
       // Automatic conversion for all types
@@ -517,17 +521,85 @@ async function generateThumb(entry){
   return c.toDataURL('image/png');
 }
 
+// Per-file document type categories (visa-specific)
+const DOC_TYPE_OPTS = [
+  'Account Statement',
+  'International Passport Data Page',
+  'TB Test Certificate',
+  'BSc Certificate',
+  'HND Certificate',
+  'WAEC',
+  'NECO Certificate',
+  'BSc Transcript',
+  'HND Transcript',
+  'Employment Evidence',
+  'CAS',
+  'Evidence for CAS',
+  'Passport Photo',
+  'Birth Certificate',
+  'Marriage Certificate',
+  'Family Photos',
+  'Parental Consent',
+  'CV',
+  'IELTS',
+  'SOP',
+  'Reference Letter',
+  'Affidavit',
+  'Other',
+];
+
+function setDocType(id, val){
+  const f = state.files.find(x=>x.id===id);
+  if(!f) return;
+  f.docType = val;
+  // Update the file name to reflect new type
+  const studentName = document.getElementById('studentNameTop').value.trim() || 'Applicant';
+  f.name = `${studentName} - ${val}.pdf`;
+  // Style the select
+  const sel = document.getElementById('dtype-'+id);
+  if(sel){
+    sel.className = val ? 'fi-dtype-sel labelled' : 'fi-dtype-sel unlabelled';
+    // Update the name shown in the file row
+    const nameEl = document.getElementById('fname-'+id);
+    if(nameEl) nameEl.textContent = f.name;
+  }
+  updateStats();
+}
+
 function renderFileList(){
   const el=document.getElementById('fileList');
   if(!state.files.length){el.innerHTML=`<div style="text-align:center;padding:20px;color:var(--muted);font-size:12px;">No documents uploaded yet.<br>Drop files above to begin.</div>`;return;}
   el.innerHTML='';
+  const typeOpts = DOC_TYPE_OPTS.map(t=>`<option value="${t}">${t}</option>`).join('');
   state.files.forEach(f=>{
     const item=document.createElement('div');
     item.className='file-item'+(f.id===state.activeId?' active':'');
     item.onclick=()=>selectFile(f.id);
     const thumbHtml=f.thumbUrl?`<img src="${f.thumbUrl}" alt="">`:`<span style="font-size:20px;">${fileIcon(f.kind)}</span>`;
     const pdfTag=f.pdfBytes?`<span class="pdf-ready-tag">✓ PDF</span>`:'';
-    item.innerHTML=`<div class="file-thumb">${thumbHtml}</div><div class="file-info"><div class="file-name" title="${f.name}">${f.name}</div><div class="file-meta">${f.originalName} · ${fmtSize(f.size)}</div><span class="file-cat">${f.cat}</span>${pdfTag}</div><div class="file-actions"><button class="btn-icon" title="Preview" onclick="event.stopPropagation();selectFile(${f.id})">👁</button><!-- Download icon removed --><button class="btn-icon danger" title="Remove" onclick="event.stopPropagation();removeFile(${f.id})">✕</button></div>`;
+    const selClass = f.docType ? 'fi-dtype-sel labelled' : 'fi-dtype-sel unlabelled';
+    item.innerHTML=`
+      <div class="file-thumb">${thumbHtml}</div>
+      <div class="file-info" style="flex:1;min-width:0;">
+        <div class="file-name" id="fname-${f.id}" title="${f.name}">${f.name}</div>
+        <div class="file-meta">${f.originalName} · ${fmtSize(f.size)}</div>
+        <span class="file-cat">${f.cat}</span>${pdfTag}
+        <div style="margin-top:6px;">
+          <select id="dtype-${f.id}" class="${selClass}"
+            onclick="event.stopPropagation()"
+            onchange="event.stopPropagation();setDocType(${f.id},this.value)">
+            <option value="" disabled ${f.docType?'':'selected'}>— Confirm document type —</option>
+            ${typeOpts}
+          </select>
+        </div>
+      </div>
+      <div class="file-actions">
+        <button class="btn-icon" title="Preview" onclick="event.stopPropagation();selectFile(${f.id})">👁</button>
+        <button class="btn-icon danger" title="Remove" onclick="event.stopPropagation();removeFile(${f.id})">✕</button>
+      </div>`;
+    if(f.docType){
+      setTimeout(()=>{ const s=document.getElementById('dtype-'+f.id); if(s) s.value=f.docType; },0);
+    }
     el.appendChild(item);
   });
 }
@@ -713,6 +785,18 @@ async function submitPackage(){
   if(!studentName){showToast('Please enter your full name at the top first.','warn');return;}
   if(!studentEmail||!studentEmail.includes('@')){showToast('Please enter a valid email address at the top.','warn');return;}
   if(!state.files.length){showToast('Please upload at least one document first.','warn');return;}
+  // Validate all files have a confirmed document type
+  const unlabelled = state.files.filter(f=>!f.docType);
+  if(unlabelled.length > 0){
+    showToast(`Please confirm the document type for all ${state.files.length} file(s) before submitting.`,'warn',5000);
+    unlabelled.forEach(f=>{
+      const sel=document.getElementById('dtype-'+f.id);
+      if(sel){ sel.classList.add('unlabelled'); sel.style.borderColor='var(--warning,#e8c84a)'; }
+      const item=sel?.closest('.file-item');
+      if(item){ item.style.outline='2px solid #e8c84a'; setTimeout(()=>{item.style.outline='';},3000); }
+    });
+    return;
+  }
   if(!confirm(`Submit ${state.files.length} file(s) to Google Drive?\n\nName:  ${studentName}\nEmail: ${studentEmail}\nRef:   ${appRef}`))return;
 
   const logPanel=document.getElementById('uploadLog');const logEntries=document.getElementById('logEntries');
@@ -754,16 +838,16 @@ async function submitPackage(){
       let uploadBytes,uploadName,uploadMime;
       if(f.pdfBytes){
         uploadBytes=f.pdfBytes;
-        uploadName=f.name;
+        uploadName=`${studentName} - ${f.docType||f.cat}.pdf`;
         uploadMime='application/pdf';
       } else {
         uploadBytes=await f.rawFile.arrayBuffer();
-        uploadName=f.name;
+        uploadName=`${studentName} - ${f.docType||f.cat}.pdf`;
         uploadMime=f.rawFile.type||'application/octet-stream';
       }
 
       const base64=arrayBufferToBase64(uploadBytes);
-      const payload={action:'uploadFile',studentName,studentEmail,appRef,folderId:DRIVE_FOLDER_ID,fileName:uploadName,mimeType:uploadMime,category:f.cat,fileData:base64};
+      const payload={action:'uploadFile',studentName,studentEmail,appRef,folderId:DRIVE_FOLDER_ID,fileName:uploadName,mimeType:uploadMime,category:f.docType||f.cat,fileData:base64};
 
       try{
         const resp = await fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
