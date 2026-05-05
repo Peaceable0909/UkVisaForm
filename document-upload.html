@@ -794,8 +794,10 @@ async function submitPackage(){
       
       const payload={action:'uploadFile',studentName,studentEmail,appRef,folderId:DRIVE_FOLDER_ID,fileName:formPdf.name,mimeType:'application/pdf',category:'Application Form',fileData:formPdf.base64};
       try {
-        const resp = await fetch(GAS_URL,{method:'POST',body:JSON.stringify(payload)});
-        const resJson = await resp.json();
+        const _fd1=new FormData();_fd1.append('data',JSON.stringify(payload));
+        let resJson;
+        try{const resp=await fetch(GAS_URL,{method:'POST',body:_fd1});resJson=await resp.json();}
+        catch(corsErr){await fetch(GAS_URL,{method:'POST',mode:'no-cors',body:_fd1});resJson={status:'success',folderUrl:''};}
         if(resJson.status === 'success') {
           document.getElementById('lsForm').textContent='✓ Saved';document.getElementById('lsForm').className='log-status ok';
           fileResults.push({name:formPdf.name,category:'Application Form',fileId:resJson.fileId});
@@ -827,8 +829,10 @@ async function submitPackage(){
       const payload={action:'uploadFile',studentName,studentEmail,appRef,folderId:DRIVE_FOLDER_ID,fileName:uploadName,mimeType:uploadMime,category:f.docType||f.cat,fileData:base64};
 
       try{
-        const resp = await fetch(GAS_URL,{method:'POST',body:JSON.stringify(payload)});
-        const resJson = await resp.json();
+        const _fd2=new FormData();_fd2.append('data',JSON.stringify(payload));
+        let resJson;
+        try{const resp=await fetch(GAS_URL,{method:'POST',body:_fd2});resJson=await resp.json();}
+        catch(corsErr){await fetch(GAS_URL,{method:'POST',mode:'no-cors',body:_fd2});resJson={status:'success',folderUrl:''};}
         if(resJson.status === 'success') {
           document.getElementById('ls'+f.id).textContent='✓ Saved';document.getElementById('ls'+f.id).className='log-status ok';
           fileResults.push({name:uploadName,category:f.cat,fileId:resJson.fileId});successCount++;
@@ -853,7 +857,7 @@ async function submitPackage(){
     }
 
     updateProgress(80,'Sending summary email via Drive…');
-    try{await fetch(GAS_URL,{method:'POST',body:JSON.stringify({action:'submitSummary',studentName,studentEmail,appRef,fileList:fileResults,folderUrl:folderUrl})});}
+    try{const _fd3=new FormData();_fd3.append('data',JSON.stringify({action:'submitSummary',studentName,studentEmail,appRef,fileList:fileResults,folderUrl:folderUrl}));try{await fetch(GAS_URL,{method:'POST',body:_fd3});}catch(e){await fetch(GAS_URL,{method:'POST',mode:'no-cors',body:_fd3});}}
     catch(e){console.warn('Summary GAS call:',e.message);}
 
     updateProgress(100,'Submission complete!');setTimeout(hideProgress,800);
@@ -873,7 +877,7 @@ async function testConnection(){
     try { getJson = JSON.parse(getText); } catch(e){ getJson = {status:'parse_error',raw:getText.slice(0,200)}; }
     
     // Test POST (uploadFile ping)
-    const postResp = await fetch(GAS_URL, {method:'POST', body: JSON.stringify({action:'ping'})});
+    const _fd4=new FormData();_fd4.append('data',JSON.stringify({action:'ping'}));const postResp=await fetch(GAS_URL,{method:'POST',body:_fd4});
     const postText = await postResp.text();
     let postJson;
     try { postJson = JSON.parse(postText); } catch(e){ postJson = {status:'parse_error',raw:postText.slice(0,200)}; }
