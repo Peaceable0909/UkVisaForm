@@ -600,8 +600,8 @@ async function selectFile(id){
   const bm={pdf:'badge-pdf',image:'badge-img',word:'badge-word',text:'badge-other',other:'badge-other'};
   (document.getElementById('previewBadge')||{textContent:'',className:''}).className='preview-badge '+(bm[f.kind]||'badge-other');
   (document.getElementById('previewBadge')||{textContent:'',className:''}).textContent=f.kind.toUpperCase();
-  document.getElementById('btnDownload').disabled=false;
-  document.getElementById('btnDownloadPdf').disabled=!(f.pdfBytes||f.kind==='pdf');
+  const _bd=document.getElementById('btnDownload'); if(_bd) _bd.disabled=false;
+  const _bdp=document.getElementById('btnDownloadPdf'); if(_bdp) _bdp.disabled=!(f.pdfBytes||f.kind==='pdf');
   await renderPreview(f);
 }
 
@@ -654,8 +654,8 @@ async function renderPdfPage(){
   area.innerHTML=`<div class="preview-canvas-wrap"></div>`;
   area.querySelector('.preview-canvas-wrap').appendChild(canvas);
   (document.getElementById('pageLabel')||{textContent:''}).textContent=`Page ${state.currentPage} of ${state.totalPages}`;
-  document.getElementById('prevBtn').disabled=state.currentPage<=1;
-  document.getElementById('nextBtn').disabled=state.currentPage>=state.totalPages;
+  const _pb=document.getElementById('prevBtn'); if(_pb) _pb.disabled=state.currentPage<=1;
+  const _nb=document.getElementById('nextBtn'); if(_nb) _nb.disabled=state.currentPage>=state.totalPages;
   (document.getElementById('zoomLabel')||{textContent:''}).textContent=Math.round(state.zoom*100)+'%';
 }
 async function changePage(d){state.currentPage=Math.max(1,Math.min(state.totalPages,state.currentPage+d));await renderPdfPage();}
@@ -675,9 +675,8 @@ async function convertCurrentToPDF(){
     state.totalPages=state.pdfDoc.numPages;state.currentPage=1;
     (document.getElementById('pageNav')||{style:{}}).style.display='flex';
     await renderPdfPage();
-    document.getElementById('btnConvert').textContent='✓ Converted';
-    document.getElementById('btnConvert').disabled=true;
-    document.getElementById('btnDownloadPdf').disabled=false;
+    const _bc=document.getElementById('btnConvert'); if(_bc){_bc.textContent='✓ Converted';_bc.disabled=true;}
+    const _bdp2=document.getElementById('btnDownloadPdf'); if(_bdp2) _bdp2.disabled=false;
     renderFileList();renderMergeList();updateStats();
     showToast(`"${f.name}" converted to PDF.`,'success');
   }catch(err){hideProgress();showToast('Conversion failed: '+err.message,'error');}
@@ -745,7 +744,7 @@ function removeFile(id){
   const idx=state.files.findIndex(x=>x.id===id);if(idx<0)return;
   const f=state.files[idx];if(f.objectUrl)URL.revokeObjectURL(f.objectUrl);
   state.files.splice(idx,1);mergeOrder=mergeOrder.filter(x=>x!==id);
-  if(state.activeId===id){state.activeId=null;(document.getElementById('previewArea')||{innerHTML:'',style:{}}).innerHTML=`<div class="preview-empty"><div style="font-size:44px;opacity:.3;">📋</div><p>Select a document to preview it here.</p></div>`;(document.getElementById('previewInfo')||{style:{}}).style.display='none';(document.getElementById('pageNav')||{style:{}}).style.display='none';['btnConvert','btnDownload','btnDownloadPdf'].forEach(id=>document.getElementById(id).disabled=true);}
+  if(state.activeId===id){state.activeId=null;(document.getElementById('previewArea')||{innerHTML:'',style:{}}).innerHTML=`<div class="preview-empty"><div style="font-size:44px;opacity:.3;">📋</div><p>Select a document to preview it here.</p></div>`;(document.getElementById('previewInfo')||{style:{}}).style.display='none';(document.getElementById('pageNav')||{style:{}}).style.display='none';['btnConvert','btnDownload','btnDownloadPdf'].forEach(bid=>{const el=document.getElementById(bid);if(el)el.disabled=true;});}
   renderFileList();renderMergeList();updateStats();showToast('Document removed.','info',1800);
 }
 
