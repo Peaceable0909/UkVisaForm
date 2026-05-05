@@ -277,8 +277,15 @@ body{font-family:'DM Sans',sans-serif;background:#EDF1F7;color:var(--text);min-h
             <input type="email" id="studentEmailTop" placeholder="e.g. john@example.com" style="padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 7px; font-size: 13px;">
           </div>
           <div class="field full" style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 4px; margin-top: 8px;">
-            <label style="font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase;">Application Reference (Optional)</label>
-            <input type="text" id="appRefTop" placeholder="e.g. GWF-12345678" style="padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 7px; font-size: 13px;">
+            <label style="font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase;">Visa Type *</label>
+            <select id="appRefTop" style="padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 7px; font-size: 13px; background:#fff;">
+              <option value="">— Select Visa Type —</option>
+              <option value="Student">Student</option>
+              <option value="Dependant">Dependant</option>
+              <option value="Partner Dependant">Partner Dependant</option>
+              <option value="Visiting">Visiting</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
         </div>
       </div>
@@ -745,7 +752,8 @@ function removeFile(id){
 async function submitPackage(){
   const studentName=document.getElementById('studentNameTop').value.trim();
   const studentEmail=document.getElementById('studentEmailTop').value.trim();
-  const appRef=document.getElementById('appRefTop').value.trim()||'N/A';
+  const appRef=document.getElementById('appRefTop').value.trim();
+  if(!appRef){showToast('Please select a visa type before submitting.','error',5000);return;}
   
   // Sync with hidden fields just in case
   document.getElementById('studentName').value = studentName;
@@ -767,7 +775,7 @@ async function submitPackage(){
     });
     return;
   }
-  if(!confirm(`Submit ${state.files.length} file(s) to Google Drive?\n\nName:  ${studentName}\nEmail: ${studentEmail}\nRef:   ${appRef}`))return;
+  if(!confirm(`Submit ${state.files.length} file(s) to Google Drive?\n\nName:  ${studentName}\nEmail: ${studentEmail}\nType:  ${appRef}`))return;
 
   const logPanel=document.getElementById('uploadLog');const logEntries=document.getElementById('logEntries');
   logPanel.style.display='block';logEntries.innerHTML='';logPanel.scrollIntoView({behavior:'smooth',block:'nearest'});
