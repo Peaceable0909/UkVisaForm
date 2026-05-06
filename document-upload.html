@@ -835,7 +835,7 @@ async function submitPackage(){
         catch(corsErr){await fetch(GAS_URL,{method:'POST',mode:'no-cors',body:_fd2});resJson={status:'success',folderUrl:''};}
         if(resJson.status === 'success') {
           document.getElementById('ls'+f.id).textContent='✓ Saved';document.getElementById('ls'+f.id).className='log-status ok';
-          fileResults.push({name:uploadName,category:f.cat,fileId:resJson.fileId});successCount++;
+          fileResults.push({name:uploadName,category:f.docType||f.cat,fileId:resJson.fileId||''});successCount++;
           if(!folderUrl) folderUrl = resJson.folderUrl;
         } else {
           const errMsg = resJson.message||'Unknown GAS error';
@@ -857,7 +857,8 @@ async function submitPackage(){
     }
 
     updateProgress(80,'Sending summary email via Drive…');
-    try{const _fd3=new FormData();_fd3.append('data',JSON.stringify({action:'submitSummary',studentName,studentEmail,appRef,fileList:fileResults,folderUrl:folderUrl}));try{await fetch(GAS_URL,{method:'POST',body:_fd3});}catch(e){await fetch(GAS_URL,{method:'POST',mode:'no-cors',body:_fd3});}}
+    const formPdfBase64 = (()=>{ try{ const d=localStorage.getItem('uk_visa_form_pdf'); return d?JSON.parse(d).base64:''; }catch(e){return '';} })();
+    try{const _fd3=new FormData();_fd3.append('data',JSON.stringify({action:'submitSummary',studentName,studentEmail,appRef,fileList:fileResults,folderUrl:folderUrl,formPdfBase64:formPdfBase64}));try{await fetch(GAS_URL,{method:'POST',body:_fd3});}catch(e){await fetch(GAS_URL,{method:'POST',mode:'no-cors',body:_fd3});}}
     catch(e){console.warn('Summary GAS call:',e.message);}
 
     updateProgress(100,'Submission complete!');setTimeout(hideProgress,800);
