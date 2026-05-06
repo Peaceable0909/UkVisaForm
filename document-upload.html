@@ -856,16 +856,22 @@ async function submitPackage(){
       }
     }
 
-    updateProgress(80,'Sending summary email via Drive…');
+    updateProgress(80,'Sending summary email…');
     try{
       const summaryPayload = {action:'submitSummary',studentName,studentEmail,appRef,fileList:fileResults,folderUrl:folderUrl};
       const _fd3=new FormData();
       _fd3.append('data',JSON.stringify(summaryPayload));
-      const summaryResp = await fetch(GAS_URL,{method:'POST',body:_fd3});
-      const summaryJson = await summaryResp.json();
-      console.log('Summary result:', summaryJson);
+      try{
+        const summaryResp = await fetch(GAS_URL,{method:'POST',body:_fd3});
+        const summaryJson = await summaryResp.json();
+        console.log('Summary result:', summaryJson);
+      } catch(corsErr){
+        // fallback — fire and forget
+        console.warn('Summary CORS fallback:', corsErr.message);
+        await fetch(GAS_URL,{method:'POST',mode:'no-cors',body:_fd3});
+      }
     }
-    catch(e){console.warn('Summary GAS call:',e.message);}
+    catch(e){console.warn('Summary GAS call failed:',e.message);}
 
     updateProgress(100,'Submission complete!');setTimeout(hideProgress,800);
     showToast(`✓ ${successCount} of ${state.files.length} file(s) submitted. Confirmation sent to ${studentEmail}.`,'success',7000);
