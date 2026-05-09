@@ -6,11 +6,15 @@
 <title>UK Visa — Document Upload & Manager</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
 <script>
 const GAS_URL         = 'https://script.google.com/macros/s/AKfycbwyIeL5PhQ6kTLsUUmdAoNn61PLa2p2uzGbXbmWtzKEo2FoYKNu-sCwQBDzbph4jlsN/exec';
 const DRIVE_FOLDER_ID = '1HZm7ac9QayGNV1na6ZS-rOa8uI8hG17z';
 const ADVISOR_EMAIL   = 'applications.whiterock@gmail.com';
+const EJS_KEY         = 'YdC-Vo2Q6n8q8imVs';
+const EJS_SERVICE     = 'service_3jy0jkk';
+const EJS_TEMPLATE    = 'template_01ws52q';
 </script>
 <style>
 :root{
@@ -389,6 +393,7 @@ body{font-family:'DM Sans',sans-serif;background:#EDF1F7;color:var(--text);min-h
 
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+emailjs.init(EJS_KEY);
 // EmailJS removed — GAS handles emails
 
 // Auto-load student info from localStorage
@@ -856,22 +861,21 @@ async function submitPackage(){
       }
     }
 
-    updateProgress(80,'Sending summary email…');
+    updateProgress(80,'Sending confirmation email…');
     try{
-      const summaryPayload = {action:'submitSummary',studentName,studentEmail,appRef,fileList:fileResults,folderUrl:folderUrl};
-      const _fd3=new FormData();
-      _fd3.append('data',JSON.stringify(summaryPayload));
-      try{
-        const summaryResp = await fetch(GAS_URL,{method:'POST',body:_fd3});
-        const summaryJson = await summaryResp.json();
-        console.log('Summary result:', summaryJson);
-      } catch(corsErr){
-        // fallback — fire and forget
-        console.warn('Summary CORS fallback:', corsErr.message);
-        await fetch(GAS_URL,{method:'POST',mode:'no-cors',body:_fd3});
-      }
-    }
-    catch(e){console.warn('Summary GAS call failed:',e.message);}
+      const fileListText = fileResults.map((f,i)=>`${i+1}. ${f.name} [${f.category}]`).join('\n');
+      await emailjs.send(EJS_SERVICE, EJS_TEMPLATE, {
+        to_name:        studentName,
+        to_email:       studentEmail,
+        advisor_email:  ADVISOR_EMAIL,
+        visa_type:      appRef,
+        file_count:     fileResults.length,
+        file_list:      fileListText,
+        folder_url:     folderUrl || 'N/A',
+        submit_date:    new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'})
+      });
+      console.log('EmailJS sent OK');
+    } catch(ejsErr){ console.warn('EmailJS error:', ejsErr); }
 
     updateProgress(100,'Submission complete!');setTimeout(hideProgress,800);
     showToast(`✓ ${successCount} of ${state.files.length} file(s) submitted. Confirmation sent to ${studentEmail}.`,'success',7000);
