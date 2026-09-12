@@ -5,427 +5,428 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UK Visa Application Portal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+</script>
 <style>
-  :root{
-    --ink:#0B1220;
-    --ink-2:#121B2E;
-    --parchment:#F6F1E4;
-    --parchment-dim:#CFC9BA;
-    --brick:#B4432F;
-    --teal:#2C6E68;
-    --gold:#B98A46;
-    --line: rgba(246,241,228,0.16);
-    --line-soft: rgba(246,241,228,0.08);
-  }
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-  html{scroll-behavior:smooth;}
-  body{
-    background:var(--ink); color:var(--parchment);
-    font-family:'Work Sans',sans-serif; font-weight:400;
-    overflow-x:hidden; -webkit-font-smoothing:antialiased;
-  }
-  h1,h2,h3,.serif{ font-family:'Fraunces',serif; font-weight:500; letter-spacing:-0.01em; }
-  a{ color:inherit; }
-  ::selection{ background:var(--gold); color:var(--ink); }
+:root {
+  --navy: #0D1B2A; --royal: #1A3A5C; --blue: #1E5FA3;
+  --accent: #C8A96E; --accent-light: #F0E6D3;
+  --surface: #FFFFFF; --surface-2: #F6F8FB; --border: #D8E2EE;
+  --text: #1A2535; --text-muted: #607080;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', sans-serif; background: #EDF1F7;
+  color: var(--text); min-height: 100vh; padding: 48px 16px 80px;
+  overflow-x: hidden;
+}
 
-  /* ───────── GRAIN TEXTURE ───────── */
-  .grain{
-    position:fixed; inset:0; z-index:1; pointer-events:none; opacity:0.05; mix-blend-mode:overlay;
-  }
+/* ───────── FIXED 3D BACKGROUND ───────── */
+#bg3d { position: fixed; inset: 0; z-index: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
+.vignette {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(13,27,42,0.10) 100%);
+}
 
-  /* ───────── HERO ───────── */
-  .hero{
-    position:relative; min-height:100svh; display:flex; flex-direction:column;
-    align-items:center; justify-content:center; text-align:center;
-    padding:120px 24px 80px; overflow:hidden;
-  }
-  .hero-arcs{ position:absolute; inset:0; z-index:0; opacity:0.5; }
-  .hero-arcs svg{ width:100%; height:100%; }
-  .compass{
-    position:absolute; top:8%; right:6%; width:min(220px,26vw); height:min(220px,26vw);
-    opacity:0.35; animation:spin 90s linear infinite;
-  }
-  @keyframes spin{ to{ transform:rotate(360deg); } }
+/* ───────── SCROLL PROGRESS ───────── */
+#progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 60; background: rgba(13,27,42,0.06); }
+#progress .fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--navy), var(--blue), var(--accent));
+  box-shadow: 0 0 10px rgba(200,169,110,0.6);
+}
 
-  .hero-stamp{ position:relative; width:150px; height:150px; margin-bottom:34px; z-index:2; }
-  .hero-stamp svg{ width:100%; height:100%; }
-  .stamp-ring-text{ font-family:'Work Sans',sans-serif; font-size:7.4px; font-weight:600; letter-spacing:0.14em; fill:var(--gold); text-transform:uppercase; }
-  .stamp-center{ fill:none; stroke:var(--gold); }
-  .stamp-outer{ fill:none; stroke:var(--gold); }
+main { position: relative; z-index: 2; }
 
-  .hero-title{
-    font-size:clamp(2.4rem, 6vw, 4.6rem); line-height:1.05; max-width:16ch;
-    z-index:2; font-style:italic; font-weight:500;
-  }
-  .hero-sub{
-    margin-top:22px; max-width:46ch; font-size:clamp(1rem,1.6vw,1.15rem);
-    color:var(--parchment-dim); line-height:1.65; z-index:2;
-  }
-  .scroll-cue{
-    position:absolute; bottom:38px; left:50%; transform:translateX(-50%);
-    display:flex; flex-direction:column; align-items:center; gap:10px;
-    font-size:11px; letter-spacing:0.14em; color:var(--parchment-dim); z-index:2;
-  }
-  .scroll-cue .track{ width:1px; height:46px; background:var(--line); position:relative; overflow:hidden; }
-  .scroll-cue .dot{ position:absolute; top:0; left:-1.5px; width:4px; height:4px; border-radius:50%; background:var(--gold); animation:travel 2.2s ease-in-out infinite; }
-  @keyframes travel{ 0%{ top:-6px; opacity:0; } 20%{ opacity:1; } 90%{ opacity:1; } 100%{ top:100%; opacity:0; } }
+.hero { max-width: 900px; margin: 0 auto 44px; text-align: center; }
+.crest {
+  width: 62px; height: 62px; background: var(--navy); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; margin: 0 auto 18px;
+  box-shadow: 0 10px 30px rgba(13,27,42,0.28), 0 0 0 6px rgba(200,169,110,0.14);
+  transition: transform .3s ease;
+}
+.crest:hover { transform: rotate(-8deg) scale(1.06); }
+.crest svg { width: 36px; height: 36px; }
+.hero h1 {
+  font-family: 'Playfair Display', serif; font-size: 30px; color: var(--navy);
+  letter-spacing: 0.01em; margin-bottom: 10px;
+}
+.hero p { font-size: 14.5px; color: var(--text-muted); max-width: 560px; margin: 0 auto; line-height: 1.7; }
 
-  /* ───────── SECTION INTRO ───────── */
-  .section-intro{ max-width:680px; margin:0 auto; padding:140px 24px 40px; text-align:center; position:relative; z-index:2; }
-  .section-intro h2{ font-size:clamp(1.8rem,3.6vw,2.6rem); font-style:italic; }
-  .section-intro p{ margin-top:16px; color:var(--parchment-dim); font-size:1.02rem; line-height:1.7; }
+.cards {
+  max-width: 1040px; margin: 0 auto; display: grid;
+  grid-template-columns: repeat(3, 1fr); gap: 22px;
+  perspective: 1400px;
+}
+.card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+  overflow: hidden; box-shadow: 0 2px 16px rgba(13,27,42,0.06);
+  display: flex; flex-direction: column;
+  transform-style: preserve-3d; will-change: transform;
+  transition: transform .18s ease-out, box-shadow .25s ease;
+  animation: card-float 7s ease-in-out infinite;
+}
+.card:nth-child(2) { animation-delay: -2.3s; }
+.card:nth-child(3) { animation-delay: -4.6s; }
+@keyframes card-float {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -7px; }
+}
+.card:hover { box-shadow: 0 18px 44px rgba(13,27,42,0.18); }
+.card-top {
+  padding: 30px 26px 22px; background: linear-gradient(135deg, var(--navy) 0%, var(--royal) 100%);
+  text-align: center; position: relative; overflow: hidden;
+}
+.card-top::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 80% -20%, rgba(200,169,110,0.28), transparent 55%);
+  pointer-events: none;
+}
+.card-icon {
+  width: 56px; height: 56px; border-radius: 14px; background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(200,169,110,0.35);
+  display: flex; align-items: center; justify-content: center; margin: 0 auto 14px;
+  font-size: 26px; transform: translateZ(30px);
+}
+.card-top h2 {
+  font-family: 'Playfair Display', serif; font-size: 19px; color: #fff; margin-bottom: 6px;
+  transform: translateZ(24px);
+}
+.card-top .tag {
+  display: inline-block; font-size: 10.5px; font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--accent); background: rgba(200,169,110,0.12);
+  border: 1px solid rgba(200,169,110,0.35); padding: 3px 10px; border-radius: 999px;
+  transform: translateZ(20px);
+}
+.card-body { padding: 22px 26px 26px; flex: 1; display: flex; flex-direction: column; }
+.card-body p { font-size: 13px; color: var(--text-muted); line-height: 1.65; margin-bottom: 16px; }
+.card-body ul { list-style: none; margin-bottom: 20px; flex: 1; }
+.card-body ul li {
+  font-size: 12.5px; color: var(--text); padding: 6px 0 6px 22px; position: relative; line-height: 1.5;
+}
+.card-body ul li::before {
+  content: '✓'; position: absolute; left: 0; top: 6px; color: var(--blue); font-weight: 700; font-size: 12px;
+}
+.btn-start {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: linear-gradient(135deg, var(--navy), var(--blue)); color: #fff;
+  padding: 13px 18px; border-radius: 10px; font-weight: 600; font-size: 13.5px;
+  text-decoration: none; box-shadow: 0 4px 14px rgba(13,27,42,0.22);
+  transition: transform .2s, box-shadow .2s, filter .2s;
+}
+.btn-start:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(13,27,42,0.32); filter: brightness(1.12); }
 
-  /* ───────── PATHWAYS ───────── */
-  #pathways{ position:relative; padding-bottom:60px; }
-  .flight-line-wrap{ position:absolute; left:50%; top:0; bottom:0; width:2px; transform:translateX(-50%); z-index:1; pointer-events:none; }
-  .flight-line-wrap svg{ position:absolute; top:0; left:50%; transform:translateX(-50%); height:100%; overflow:visible; }
-  .flight-marker{ position:absolute; left:50%; top:0; width:26px; height:26px; transform:translate(-50%,-50%); z-index:2; }
-  .flight-marker svg{ width:100%; height:100%; filter:drop-shadow(0 0 6px rgba(185,138,70,0.6)); }
+.footer-note {
+  max-width: 900px; margin: 40px auto 0; text-align: center;
+  font-size: 11.5px; color: var(--text-muted); line-height: 1.7;
+}
+.footer-note a { color: var(--blue); text-decoration: none; font-weight: 600; }
+.footer-note a:hover { text-decoration: underline; }
 
-  .pathway-panel{
-    position:relative; z-index:2; display:grid; grid-template-columns:0.85fr 1.15fr; gap:6vw;
-    align-items:center; max-width:1180px; margin:0 auto; padding:100px 24px;
-    border-top:1px solid var(--line-soft);
-  }
-  .pathway-panel:first-of-type{ border-top:none; }
-  .pathway-panel.reverse{ direction:rtl; }
-  .pathway-panel.reverse > *{ direction:ltr; }
-
-  .pathway-visual{ display:flex; align-items:center; justify-content:center; position:relative; }
-  .pathway-visual .stamp-circle{ width:min(230px,60vw); height:min(230px,60vw); }
-  .pathway-visual .icon-badge{
-    position:absolute; width:52px; height:52px; border-radius:50%;
-    background:var(--ink-2); border:1px solid var(--line); display:flex;
-    align-items:center; justify-content:center;
-  }
-  .pathway-student .icon-badge{ top:6%; right:8%; }
-  .pathway-dependant .icon-badge{ bottom:8%; left:4%; }
-  .pathway-visitor .icon-badge{ top:10%; left:2%; }
-
-  .pathway-content .stamp-label{
-    display:inline-flex; align-items:center; gap:8px; font-size:11.5px; letter-spacing:0.14em;
-    text-transform:uppercase; color:var(--accent-c); margin-bottom:16px; font-weight:600;
-  }
-  .pathway-content .stamp-label::before{ content:''; width:22px; height:1px; background:var(--accent-c); }
-  .pathway-content h3{ font-size:clamp(1.9rem,3.4vw,2.6rem); margin-bottom:16px; }
-  .pathway-content p.desc{ color:var(--parchment-dim); font-size:1.02rem; line-height:1.7; max-width:46ch; }
-  .pathway-content ul{ list-style:none; margin:26px 0 32px; display:flex; flex-direction:column; gap:10px; }
-  .pathway-content li{ font-size:0.94rem; padding-left:22px; position:relative; color:var(--parchment); }
-  .pathway-content li::before{ content:''; position:absolute; left:0; top:8px; width:8px; height:1px; background:var(--accent-c); }
-
-  .btn-boarding{
-    display:inline-flex; align-items:center; gap:14px; padding:15px 26px 15px 20px;
-    background:transparent; border:1.5px solid var(--accent-c); border-radius:2px;
-    color:var(--parchment); text-decoration:none; font-size:0.92rem; font-weight:600;
-    position:relative; transition:background .25s ease, color .25s ease;
-  }
-  .btn-boarding::after{
-    content:''; position:absolute; right:-1px; top:50%; width:12px; height:12px;
-    background:var(--ink); border:1.5px solid var(--accent-c); border-radius:50%;
-    transform:translate(50%,-50%);
-  }
-  .btn-boarding:hover{ background:var(--accent-c); color:var(--ink); }
-
-  .pathway-student{ --accent-c:var(--teal); }
-  .pathway-dependant{ --accent-c:var(--brick); }
-  .pathway-visitor{ --accent-c:var(--gold); }
-
-  /* ───────── HOW IT WORKS ───────── */
-  #how{ padding:80px 24px 130px; max-width:1080px; margin:0 auto; position:relative; z-index:2; }
-  .boarding-strip{
-    display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--line);
-    border-radius:4px; overflow:hidden;
-  }
-  .strip-step{
-    padding:40px 30px; position:relative; border-left:1px dashed var(--line);
-  }
-  .strip-step:first-child{ border-left:none; }
-  .strip-step .num{ font-family:'Fraunces',serif; font-style:italic; font-size:2.6rem; color:var(--gold); line-height:1; }
-  .strip-step h4{ font-family:'Fraunces',serif; font-weight:500; font-size:1.2rem; margin:18px 0 10px; }
-  .strip-step p{ font-size:0.92rem; color:var(--parchment-dim); line-height:1.6; }
-  .strip-step::after{
-    content:''; position:absolute; top:0; bottom:0; right:-7px; width:14px;
-    background-image:radial-gradient(circle,var(--ink) 3px,transparent 3.5px);
-    background-size:14px 20px; background-repeat:repeat-y;
-  }
-  .strip-step:last-child::after{ display:none; }
-
-  /* ───────── FOOTER CTA ───────── */
-  #cta-footer{
-    text-align:center; padding:60px 24px 90px; position:relative; z-index:2;
-  }
-  #cta-footer h2{ font-size:clamp(2rem,4.4vw,3.2rem); font-style:italic; margin-bottom:34px; }
-  .cta-row{ display:flex; flex-wrap:wrap; justify-content:center; gap:16px; margin-bottom:56px; }
-  .cta-chip{
-    padding:13px 24px; border:1px solid var(--line); border-radius:999px; text-decoration:none;
-    font-size:0.9rem; font-weight:500; color:var(--parchment); transition:border-color .2s, color .2s;
-  }
-  .cta-chip:hover{ border-color:var(--gold); color:var(--gold); }
-  .foot-note{ font-size:12px; color:var(--parchment-dim); line-height:1.8; max-width:520px; margin:0 auto; }
-  .foot-note a{ color:var(--gold); text-decoration:none; border-bottom:1px solid rgba(185,138,70,0.4); }
-
-  /* ───────── REVEAL DEFAULTS (no-JS / reduced-motion fallback) ───────── */
-  .reveal-init{ opacity:1; }
-  @media (prefers-reduced-motion: reduce){
-    .compass{ animation:none; }
-    .scroll-cue .dot{ animation:none; }
-  }
-
-  /* ───────── RESPONSIVE ───────── */
-  @media (max-width:900px){
-    .pathway-panel{ grid-template-columns:1fr; text-align:center; gap:36px; padding:70px 24px; direction:ltr; }
-    .pathway-panel.reverse{ direction:ltr; }
-    .pathway-content ul{ align-items:center; }
-    .pathway-content li{ padding-left:0; }
-    .pathway-content li::before{ display:none; }
-    .pathway-content .stamp-label{ justify-content:center; }
-    .btn-boarding{ margin:0 auto; }
-    .flight-line-wrap{ display:none; }
-    .boarding-strip{ grid-template-columns:1fr; }
-    .strip-step{ border-left:none; border-top:1px dashed var(--line); }
-    .strip-step:first-child{ border-top:none; }
-    .strip-step::after{ display:none; }
-  }
-  @media (max-width:520px){
-    .hero{ padding-top:100px; }
-    .compass{ display:none; }
-  }
+@media (max-width: 820px) {
+  body { padding: 36px 14px 60px; }
+  .cards { grid-template-columns: 1fr; max-width: 460px; }
+  .hero h1 { font-size: 24px; }
+  .card { animation: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card { animation: none; }
+  .crest:hover { transform: none; }
+  html { scroll-behavior: auto; }
+}
 </style>
+<base target="_blank">
 </head>
 <body>
 
-<svg class="grain" xmlns="http://www.w3.org/2000/svg">
-  <filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/></filter>
-  <rect width="100%" height="100%" filter="url(#noiseFilter)"/>
-</svg>
+<canvas id="bg3d"></canvas>
+<div class="vignette"></div>
+<div id="progress"><div class="fill"></div></div>
 
-<!-- ══════════ HERO ══════════ -->
-<section class="hero">
-  <div class="hero-arcs">
-    <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
-      <circle cx="600" cy="700" r="260" fill="none" stroke="var(--line-soft)" stroke-width="1"/>
-      <circle cx="600" cy="700" r="380" fill="none" stroke="var(--line-soft)" stroke-width="1"/>
-      <circle cx="600" cy="700" r="500" fill="none" stroke="var(--line-soft)" stroke-width="1"/>
-      <path d="M60 120 Q 400 40 700 160 T 1180 90" fill="none" stroke="var(--line-soft)" stroke-width="1" stroke-dasharray="2 8"/>
+<main>
+
+<div class="hero" id="hero">
+  <div class="crest" id="crest">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="16" cy="16" r="14" stroke="#C8A96E" stroke-width="1.5"/>
+      <path d="M10 12h12M10 16h12M10 20h12" stroke="#C8A96E" stroke-width="1.5" stroke-linecap="round"/>
+      <rect x="14" y="6" width="4" height="4" rx="1" fill="#C8A96E"/>
     </svg>
   </div>
-
-  <svg class="compass" viewBox="0 0 100 100">
-    <circle cx="50" cy="50" r="46" fill="none" stroke="var(--gold)" stroke-width="0.6"/>
-    <circle cx="50" cy="50" r="38" fill="none" stroke="var(--gold)" stroke-width="0.4"/>
-    <path d="M50 8 L54 46 L50 50 L46 46 Z" fill="var(--gold)"/>
-    <path d="M50 92 L46 54 L50 50 L54 54 Z" fill="var(--parchment-dim)"/>
-    <circle cx="50" cy="50" r="3" fill="var(--gold)"/>
-  </svg>
-
-  <div class="hero-stamp" id="heroStamp">
-    <svg viewBox="0 0 160 160">
-      <defs><path id="heroRingPath" d="M 80,80 m -62,0 a 62,62 0 1,1 124,0 a 62,62 0 1,1 -124,0"/></defs>
-      <circle class="stamp-outer" cx="80" cy="80" r="74" stroke-width="1.4"/>
-      <circle class="stamp-outer" cx="80" cy="80" r="68" stroke-width="0.6"/>
-      <text class="stamp-ring-text"><textPath href="#heroRingPath" startOffset="0%">UK VISA APPLICATION PORTAL • PREPARE WITH CONFIDENCE • </textPath></text>
-      <circle class="stamp-center" cx="80" cy="80" r="40" stroke-width="1"/>
-      <path d="M62 84 L74 96 L100 66" fill="none" stroke="var(--gold)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-
-  <h1 class="hero-title">Every visa tells a different story.</h1>
-  <p class="hero-sub">Tell us who's travelling and why. The portal asks only what applies to your circumstances, then hands you a finished, print-ready application.</p>
-
-  <div class="scroll-cue"><span>SCROLL</span><div class="track"><div class="dot"></div></div></div>
-</section>
-
-<!-- ══════════ INTRO TO PATHWAYS ══════════ -->
-<div class="section-intro">
-  <h2>Three pathways. One portal.</h2>
-  <p>Pick the one that matches your reason for travel — everything downstream, from the questions you're asked to the checklist at the end, adapts to it.</p>
+  <h1 id="heroTitle">UK Visa Application Portal</h1>
+  <p id="heroSub">Select the type of application you need to complete. Each pathway asks only the questions relevant to your circumstances, then guides you through document upload and a final review before you generate your application PDF.</p>
 </div>
 
-<!-- ══════════ PATHWAYS ══════════ -->
-<section id="pathways">
-  <div class="flight-line-wrap">
-    <svg id="flightSvg" width="2" height="100%">
-      <line id="flightLine" x1="1" y1="0" x2="1" y2="100%" stroke="var(--gold)" stroke-width="2" stroke-dasharray="1 10" stroke-linecap="round"/>
-    </svg>
-    <div class="flight-marker" id="flightMarker">
-      <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.6"><path d="M12 2 L14 9 L21 12 L14 13 L12 22 L10 13 L3 12 L10 9 Z"/></svg>
-    </div>
-  </div>
+<div class="cards" id="cards">
 
-  <!-- STUDENT -->
-  <div class="pathway-panel pathway-student" data-panel>
-    <div class="pathway-visual" data-visual>
-      <svg class="stamp-circle" viewBox="0 0 200 200">
-        <defs><path id="ringStudent" d="M 100,100 m -78,0 a 78,78 0 1,1 156,0 a 78,78 0 1,1 -156,0"/></defs>
-        <circle cx="100" cy="100" r="92" fill="none" stroke="var(--teal)" stroke-width="1"/>
-        <circle cx="100" cy="100" r="86" fill="none" stroke="var(--teal)" stroke-width="0.5"/>
-        <text class="stamp-ring-text" fill="var(--teal)"><textPath href="#ringStudent">STUDY IN THE UNITED KINGDOM • TIER: STUDENT • </textPath></text>
-        <circle cx="100" cy="100" r="50" fill="none" stroke="var(--teal)" stroke-width="1.2"/>
-        <path d="M70 92 L100 78 L130 92 L100 106 Z" fill="none" stroke="var(--teal)" stroke-width="2.4" stroke-linejoin="round"/>
-        <path d="M82 99 L82 114 Q100 124 118 114 L118 99" fill="none" stroke="var(--teal)" stroke-width="2.4"/>
-        <line x1="130" y1="92" x2="130" y2="107" stroke="var(--teal)" stroke-width="2.4"/>
-      </svg>
-      <div class="icon-badge"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.6"><path d="M4 19V5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M14 3v5h5"/></svg></div>
+  <div class="card" data-card>
+    <div class="card-top">
+      <div class="card-icon">&#127891;</div>
+      <h2>Student Visa</h2>
+      <span class="tag">Study in the UK</span>
     </div>
-    <div class="pathway-content" data-content>
-      <span class="stamp-label">Study</span>
-      <h3>Student Visa</h3>
-      <p class="desc">For applicants with an offer or CAS from a UK institution, ready to begin their course.</p>
+    <div class="card-body">
+      <p>For applicants who have an offer or CAS from a UK institution and are applying to study in the UK.</p>
       <ul>
         <li>Personal, family &amp; travel history</li>
         <li>Academic &amp; CAS details</li>
         <li>Financial &amp; sponsor evidence</li>
         <li>Personal statement &amp; declaration</li>
       </ul>
-      <a href="student-visa.html" class="btn-boarding">Start the student application</a>
+      <a href="student-visa.html" class="btn-start">Start Application &#8594;</a>
     </div>
   </div>
 
-  <!-- DEPENDANT -->
-  <div class="pathway-panel pathway-dependant reverse" data-panel>
-    <div class="pathway-visual" data-visual>
-      <svg class="stamp-circle" viewBox="0 0 200 200">
-        <defs><path id="ringDependant" d="M 100,100 m -78,0 a 78,78 0 1,1 156,0 a 78,78 0 1,1 -156,0"/></defs>
-        <circle cx="100" cy="100" r="92" fill="none" stroke="var(--brick)" stroke-width="1"/>
-        <circle cx="100" cy="100" r="86" fill="none" stroke="var(--brick)" stroke-width="0.5"/>
-        <text class="stamp-ring-text" fill="var(--brick)"><textPath href="#ringDependant">JOINING OR ACCOMPANYING • FAMILY REUNION • </textPath></text>
-        <circle cx="100" cy="100" r="50" fill="none" stroke="var(--brick)" stroke-width="1.2"/>
-        <circle cx="86" cy="94" r="12" fill="none" stroke="var(--brick)" stroke-width="2.4"/>
-        <circle cx="114" cy="94" r="12" fill="none" stroke="var(--brick)" stroke-width="2.4"/>
-        <path d="M70 122 Q100 108 130 122" fill="none" stroke="var(--brick)" stroke-width="2.4" stroke-linecap="round"/>
-      </svg>
-      <div class="icon-badge"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--brick)" stroke-width="1.6"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+  <div class="card" data-card>
+    <div class="card-top">
+      <div class="card-icon">&#128106;</div>
+      <h2>Dependant Visa</h2>
+      <span class="tag">Joining or Accompanying</span>
     </div>
-    <div class="pathway-content" data-content>
-      <span class="stamp-label">Family</span>
-      <h3>Dependant Visa</h3>
-      <p class="desc">For a spouse, partner, parent or child joining or accompanying someone already building a life in the UK.</p>
+    <div class="card-body">
+      <p>For a spouse, partner, parent or child joining or accompanying someone who is already in — or applying for — the UK.</p>
       <ul>
         <li>Relationship to the main applicant</li>
         <li>Main applicant's UK status</li>
         <li>Marriage, custody &amp; relationship evidence</li>
         <li>Financial &amp; accommodation details</li>
       </ul>
-      <a href="dependant-visa.html" class="btn-boarding">Start the dependant application</a>
+      <a href="dependant-visa.html" class="btn-start">Start Application &#8594;</a>
     </div>
   </div>
 
-  <!-- VISITOR -->
-  <div class="pathway-panel pathway-visitor" data-panel>
-    <div class="pathway-visual" data-visual>
-      <svg class="stamp-circle" viewBox="0 0 200 200">
-        <defs><path id="ringVisitor" d="M 100,100 m -78,0 a 78,78 0 1,1 156,0 a 78,78 0 1,1 -156,0"/></defs>
-        <circle cx="100" cy="100" r="92" fill="none" stroke="var(--gold)" stroke-width="1"/>
-        <circle cx="100" cy="100" r="86" fill="none" stroke="var(--gold)" stroke-width="0.5"/>
-        <text class="stamp-ring-text" fill="var(--gold)"><textPath href="#ringVisitor">TOURISM • FAMILY • BUSINESS • GRADUATION • </textPath></text>
-        <circle cx="100" cy="100" r="50" fill="none" stroke="var(--gold)" stroke-width="1.2"/>
-        <path d="M100 68 L106 92 L130 96 L106 104 L100 128 L94 104 L70 96 L94 92 Z" fill="none" stroke="var(--gold)" stroke-width="2.2" stroke-linejoin="round"/>
-      </svg>
-      <div class="icon-badge"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.6"><path d="M12 2 L14 9 L21 12 L14 13 L12 22 L10 13 L3 12 L10 9 Z"/></svg></div>
+  <div class="card" data-card>
+    <div class="card-top">
+      <div class="card-icon">&#9992;&#65039;</div>
+      <h2>Visitor Visa</h2>
+      <span class="tag">Tourism, Family &amp; More</span>
     </div>
-    <div class="pathway-content" data-content>
-      <span class="stamp-label">Visit</span>
-      <h3>Visitor Visa</h3>
-      <p class="desc">For tourism, family visits, graduations, business trips, and everything in between.</p>
+    <div class="card-body">
+      <p>For people visiting the UK for tourism, to see family or friends, to attend a graduation, or for business.</p>
       <ul>
         <li>Purpose of your visit</li>
         <li>UK contact or sponsor details</li>
         <li>Travel plans &amp; accommodation</li>
         <li>Financial &amp; employment evidence</li>
       </ul>
-      <a href="visitor-visa.html" class="btn-boarding">Start the visitor application</a>
+      <a href="visitor-visa.html" class="btn-start">Start Application &#8594;</a>
     </div>
   </div>
-</section>
 
-<!-- ══════════ HOW IT WORKS ══════════ -->
-<section id="how">
-  <div class="section-intro" style="padding-top:0;">
-    <h2>How it gets done</h2>
-  </div>
-  <div class="boarding-strip">
-    <div class="strip-step" data-step><span class="num">1</span><h4>Choose your pathway</h4><p>Tell us why you're travelling to the UK — study, family, or a visit.</p></div>
-    <div class="strip-step" data-step><span class="num">2</span><h4>Answer what applies</h4><p>Questions adjust as you go. Nothing irrelevant, nothing missing.</p></div>
-    <div class="strip-step" data-step><span class="num">3</span><h4>Generate your PDF</h4><p>Download a complete, print-ready application when you're finished.</p></div>
-  </div>
-</section>
+</div>
 
-<!-- ══════════ FOOTER CTA ══════════ -->
-<section id="cta-footer">
-  <h2>Ready when you are.</h2>
-  <div class="cta-row">
-    <a href="student-visa.html" class="cta-chip">Student Visa</a>
-    <a href="dependant-visa.html" class="cta-chip">Dependant Visa</a>
-    <a href="visitor-visa.html" class="cta-chip">Visitor Visa</a>
-  </div>
-  <p class="foot-note">This portal helps you prepare and organise your application — it is not a UK government service. For official guidance, visit <a href="https://www.gov.uk/browse/visas-immigration" target="_blank" rel="noopener">GOV.UK</a>.</p>
-</section>
+<div class="footer-note" id="footNote">
+  Not sure which category applies to you? <a href="https://www.gov.uk/browse/visas-immigration" target="_blank" rel="noopener">Check UK visa categories on GOV.UK</a><br>
+  Your answers are saved automatically in your browser as you go &#8212; nothing is generated until you click "Generate PDF Application" at the end of the form.
+</div>
+
+</main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
 <script>
 (function(){
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isMobile = window.matchMedia('(max-width: 820px)').matches;
   const hasGsap = typeof gsap !== 'undefined';
 
-  /* ── FLIGHT LINE HEIGHT SYNC ── */
-  const flightSvg = document.getElementById('flightSvg');
-  const flightLine = document.getElementById('flightLine');
-  function syncLine(){
-    const wrap = document.querySelector('.flight-line-wrap');
-    if (!wrap) return;
-    const h = wrap.offsetHeight;
-    flightSvg.setAttribute('height', h);
-    flightLine.setAttribute('y2', h);
+  /* ── SCROLL PROGRESS BAR ── */
+  const fill = document.querySelector('#progress .fill');
+  function updateProgress(){
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    fill.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0) + '%';
   }
-  syncLine();
-  window.addEventListener('resize', syncLine);
+  window.addEventListener('scroll', updateProgress, { passive:true });
+  updateProgress();
 
-  if (!hasGsap || reduced) {
-    document.querySelectorAll('[data-content], [data-visual], [data-step]').forEach(el => el.style.opacity = 1);
-    return;
+  /* ── 3D HOVER TILT ON CARDS (desktop, motion-safe) ── */
+  if (!reduced && !isMobile){
+    document.querySelectorAll('[data-card]').forEach(card => {
+      card.addEventListener('pointermove', (e) => {
+        const r = card.getBoundingClientRect();
+        const dx = (e.clientX - r.left) / r.width - 0.5;
+        const dy = (e.clientY - r.top) / r.height - 0.5;
+        card.style.animationPlayState = 'paused';
+        card.style.transform =
+          'rotateX(' + (-dy * 10) + 'deg) rotateY(' + (dx * 12) + 'deg) translateY(-4px) scale(1.02)';
+      });
+      card.addEventListener('pointerleave', () => {
+        card.style.transform = '';
+        card.style.animationPlayState = 'running';
+      });
+    });
   }
 
+  if (!hasGsap || reduced) return;
   gsap.registerPlugin(ScrollTrigger);
 
-  /* ── HERO ENTRANCE (single orchestrated sequence) ── */
+  /* ── HERO ENTRANCE ── */
   const tl = gsap.timeline({ defaults:{ ease:'power3.out' } });
-  tl.from('#heroStamp', { scale:1.7, rotate:-20, opacity:0, duration:1, ease:'back.out(1.6)' })
-    .from('.hero-title', { y:36, opacity:0, duration:0.75 }, '-=0.45')
-    .from('.hero-sub', { y:18, opacity:0, duration:0.65 }, '-=0.4')
-    .from('.scroll-cue', { opacity:0, duration:0.5 }, '-=0.25');
+  tl.from('#crest', { scale:0, rotate:-90, duration:0.8, ease:'back.out(1.8)' })
+    .from('#heroTitle', { y:26, opacity:0, duration:0.65 }, '-=0.35')
+    .from('#heroSub', { y:16, opacity:0, duration:0.55 }, '-=0.35');
 
-  /* ── PATHWAY PANELS: STAMP-IN ON SCROLL ── */
-  document.querySelectorAll('[data-panel]').forEach(panel => {
-    const visual = panel.querySelector('[data-visual]');
-    const content = panel.querySelector('[data-content]');
-    gsap.set(content, { opacity:1 });
-    gsap.from(visual, {
-      scale:0.55, rotate:-14, opacity:0, duration:0.9, ease:'back.out(1.5)',
-      scrollTrigger:{ trigger:panel, start:'top 78%', toggleActions:'play none none reverse' }
-    });
-    gsap.from(content.children, {
-      y:24, opacity:0, duration:0.6, stagger:0.08, ease:'power2.out',
-      scrollTrigger:{ trigger:panel, start:'top 72%', toggleActions:'play none none reverse' }
-    });
+  /* ── CARDS: 3D RISE-IN ── */
+  gsap.from('[data-card]', {
+    y:70, opacity:0, rotateX:-14, transformOrigin:'center top',
+    duration:0.85, stagger:0.14, ease:'power3.out',
+    clearProps:'transform,opacity',
+    scrollTrigger:{ trigger:'#cards', start:'top 82%' }
   });
 
-  /* ── FLIGHT PATH DRAW + MARKER TRAVEL ── */
-  const len = flightLine.getTotalLength ? flightLine.getTotalLength() : 0;
-  gsap.to('#flightMarker', {
-    top:'100%', ease:'none',
-    scrollTrigger:{ trigger:'#pathways', start:'top center', end:'bottom center', scrub:0.6 }
+  /* ── FOOTER FADE-UP ── */
+  gsap.from('#footNote', {
+    y:20, opacity:0, duration:0.6, ease:'power2.out',
+    scrollTrigger:{ trigger:'#footNote', start:'top 92%' }
   });
 
-  /* ── HOW-IT-WORKS STEPS ── */
-  gsap.from('[data-step]', {
-    y:30, opacity:0, duration:0.6, stagger:0.15, ease:'power2.out',
-    scrollTrigger:{ trigger:'.boarding-strip', start:'top 80%' }
+  /* ── HERO PARALLAX ON SCROLL ── */
+  gsap.to('#hero', {
+    yPercent: -10, opacity: 0.55, ease:'none',
+    scrollTrigger:{ trigger:'#hero', start:'top top', end:'bottom top', scrub:true }
   });
 
   ScrollTrigger.refresh();
 })();
 </script>
+
+<!-- ══════════ THREE.JS LIGHT 3D SCENE ══════════ -->
+<script type="module">
+import * as THREE from 'three';
+
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const isMobile = window.matchMedia('(max-width: 820px)').matches;
+const canvas = document.getElementById('bg3d');
+
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: !isMobile, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setClearColor(0x000000, 0);
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.Fog(0xEDF1F7, 10, 46);
+
+const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 120);
+camera.position.set(0, 0, 13);
+
+const NAVY = 0x1A3A5C, ROYAL = 0x1E5FA3, GOLD = 0xC8A96E;
+const world = new THREE.Group();
+scene.add(world);
+
+/* ── Gold stamp rings drifting in depth ── */
+const ringDefs = [
+  { r: 5.2, z: -4,  x: -4.5, y:  2.6, c: GOLD },
+  { r: 3.6, z: -12, x:  4.8, y: -2.2, c: GOLD },
+  { r: 6.4, z: -20, x: -3.2, y: -3.0, c: ROYAL },
+  { r: 4.4, z: -28, x:  4.2, y:  3.2, c: GOLD },
+  { r: 7.0, z: -36, x:  0.0, y:  0.0, c: NAVY  }
+];
+const rings = ringDefs.map(d => {
+  const m = new THREE.Mesh(
+    new THREE.TorusGeometry(d.r, 0.028, 12, 90),
+    new THREE.MeshBasicMaterial({ color: d.c, transparent: true, opacity: 0.5 })
+  );
+  m.position.set(d.x, d.y, d.z);
+  m.rotation.set(Math.PI / 2 + Math.sin(d.z) * 0.3, d.z * 0.1, 0);
+  world.add(m);
+  return m;
+});
+
+/* ── Wireframe landmarks ── */
+const ico = new THREE.Mesh(
+  new THREE.IcosahedronGeometry(2.4, 1),
+  new THREE.MeshBasicMaterial({ color: NAVY, wireframe: true, transparent: true, opacity: 0.28 })
+);
+ico.position.set(5.6, 2.8, -9);
+world.add(ico);
+
+const octa = new THREE.Mesh(
+  new THREE.OctahedronGeometry(1.8, 0),
+  new THREE.MeshBasicMaterial({ color: ROYAL, wireframe: true, transparent: true, opacity: 0.3 })
+);
+octa.position.set(-5.4, -2.6, -17);
+world.add(octa);
+
+const knot = new THREE.Mesh(
+  new THREE.TorusKnotGeometry(1.5, 0.32, 90, 12),
+  new THREE.MeshBasicMaterial({ color: GOLD, wireframe: true, transparent: true, opacity: 0.3 })
+);
+knot.position.set(4.8, -3.0, -26);
+world.add(knot);
+
+/* ── Soft dust particles ── */
+const P_COUNT = isMobile ? 200 : 480;
+const pGeo = new THREE.BufferGeometry();
+const pos = new Float32Array(P_COUNT * 3);
+for (let i = 0; i < P_COUNT; i++){
+  pos[i * 3]     = (Math.random() - 0.5) * 26;
+  pos[i * 3 + 1] = (Math.random() - 0.5) * 16;
+  pos[i * 3 + 2] = -Math.random() * 42 + 5;
+}
+pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({
+  color: NAVY, size: 0.05, transparent: true, opacity: 0.35, depthWrite: false
+}));
+world.add(particles);
+
+/* ── Scroll + pointer state ── */
+let scrollTarget = 0, scrollCur = 0;
+let px = 0, py = 0, pxT = 0, pyT = 0;
+function onScroll(){
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  scrollTarget = max > 0 ? window.scrollY / max : 0;
+}
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+
+if (!isMobile && !reduced){
+  window.addEventListener('pointermove', (e) => {
+    pxT = (e.clientX / window.innerWidth - 0.5) * 1.4;
+    pyT = (e.clientY / window.innerHeight - 0.5) * 0.9;
+  }, { passive: true });
+}
+
+function resize(){
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+window.addEventListener('resize', resize);
+
+const clock = new THREE.Clock();
+function renderFrame(t){
+  camera.position.z = 13 - scrollCur * 7;
+  camera.position.x = px + Math.sin(t * 0.12) * 0.4;
+  camera.position.y = -py + Math.cos(t * 0.1) * 0.3;
+  camera.lookAt(0, 0, camera.position.z - 10);
+
+  rings.forEach((r, i) => {
+    r.rotation.z = t * (0.06 + i * 0.012) * (i % 2 ? 1 : -1);
+  });
+  ico.rotation.y = t * 0.16; ico.rotation.x = t * 0.06;
+  octa.rotation.y = t * 0.2; octa.rotation.z = t * 0.09;
+  knot.rotation.y = t * 0.14; knot.rotation.x = t * 0.1;
+  particles.rotation.z = t * 0.006;
+
+  renderer.render(scene, camera);
+}
+
+if (reduced){
+  renderFrame(0);
+} else {
+  renderer.setAnimationLoop(() => {
+    const t = clock.getElapsedTime();
+    scrollCur += (scrollTarget - scrollCur) * 0.06;
+    px += (pxT - px) * 0.04;
+    py += (pyT - py) * 0.04;
+    renderFrame(t);
+  });
+}
+</script>
+
 </body>
 </html>
