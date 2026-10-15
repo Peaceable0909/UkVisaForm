@@ -324,6 +324,8 @@
       <div class="field"><label>Family Name</label><input type="text" id="familyName" name="familyName"></div>
       <div class="field"><label>Date of Birth</label><input type="date" id="dob" name="dob"></div>
       <div class="field"><label>Place of Birth</label><input type="text" id="placeOfBirth" name="placeOfBirth"></div>
+      <div class="field"><label>Country of Birth</label><input type="text" id="countryOfBirth" name="countryOfBirth"></div>
+        <div class="field"><label>Gender</label><select id="gender" name="gender"><option value="">Select&#8230;</option><option>Male</option><option>Female</option><option>Other</option><option>Prefer not to say</option></select></div>
       <div class="field full">
         <label>Have you ever been known by any other name?</label>
         <div class="radio-group">
@@ -335,15 +337,24 @@
         </div>
       </div>
       <div class="field"><label>Nationality</label><input type="text" id="nationality" name="nationality"></div>
-      <div class="field"><label>Marital Status</label><input type="text" id="maritalStatus" name="maritalStatus"></div>
+      <div class="field"><label>Marital Status</label><select id="maritalStatus" name="maritalStatus"><option value="">Select&#8230;</option><option>Single</option><option>Married</option><option>Civil Partnership</option><option>Unmarried Partner</option><option>Divorced</option><option>Separated</option><option>Widowed</option></select></div>
+      <div class="field full"><label>Do you hold or have you ever held any other nationality?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="otherNationality" id="otherNationalityYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="otherNationality" id="otherNationalityNo" value="No"> No</label></div><div class="conditional-field" id="otherNationalityField"><div class="field-grid"><div class="field"><label>Other Nationality / Citizenship</label><input type="text" id="otherNationalityDetails" name="otherNationalityDetails"></div></div></div></div>
       <div class="field full"><label>Current Home Address</label><input type="text" id="currentAddress" name="currentAddress"></div>
       <div class="field"><label>Telephone Number</label><input type="tel" id="telephone" name="telephone"></div>
       <div class="field"><label>Email Address</label><input type="email" id="email" name="email"></div>
+      <div class="field"><label>How long at this address?</label><input type="text" id="addressDuration" name="addressDuration" placeholder="e.g. 2 years"></div>
+        <div class="field full"><label>Is this address also your correspondence address?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="correspondence" id="correspondenceYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="correspondence" id="correspondenceNo" value="No"> No</label></div><div class="conditional-field" id="correspondenceField"><div class="field-grid"><div class="field full"><label>Correspondence Address</label><input type="text" id="correspondenceAddress" name="correspondenceAddress"></div></div></div></div>
+        <div class="field full"><label>Home Ownership Status</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="homeOwnership" value="Owned"> Owned</label><label class="radio-pill"><input type="radio" name="homeOwnership" value="Rented"> Rented</label><label class="radio-pill"><input type="radio" name="homeOwnership" value="Living with Family"> Living with Family</label><label class="radio-pill"><input type="radio" name="homeOwnership" value="Other"> Other</label></div></div>
+        <div class="field full"><label>Have you lived at your current address for less than 2 years?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="prevAddressNeeded" id="prevAddressNeededYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="prevAddressNeeded" id="prevAddressNeededNo" value="No"> No</label></div><div class="conditional-field" id="prevAddressNeededField"><div class="field-grid"><div class="field full"><label>Previous Address</label><input type="text" id="previousAddress" name="previousAddress"></div>
+        <div class="field"><label>How long did you live there?</label><input type="text" id="previousAddressDuration" name="previousAddressDuration"></div></div></div></div>
+        <div class="field full"><label>Do you have a national identity card?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="hasNationalId" id="hasNationalIdYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="hasNationalId" id="hasNationalIdNo" value="No"> No</label></div><div class="conditional-field" id="hasNationalIdField"><div class="field-grid"><div class="field"><label>National Identity Card Number</label><input type="text" id="nationalIdNumber" name="nationalIdNumber"></div></div></div></div>
       <div class="subsection full" style="grid-column:1/-1"><div class="subsection-title">Passport &amp; Nationality</div></div>
       <div class="field"><label>Passport Number</label><input type="text" id="passportNumber" name="passportNumber"></div>
       <div class="field"><label>Passport Issuing Country</label><input type="text" id="passportIssuingCountry" name="passportIssuingCountry"></div>
       <div class="field"><label>Passport Issue Date</label><input type="date" id="passportIssueDate" name="passportIssueDate"></div>
       <div class="field"><label>Passport Expiry Date</label><input type="date" id="passportExpiryDate" name="passportExpiryDate"></div>
+      <div class="field"><label>Passport Issuing Authority / Place of Issue</label><input type="text" id="passportPlaceOfIssue" name="passportPlaceOfIssue"></div>
+        <div class="field full"><label>Do you hold any other valid passport or travel document?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="otherPassports" id="otherPassportsYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="otherPassports" id="otherPassportsNo" value="No"> No</label></div><div class="conditional-field" id="otherPassportsField"><div class="field-grid"><div class="field full"><label>Details (type, number, issuing country)</label><input type="text" id="otherPassportDetails" name="otherPassportDetails"></div></div></div></div>
     </div>
   </div>
 </div>
@@ -367,6 +378,10 @@
           </div>
         </div>
         <div class="field full"><label>Do you have any pre-booked tours or attractions?</label><input type="text" id="preBookedTours" name="preBookedTours" placeholder="e.g. London Eye, day trip to Edinburgh"></div>
+        <div class="field full"><label>Why have you chosen to visit the UK, and what do you want to see or do?</label><textarea id="tourReason" name="tourReason"></textarea></div>
+        <div class="field full"><label>Do you know anyone in the UK?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="tourUkContact" id="tourUkContactYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="tourUkContact" id="tourUkContactNo" value="No"> No</label></div><div class="conditional-field" id="tourUkContactField"><div class="field-grid"><div class="field"><label>Their Full Name</label><input type="text" id="tourUkContactName" name="tourUkContactName"></div>
+        <div class="field"><label>Relationship to You</label><input type="text" id="tourUkContactRelationship" name="tourUkContactRelationship"></div>
+        <div class="field full"><label>Their UK Address</label><input type="text" id="tourUkContactAddress" name="tourUkContactAddress"></div></div></div></div>
       </div>
     </div>
 
@@ -386,6 +401,14 @@
         <div class="field"><label>Length of Stay Planned</label><input type="text" id="famLengthOfStay" name="famLengthOfStay" placeholder="e.g. 2 weeks"></div>
         <div class="field full"><label>Their UK Address</label><input type="text" id="famHostAddress" name="famHostAddress"></div>
         <div class="field full"><label>Accommodation Arrangements</label><input type="text" id="famAccommodationArrangement" name="famAccommodationArrangement" placeholder="e.g. Staying at their home"></div>
+        <div class="field"><label>Family Member's Date of Birth</label><input type="date" id="famHostDob" name="famHostDob"></div>
+        <div class="field"><label>Their Nationality</label><input type="text" id="famHostNationality" name="famHostNationality"></div>
+        <div class="field"><label>Their Passport / ID Number</label><input type="text" id="famHostPassport" name="famHostPassport"></div>
+        <div class="field"><label>Their Occupation</label><input type="text" id="famHostOccupation" name="famHostOccupation"></div>
+        <div class="field"><label>Their Telephone Number</label><input type="tel" id="famHostPhone" name="famHostPhone"></div>
+        <div class="field"><label>Their Email Address</label><input type="email" id="famHostEmail" name="famHostEmail"></div>
+        <div class="field"><label>When did you last see them in person?</label><input type="text" id="famLastMet" name="famLastMet"></div>
+        <div class="field full"><label>Will your family member pay for any of your costs?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="famHostPays" id="famHostPaysYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="famHostPays" id="famHostPaysNo" value="No"> No</label></div></div>
       </div>
     </div>
 
@@ -397,6 +420,15 @@
         <div class="field"><label>How Do You Know Them?</label><input type="text" id="friendHowKnown" name="friendHowKnown"></div>
         <div class="field full"><label>Their UK Address</label><input type="text" id="friendHostAddress" name="friendHostAddress"></div>
         <div class="field"><label>Length of Stay Planned</label><input type="text" id="friendLengthOfStay" name="friendLengthOfStay"></div>
+        <div class="field"><label>Their UK Immigration Status</label><select id="friendHostStatus" name="friendHostStatus"><option value="">Select&#8230;</option><option>British Citizen</option><option>Settled Status / ILR</option><option>Pre-Settled Status</option><option>Points-Based Visa Holder</option><option>Other</option></select></div>
+        <div class="field"><label>Friend's Date of Birth</label><input type="date" id="friendHostDob" name="friendHostDob"></div>
+        <div class="field"><label>Their Nationality</label><input type="text" id="friendHostNationality" name="friendHostNationality"></div>
+        <div class="field"><label>Their Occupation</label><input type="text" id="friendHostOccupation" name="friendHostOccupation"></div>
+        <div class="field"><label>Their Telephone Number</label><input type="tel" id="friendHostPhone" name="friendHostPhone"></div>
+        <div class="field"><label>Their Email Address</label><input type="email" id="friendHostEmail" name="friendHostEmail"></div>
+        <div class="field"><label>How long have you known them?</label><input type="text" id="friendKnownDuration" name="friendKnownDuration"></div>
+        <div class="field full"><label>Have you met them in person?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="friendMetInPerson" id="friendMetInPersonYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="friendMetInPerson" id="friendMetInPersonNo" value="No"> No</label></div><div class="conditional-field" id="friendMetInPersonField"><div class="field-grid"><div class="field full"><label>When and where did you first meet?</label><input type="text" id="friendFirstMet" name="friendFirstMet"></div></div></div></div>
+        <div class="field full"><label>Will your friend pay for any of your costs?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="friendHostPays" id="friendHostPaysYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="friendHostPays" id="friendHostPaysNo" value="No"> No</label></div></div>
       </div>
     </div>
 
@@ -411,6 +443,12 @@
         <div class="field"><label>Student's UK Immigration Status</label><input type="text" id="gradStudentStatus" name="gradStudentStatus" placeholder="e.g. Student Visa"></div>
         <div class="field"><label>Where Will You Stay?</label><input type="text" id="gradWhereStay" name="gradWhereStay"></div>
         <div class="field full"><label>Who Will Pay for the Trip?</label><input type="text" id="gradWhoPays" name="gradWhoPays"></div>
+        <div class="field"><label>Course / Degree Awarded</label><input type="text" id="gradCourse" name="gradCourse"></div>
+        <div class="field"><label>Student ID Number</label><input type="text" id="gradStudentId" name="gradStudentId"></div>
+        <div class="field full"><label>Student's UK Address</label><input type="text" id="gradStudentAddress" name="gradStudentAddress"></div>
+        <div class="field"><label>Student's Telephone Number</label><input type="tel" id="gradStudentPhone" name="gradStudentPhone"></div>
+        <div class="field full"><label>Have you received an official invitation or ticket for the ceremony?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="gradTickets" id="gradTicketsYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="gradTickets" id="gradTicketsNo" value="No"> No</label></div></div>
+        <div class="field full"><label>Will other family members be attending the ceremony with you?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="gradOthersAttending" id="gradOthersAttendingYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="gradOthersAttending" id="gradOthersAttendingNo" value="No"> No</label></div><div class="conditional-field" id="gradOthersAttendingField"><div class="field-grid"><div class="field full"><label>Who else is attending?</label><input type="text" id="gradOthersWho" name="gradOthersWho"></div></div></div></div>
       </div>
     </div>
 
@@ -423,6 +461,13 @@
         <div class="field"><label>Their Role / Position</label><input type="text" id="bizContactRole" name="bizContactRole"></div>
         <div class="field full"><label>Company UK Address</label><input type="text" id="bizCompanyAddress" name="bizCompanyAddress"></div>
         <div class="field full"><label>Purpose of the Business Visit</label><textarea id="bizPurposeDetail" name="bizPurposeDetail" placeholder="e.g. Meetings, conference, negotiations"></textarea></div>
+        <div class="field"><label>Company Telephone Number</label><input type="tel" id="bizCompanyPhone" name="bizCompanyPhone"></div>
+        <div class="field"><label>Company Email Address</label><input type="email" id="bizCompanyEmail" name="bizCompanyEmail"></div>
+        <div class="field"><label>Company Website</label><input type="text" id="bizCompanyWebsite" name="bizCompanyWebsite"></div>
+        <div class="field"><label>Contact Person's Email</label><input type="email" id="bizContactEmail" name="bizContactEmail"></div>
+        <div class="field"><label>Type of Business Activity</label><select id="bizActivity" name="bizActivity"><option value="">Select&#8230;</option><option>Meetings / negotiations</option><option>Conference / trade fair</option><option>Training received (not delivered)</option><option>Site visit / inspection</option><option>Sales / contract signing</option><option>Other</option></select></div>
+        <div class="field full"><label>Will you receive any payment, fees or expenses from a UK source?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="bizPaidByUk" id="bizPaidByUkYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="bizPaidByUk" id="bizPaidByUkNo" value="No"> No</label></div><div class="conditional-field" id="bizPaidByUkField"><div class="field-grid"><div class="field full"><label>Please explain the payments</label><textarea id="bizPaidDetails" name="bizPaidDetails"></textarea></div></div></div></div>
+        <div class="field full"><label>Have you made business visits to the UK before?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="bizPrevVisits" id="bizPrevVisitsYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="bizPrevVisits" id="bizPrevVisitsNo" value="No"> No</label></div><div class="conditional-field" id="bizPrevVisitsField"><div class="field-grid"><div class="field full"><label>When, and who did you meet?</label><textarea id="bizPrevVisitsDetails" name="bizPrevVisitsDetails"></textarea></div></div></div></div>
         <div class="field full">
           <label>Do you have a formal Letter of Invitation?</label>
           <div class="radio-group">
@@ -440,6 +485,8 @@
         <div class="field full"><label>Please describe the purpose of your visit</label><textarea id="otherPurposeDescribe" name="otherPurposeDescribe"></textarea></div>
         <div class="field"><label>UK Contact Name (if any)</label><input type="text" id="otherContactName" name="otherContactName"></div>
         <div class="field"><label>UK Contact Address (if any)</label><input type="text" id="otherContactAddress" name="otherContactAddress"></div>
+        <div class="field"><label>UK Contact Telephone (if any)</label><input type="tel" id="otherContactPhone" name="otherContactPhone"></div>
+        <div class="field"><label>How do you know them?</label><input type="text" id="otherContactRelationship" name="otherContactRelationship"></div>
       </div>
     </div>
 
@@ -459,6 +506,15 @@
       <div class="field"><label>Total Duration of Stay</label><input type="text" id="stayDuration" name="stayDuration" placeholder="e.g. 14 days"></div>
       <div class="field"><label>Point of Entry (Airport/Port)</label><input type="text" id="entryPoint" name="entryPoint"></div>
       <div class="field full"><label>Outline of Planned Itinerary</label><textarea id="itineraryOutline" name="itineraryOutline"></textarea></div>
+      <div class="field"><label>Country / City You Are Travelling From</label><input type="text" id="departCity" name="departCity"></div>
+        <div class="field"><label>Country You Will Return To</label><input type="text" id="returnCountry" name="returnCountry"></div>
+        <div class="field full"><label>Have you booked your return travel?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="returnTicket" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="returnTicket" value="Not yet"> Not yet</label><label class="radio-pill"><input type="radio" name="returnTicket" value="Will book after visa decision"> Will book after visa decision</label></div></div>
+        <div class="field full"><label>Are you travelling with anyone?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="travelCompanions" id="travelCompanionsYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="travelCompanions" id="travelCompanionsNo" value="No"> No</label></div><div class="conditional-field" id="companionsField"><div class="field-grid"><div class="field full"><div id="companionsList"></div><button class="btn btn-add" type="button" id="addCompanionBtn" onclick="addDynamicEntry(DYN.companion)">+ Add Companion</button></div></div></div></div>
+        <div class="field full"><label>Do you plan to visit any other countries on this trip?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="visitOtherCountries" id="visitOtherCountriesYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="visitOtherCountries" id="visitOtherCountriesNo" value="No"> No</label></div><div class="conditional-field" id="visitOtherCountriesField"><div class="field-grid"><div class="field full"><label>Which countries, and when?</label><input type="text" id="otherCountriesList" name="otherCountriesList"></div></div></div></div>
+        <div class="subsection full" style="grid-column:1/-1"><div class="subsection-title">Activities During Your Visit</div></div>
+        <div class="field full"><label>Do you intend to receive medical treatment in the UK?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="plansMedical" id="plansMedicalYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="plansMedical" id="plansMedicalNo" value="No"> No</label></div><div class="conditional-field" id="plansMedicalField"><div class="field-grid"><div class="field full"><label>Please give details (treatment, provider, how it will be paid for)</label><textarea id="plansMedicalDetails" name="plansMedicalDetails"></textarea></div></div></div></div>
+        <div class="field full"><label>Do you plan to get married or enter a civil partnership in the UK?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="plansMarriage" id="plansMarriageYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="plansMarriage" id="plansMarriageNo" value="No"> No</label></div></div>
+        <div class="field full"><label>Do you plan to do any paid or unpaid work, or study, during your visit?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="plansWorkStudy" id="plansWorkStudyYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="plansWorkStudy" id="plansWorkStudyNo" value="No"> No</label></div><div class="conditional-field" id="plansWorkStudyField"><div class="field-grid"><div class="field full"><label>Please give details</label><textarea id="plansWorkStudyDetails" name="plansWorkStudyDetails"></textarea></div></div></div></div>
     </div>
   </div>
 </div>
@@ -487,6 +543,9 @@
         </div>
       </div>
       <div class="field full"><label>Accommodation Address</label><input type="text" id="accommodationAddress" name="accommodationAddress"></div>
+      <div class="field"><label>Hotel / Host / Property Name</label><input type="text" id="accommodationName" name="accommodationName"></div>
+        <div class="field"><label>Total Cost (or Cost per Night)</label><input type="text" id="accommodationCost" name="accommodationCost"></div>
+        <div class="field full"><label>Who is paying for your accommodation?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="accommodationPaidBy" value="Myself"> Myself</label><label class="radio-pill"><input type="radio" name="accommodationPaidBy" value="UK host"> UK host</label><label class="radio-pill"><input type="radio" name="accommodationPaidBy" value="Employer / Company"> Employer / Company</label><label class="radio-pill"><input type="radio" name="accommodationPaidBy" value="Other"> Other</label></div></div>
     </div>
   </div>
 </div>
@@ -507,6 +566,14 @@
         </select>
       </div>
       <div class="field"><label>Estimated Total Cost of Trip</label><input type="text" id="estimatedTripCost" name="estimatedTripCost"></div>
+      <div class="conditional-field" id="tripSponsorField" style="grid-column:1/-1"><div class="subsection-title" style="margin-bottom:12px">Sponsor Details</div><div class="field-grid">
+        <div class="field"><label>Sponsor's Full Name</label><input type="text" id="sponsorName" name="sponsorName"></div>
+        <div class="field"><label>Relationship to You</label><input type="text" id="sponsorRelationship" name="sponsorRelationship"></div>
+        <div class="field full"><label>Sponsor's Address</label><input type="text" id="sponsorAddress" name="sponsorAddress"></div>
+        <div class="field"><label>Sponsor's Telephone</label><input type="tel" id="sponsorPhone" name="sponsorPhone"></div>
+        <div class="field"><label>Amount They Will Provide</label><input type="text" id="sponsorAmount" name="sponsorAmount"></div>
+        <div class="field full"><label>Which costs will they cover, and how will they provide the money?</label><textarea id="sponsorHow" name="sponsorHow"></textarea></div>
+      </div></div>
       <div class="field full">
         <label>Do you have a bank account with sufficient funds?</label>
         <div class="radio-group">
@@ -517,6 +584,10 @@
           <div class="field"><label>Amount Held</label><input type="text" id="sufficientFundsAmount" name="sufficientFundsAmount"></div>
         </div>
       </div>
+      <div class="field"><label>Total Savings Available</label><input type="text" id="savingsAmount" name="savingsAmount"></div>
+        <div class="field"><label>Main Source of Your Funds</label><select id="fundsSource" name="fundsSource"><option value="">Select&#8230;</option><option>Salary / Employment</option><option>Savings</option><option>Business Income</option><option>Pension</option><option>Family Support</option><option>Other</option></select></div>
+        <div class="field"><label>Name on the Bank Account</label><input type="text" id="accountHolderName" name="accountHolderName"></div>
+        <div class="field full"><label>Have the funds been held for at least 28 consecutive days?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="funds28Days" id="funds28DaysYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="funds28Days" id="funds28DaysNo" value="No"> No</label></div></div>
     </div>
   </div>
 </div>
@@ -547,6 +618,15 @@
           <label class="radio-pill"><input type="radio" name="leaveApproved" value="N/A"> Not Applicable</label>
         </div>
       </div>
+      <div class="field"><label>Date Employment Started</label><input type="date" id="employmentStartDate" name="employmentStartDate"></div>
+        <div class="field"><label>Employer's Telephone Number</label><input type="tel" id="employerPhone" name="employerPhone"></div>
+      <div class="conditional-field" id="selfEmployedField" style="grid-column:1/-1"><div class="field-grid"><div class="field full"><label>Business Name &amp; Nature of Business</label><input type="text" id="businessName" name="businessName"></div>
+        <div class="field"><label>How long has the business been running?</label><input type="text" id="businessAge" name="businessAge"></div>
+        <div class="field"><label>Business Registration Number</label><input type="text" id="businessRegNumber" name="businessRegNumber"></div></div></div>
+      <div class="conditional-field" id="studentField" style="grid-column:1/-1"><div class="field-grid"><div class="field full"><label>School / University Name</label><input type="text" id="studentInstitution" name="studentInstitution"></div>
+        <div class="field"><label>Course of Study</label><input type="text" id="studentCourse" name="studentCourse"></div>
+        <div class="field"><label>Term / holiday dates covering this trip</label><input type="text" id="studentLeaveDates" name="studentLeaveDates"></div></div></div>
+      <div class="conditional-field" id="notWorkingField" style="grid-column:1/-1"><div class="field-grid"><div class="field full"><label>How do you support yourself, and what do you do day-to-day?</label><textarea id="notWorkingSupport" name="notWorkingSupport"></textarea></div></div></div>
     </div>
   </div>
 </div>
@@ -558,25 +638,39 @@
     <span class="section-number">08</span><span class="chevron">&#9660;</span>
   </div>
   <div class="section-body hidden" id="body-family">
+    <div class="smart-note">&#128161; Your marital status is taken from the Personal Information section &#8212; the spouse / partner questions appear automatically if it applies to you.</div>
     <div class="field-grid">
-      <div class="field">
-        <label>Marital / Family Status</label>
-        <select id="familyStatus" name="familyStatus">
-          <option value="">Select&#8230;</option>
-          <option>Single</option><option>Married</option><option>Divorced</option><option>Widowed</option>
-        </select>
-      </div>
-      <div class="field"><label>Number of Children (if any)</label><input type="number" id="childrenCount" name="childrenCount" min="0"></div>
-      <div class="field full">
-        <label>Do you have immediate family remaining in your home country?</label>
-        <div class="radio-group">
-          <label class="radio-pill"><input type="radio" name="familyRemainingHome" id="familyRemainingHomeYes" value="Yes"> Yes</label>
-          <label class="radio-pill"><input type="radio" name="familyRemainingHome" id="familyRemainingHomeNo" value="No"> No</label>
-        </div>
-        <div class="conditional-field" id="familyRemainingHomeField">
-          <div class="field full"><label>Who remains, and what is your relationship to them?</label><textarea id="familyRemainingHomeDetail" name="familyRemainingHomeDetail"></textarea></div>
-        </div>
-      </div>
+      <div class="conditional-block" id="spouseBlock" style="grid-column:1/-1"><div class="subsection" style="margin-top:0;padding-top:0;border-top:none"><div class="subsection-title">Spouse / Partner</div></div><div class="field-grid">
+        <div class="field"><label>Given Name(s)</label><input type="text" id="spouseGivenNames" name="spouseGivenNames"></div>
+        <div class="field"><label>Family Name</label><input type="text" id="spouseFamilyName" name="spouseFamilyName"></div>
+        <div class="field"><label>Date of Birth</label><input type="date" id="spouseDob" name="spouseDob"></div>
+        <div class="field"><label>Nationality</label><input type="text" id="spouseNationality" name="spouseNationality"></div>
+        <div class="field"><label>Occupation</label><input type="text" id="spouseOccupation" name="spouseOccupation"></div>
+        <div class="field full"><label>Does your spouse/partner live with you?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="spouseLive" id="spouseLiveYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="spouseLive" id="spouseLiveNo" value="No"> No</label></div></div>
+        <div class="field full"><label>Is your spouse/partner travelling with you to the UK?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="spouseTravel" id="spouseTravelYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="spouseTravel" id="spouseTravelNo" value="No"> No</label></div><div class="conditional-field" id="spouseTravelField"><div class="field-grid"><div class="field"><label>Spouse / Partner's Passport Number</label><input type="text" id="spousePassport" name="spousePassport"></div></div></div></div>
+      </div></div>
+      <div class="subsection full" style="grid-column:1/-1"><div class="subsection-title">Mother</div></div>
+        <div class="field"><label>Given Name(s)</label><input type="text" id="motherGivenNames" name="motherGivenNames"></div>
+        <div class="field"><label>Family Name</label><input type="text" id="motherFamilyName" name="motherFamilyName"></div>
+        <div class="field"><label>Date of Birth</label><input type="date" id="motherDob" name="motherDob"></div>
+        <div class="field"><label>Country of Nationality</label><input type="text" id="motherNationality" name="motherNationality"></div>
+        <div class="subsection full" style="grid-column:1/-1"><div class="subsection-title">Father</div></div>
+        <div class="field"><label>Given Name(s)</label><input type="text" id="fatherGivenNames" name="fatherGivenNames"></div>
+        <div class="field"><label>Family Name</label><input type="text" id="fatherFamilyName" name="fatherFamilyName"></div>
+        <div class="field"><label>Date of Birth</label><input type="date" id="fatherDob" name="fatherDob"></div>
+        <div class="field"><label>Country of Nationality</label><input type="text" id="fatherNationality" name="fatherNationality"></div>
+        <div class="subsection full" style="grid-column:1/-1"><div class="subsection-title">Children</div></div>
+        <div class="field full"><label>Do you have any children?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="hasChildren" id="hasChildrenYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="hasChildren" id="hasChildrenNo" value="No"> No</label></div><div class="conditional-field" id="childrenField"><div class="field-grid"><div class="field full"><div id="childrenList"></div><button class="btn btn-add" type="button" id="addChildBtn" onclick="addDynamicEntry(DYN.child)">+ Add Child</button></div></div></div></div>
+        <div class="subsection full" style="grid-column:1/-1"><div class="subsection-title">Ties to Your Home Country</div></div>
+        <div class="field full"><label>Do you have immediate family remaining in your home country?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="familyRemainingHome" id="familyRemainingHomeYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="familyRemainingHome" id="familyRemainingHomeNo" value="No"> No</label></div><div class="conditional-field" id="familyRemainingHomeField"><div class="field-grid"><div class="field full"><label>Who remains, and what is your relationship to them?</label><textarea id="familyRemainingHomeDetail" name="familyRemainingHomeDetail"></textarea></div></div></div></div>
+        <div class="field full"><label>Do you own property in your home country?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="ownsProperty" id="ownsPropertyYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="ownsProperty" id="ownsPropertyNo" value="No"> No</label></div><div class="conditional-field" id="ownsPropertyField"><div class="field-grid"><div class="field full"><label>Describe the property (type, location, ownership)</label><input type="text" id="propertyDetails" name="propertyDetails"></div></div></div></div>
+        <div class="field full"><label>Do you own or run a business in your home country?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="ownsBusiness" id="ownsBusinessYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="ownsBusiness" id="ownsBusinessNo" value="No"> No</label></div><div class="conditional-field" id="ownsBusinessField"><div class="field-grid"><div class="field full"><label>Describe the business</label><input type="text" id="businessDetails" name="businessDetails"></div></div></div></div>
+        <div class="field full"><label>Anything else that ties you to your home country? (studies, dependants, community or caring role...)</label><textarea id="homeTies" name="homeTies"></textarea></div>
+        <div class="subsection full" style="grid-column:1/-1"><div class="subsection-title">Other Family in the UK</div></div>
+        <div class="field full"><label>Do you have any other family members in the UK (apart from any host named above)?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="ukRelatives" id="ukRelativesYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="ukRelatives" id="ukRelativesNo" value="No"> No</label></div><div class="conditional-field" id="ukRelativesField"><div class="field-grid"><div class="field full"><label>Full Name of Family Member</label><input type="text" id="ukRelName" name="ukRelName"></div>
+        <div class="field"><label>Relationship to You</label><input type="text" id="ukRelRelationship" name="ukRelRelationship"></div>
+        <div class="field"><label>Their UK Immigration Status</label><input type="text" id="ukRelStatus" name="ukRelStatus"></div>
+        <div class="field full"><label>Their UK Address</label><input type="text" id="ukRelAddress" name="ukRelAddress"></div></div></div></div>
     </div>
   </div>
 </div>
@@ -589,36 +683,31 @@
   </div>
   <div class="section-body hidden" id="body-travelhistory">
     <div class="field-grid">
-      <div class="field">
-        <label>Have you visited the UK before?</label>
-        <div class="radio-group">
-          <label class="radio-pill"><input type="radio" name="visitedUkBefore" value="Yes"> Yes</label>
-          <label class="radio-pill"><input type="radio" name="visitedUkBefore" value="No"> No</label>
-        </div>
-      </div>
-      <div class="field"><label>Number of Previous UK Visits</label><input type="number" id="ukVisitCount" name="ukVisitCount" min="0"></div>
-      <div class="field full">
-        <label>Has any visa application (any country) ever been refused?</label>
-        <div class="radio-group">
-          <label class="radio-pill"><input type="radio" name="visaRefused" id="visaRefusedYes" value="Yes"> Yes</label>
-          <label class="radio-pill"><input type="radio" name="visaRefused" id="visaRefusedNo" value="No"> No</label>
-        </div>
-      </div>
-      <div class="field full" id="refusalListField" style="display:none">
+      <div class="field full"><label>Have you visited the UK before?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="visitedUkBefore" id="visitedUkBeforeYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="visitedUkBefore" id="visitedUkBeforeNo" value="No"> No</label></div><div class="conditional-field" id="visitedUkBeforeField"><div class="field-grid"><div class="field"><label>Number of Previous UK Visits</label><input type="number" id="ukVisitCount" name="ukVisitCount"></div>
+        <div class="field"><label>Date of Your Last UK Visit</label><input type="date" id="lastUkVisitDate" name="lastUkVisitDate"></div>
+        <div class="field"><label>Purpose of Your Last UK Visit</label><input type="text" id="lastUkVisitPurpose" name="lastUkVisitPurpose"></div>
+        <div class="field"><label>Length of Your Last UK Stay</label><input type="text" id="lastUkVisitLength" name="lastUkVisitLength"></div></div></div></div>
+        <div class="field full"><label>Have you ever held a UK visa?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="heldUkVisa" id="heldUkVisaYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="heldUkVisa" id="heldUkVisaNo" value="No"> No</label></div><div class="conditional-field" id="heldUkVisaField"><div class="field-grid"><div class="field"><label>Visa Type</label><input type="text" id="heldUkVisaType" name="heldUkVisaType"></div>
+        <div class="field"><label>Dates it was valid</label><input type="text" id="heldUkVisaDates" name="heldUkVisaDates"></div></div></div></div>
+        <div class="field full"><label>Have you travelled to any other countries in the last 10 years?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="otherTravel" id="otherTravelYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="otherTravel" id="otherTravelNo" value="No"> No</label></div><div class="conditional-field" id="otherTravelDetailsField"><div class="field-grid"><div class="field full"><div id="travelEntriesList"></div><button class="btn btn-add" type="button" id="addTravelEntryBtn" onclick="addDynamicEntry(DYN.travel)">+ Add Travel Entry</button></div></div></div></div>
+        <div class="field full"><label>Has any visa application (any country) ever been refused?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="visaRefused" id="visaRefusedYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="visaRefused" id="visaRefusedNo" value="No"> No</label></div></div>
+        <div class="field full" id="refusalListField" style="display:none">
         <div id="refusalList"></div>
         <button class="btn btn-add" type="button" id="addRefusalBtn" onclick="addRefusalEntry()">+ Add Refusal / Issue Entry</button>
       </div>
-      <div class="field full">
-        <label>Have you ever overstayed a visa, in the UK or elsewhere?</label>
-        <div class="radio-group">
-          <label class="radio-pill"><input type="radio" name="overstayed" id="overstayedYes" value="Yes"> Yes</label>
-          <label class="radio-pill"><input type="radio" name="overstayed" id="overstayedNo" value="No"> No</label>
-        </div>
-        <div class="conditional-field" id="overstayedField">
-          <div class="field full"><label>Explain the circumstances</label><textarea id="overstayedExplain" name="overstayedExplain"></textarea></div>
-        </div>
-      </div>
+        <div class="field full"><label>Have you ever overstayed a visa, in the UK or elsewhere?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="overstayed" id="overstayedYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="overstayed" id="overstayedNo" value="No"> No</label></div><div class="conditional-field" id="overstayedField"><div class="field-grid"><div class="field full"><label>Explain the circumstances</label><textarea id="overstayedExplain" name="overstayedExplain"></textarea></div></div></div></div>
     </div>
+  </div>
+</div>
+
+<div class="form-card" id="card-character">
+  <div class="section-header collapsed" onclick="toggleSection('character')">
+    <div class="section-icon">&#128737;&#65039;</div><h2>Character &amp; Security</h2>
+    <span class="section-number">10</span><span class="chevron">&#9660;</span>
+  </div>
+  <div class="section-body hidden" id="body-character">
+    <div class="notice-box" style="margin-bottom:18px"><strong>Please answer every question honestly.</strong> Answering "Yes" does not automatically mean refusal, but giving false or incomplete information can.</div>
+    <div id="characterQuestions"></div>
   </div>
 </div>
 
@@ -626,7 +715,7 @@
 <div class="form-card" id="card-additional">
   <div class="section-header collapsed" onclick="toggleSection('additional')">
     <div class="section-icon">&#128204;</div><h2>Additional Information</h2>
-    <span class="section-number">10</span><span class="chevron">&#9660;</span>
+    <span class="section-number">11</span><span class="chevron">&#9660;</span>
   </div>
   <div class="section-body hidden" id="body-additional">
     <div class="field-grid">
@@ -659,7 +748,7 @@
 <div class="form-card" id="card-statement">
   <div class="section-header collapsed" onclick="toggleSection('statement')">
     <div class="section-icon">&#9997;&#65039;</div><h2>Personal Statement</h2>
-    <span class="section-number">11</span><span class="chevron">&#9660;</span>
+    <span class="section-number">12</span><span class="chevron">&#9660;</span>
   </div>
   <div class="section-body hidden" id="body-statement">
     <div class="field full">
@@ -673,7 +762,7 @@
 <div class="form-card" id="card-declaration">
   <div class="section-header collapsed" onclick="toggleSection('declaration')">
     <div class="section-icon">&#9997;&#65039;</div><h2>Declaration</h2>
-    <span class="section-number">12</span><span class="chevron">&#9660;</span>
+    <span class="section-number">13</span><span class="chevron">&#9660;</span>
   </div>
   <div class="section-body hidden" id="body-declaration">
     <div class="notice-box"><strong>Declaration:</strong> By signing below, you confirm that all information provided in this application is true, complete and accurate to the best of your knowledge, and that you intend to leave the UK at the end of your visit.</div>
@@ -706,7 +795,7 @@
 <div class="form-card" id="card-documents">
   <div class="section-header collapsed" onclick="toggleSection('documents')">
     <div class="section-icon">&#128194;</div><h2>Document Requirements</h2>
-    <span class="section-number">13</span><span class="chevron">&#9660;</span>
+    <span class="section-number">14</span><span class="chevron">&#9660;</span>
   </div>
   <div class="section-body hidden" id="body-documents">
     <p style="font-size:13px;color:var(--text-muted);margin-bottom:14px" id="docChecklistIntro">Select a purpose above to see your personalised document checklist. Click any document below to view its requirements.</p>
@@ -759,6 +848,13 @@ function setPurposePath(value) {
 const STORAGE_KEY = 'uk_visa_visitor_form_data';
 let saveTimeout;
 
+const DYNAMIC_LISTS = [
+  { count: 'refusalCount', wrap: 'refusalListField', add: () => addRefusalEntry() },
+  { count: 'companionCount', wrap: 'companionsField', add: () => addDynamicEntry(DYN.companion) },
+  { count: 'childCount', wrap: 'childrenField', add: () => addDynamicEntry(DYN.child) },
+  { count: 'travelEntryCount', wrap: 'otherTravelDetailsField', add: () => addDynamicEntry(DYN.travel) }
+];
+
 function autoSaveForm() {
   clearTimeout(saveTimeout);
   saveTimeout = setTimeout(() => {
@@ -772,7 +868,7 @@ function autoSaveForm() {
     document.querySelectorAll('[id^="body-"]').forEach(b => { ss[b.id] = b.classList.contains('hidden'); });
     formData._sectionStates = ss;
     formData._group = window.currentGroup;
-    formData._refusalCount = window.refusalCount || 0;
+    DYNAMIC_LISTS.forEach(l => { formData['_' + l.count] = window[l.count] || 0; });
     if (window.signaturePad && !window.signaturePad.isEmpty()) formData._signature = window.signaturePad.toDataURL('image/png');
     localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
   }, 1000);
@@ -783,6 +879,12 @@ function restoreFormData() {
   if (!saved) return;
   try {
     const fd = JSON.parse(saved);
+    /* 1. rebuild repeating entries first, so their saved values have somewhere to go */
+    DYNAMIC_LISTS.forEach(l => {
+      const n = fd['_' + l.count] || 0;
+      if (n > 0) { document.getElementById(l.wrap).style.display = 'block'; for (let i = 0; i < n; i++) l.add(); }
+    });
+    /* 2. restore values */
     Object.keys(fd).forEach(k => {
       if (k.startsWith('_')) return;
       const el = document.getElementById(k);
@@ -801,9 +903,10 @@ function restoreFormData() {
         else { b.classList.remove('hidden'); b.previousElementSibling?.classList.remove('collapsed'); }
       });
     }
+    /* 3. re-run the show/hide logic */
     if (fd.visitPurpose) setPurposePath(fd.visitPurpose);
-    if (fd._refusalCount > 0) { document.getElementById('refusalListField').style.display='block'; for (let i=0;i<fd._refusalCount;i++) addRefusalEntry(); }
     document.querySelectorAll('input[type="radio"]:checked').forEach(el => el.dispatchEvent(new Event('change', {bubbles:true})));
+    document.querySelectorAll('select').forEach(el => el.dispatchEvent(new Event('change', {bubbles:true})));
     updateProgress();
   } catch(e) { console.warn('Restore failed:', e); }
 }
@@ -834,6 +937,56 @@ window.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('change', autoSaveForm);
 });
 
+/* ── DYNAMIC ENTRY ENGINE ── */
+const DYN = {
+  companion: {"count": "companionCount", "list": "companionsList", "btn": "addCompanionBtn", "prefix": "comp", "title": "Travelling Companion", "fields": [{"id": "Name", "label": "Full Name", "short": "Name"}, {"id": "Dob", "label": "Date of Birth", "type": "date", "short": "DOB"}, {"id": "Relationship", "label": "Relationship to You", "short": "Relationship"}, {"id": "Nationality", "label": "Nationality", "short": "Nationality"}, {"id": "Passport", "label": "Passport Number", "short": "Passport"}, {"id": "Separate", "label": "Applying on a separate application?", "type": "yn", "short": "Separate Application"}]},
+  child: {"count": "childCount", "list": "childrenList", "btn": "addChildBtn", "prefix": "child", "title": "Child", "fields": [{"id": "Name", "label": "Full Name", "short": "Name"}, {"id": "Dob", "label": "Date of Birth", "type": "date", "short": "DOB"}, {"id": "Nationality", "label": "Nationality", "short": "Nationality"}, {"id": "Passport", "label": "Passport Number (if any)", "short": "Passport"}, {"id": "Live", "label": "Lives with you?", "type": "yn", "short": "Lives With You"}, {"id": "Travel", "label": "Travelling with you to the UK?", "type": "yn", "short": "Travelling With You"}]},
+  travel: {"count": "travelEntryCount", "list": "travelEntriesList", "btn": "addTravelEntryBtn", "prefix": "travelEntry", "title": "Travel Entry", "max": 8, "fields": [{"id": "Country", "label": "Country", "short": "Country"}, {"id": "Date", "label": "Date of Visit", "type": "date", "short": "Date"}, {"id": "Reason", "label": "Reason for Travel", "short": "Reason"}, {"id": "Length", "label": "Length of Stay", "short": "Length of Stay"}]}
+};
+function addDynamicEntry(cfg) {
+  const max = cfg.max || 5;
+  if ((window[cfg.count] || 0) >= max) return;
+  window[cfg.count] = (window[cfg.count] || 0) + 1;
+  const n = window[cfg.count];
+  const fields = cfg.fields.map(f => {
+    const fid = cfg.prefix + n + f.id;
+    if (f.type === 'yn') return `<div class="field full"><label>${f.label}</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="${fid}" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="${fid}" value="No"> No</label></div></div>`;
+    return `<div class="field${f.full ? ' full' : ''}"><label>${f.label}</label><input type="${f.type || 'text'}" id="${fid}" name="${fid}"></div>`;
+  }).join('');
+  const div = document.createElement('div'); div.className = 'dynamic-entry'; div.id = cfg.prefix + '-' + n;
+  div.innerHTML = `<div class="dynamic-entry-header"><span class="dynamic-entry-title">${cfg.title} ${n}</span><button class="btn-remove" onclick="removeEntry('${cfg.prefix}-${n}')" type="button">&#10005; Remove</button></div><div class="field-grid">${fields}</div>`;
+  document.getElementById(cfg.list).appendChild(div);
+  document.getElementById(cfg.btn).disabled = window[cfg.count] >= max;
+  autoSaveForm();
+}
+function bindDynamic(name, yesId, cfg, wrapId) {
+  document.querySelectorAll(`input[name="${name}"]`).forEach(r => r.addEventListener('change', () => {
+    const show = document.getElementById(yesId).checked;
+    document.getElementById(wrapId).style.display = show ? 'block' : 'none';
+    if (show && !window[cfg.count]) addDynamicEntry(cfg);
+    if (!show) { window[cfg.count] = 0; document.getElementById(cfg.list).innerHTML = ''; document.getElementById(cfg.btn).disabled = false; }
+  }));
+}
+
+/* ── CHARACTER & SECURITY QUESTIONS ── */
+const CHARACTER_QUESTIONS = [
+  { key: 'immOffence', short: 'Immigration Offence / Penalty', q: 'Have you ever committed an immigration offence or been given a civil penalty - for example entering illegally, working without permission, or breaking visa conditions - in the UK or any other country?' },
+  { key: 'deception', short: 'Deception in Applications', q: 'Have you ever used deception (false documents, false information or concealed facts) in an application to any government or in dealings with UK immigration?' },
+  { key: 'refusedStay', short: 'Refused Stay / Asylum / Banned', q: 'Have you ever been refused permission to stay, refused asylum, required to leave, excluded or banned from any country?' },
+  { key: 'ukDebts', short: 'UK Debts / NHS Charges', q: 'Do you owe any money to the NHS or any other UK public body, or have any unpaid UK medical or hospital bills?' },
+  { key: 'warCrimes', short: 'War Crimes / Genocide', q: 'Have you ever been involved in, or suspected of involvement in, war crimes, crimes against humanity or genocide?' },
+  { key: 'terrorism', short: 'Terrorism / Proscribed Groups', q: 'Have you ever been involved in, supported or encouraged terrorism, or been a member of - or supported - any organisation involved in terrorism or that is banned or proscribed?' },
+  { key: 'extremism', short: 'Extremist Views', q: 'Have you ever expressed views - by any means (speeches, writing, websites, social media) - that justify or glorify terrorist violence, encourage others to commit terrorist acts, or foster hatred that could lead to violence between communities?' },
+  { key: 'military', short: 'Military / Security Service', q: 'Have you ever served in, or been a member of, a military, paramilitary, police, intelligence or security force, civil defence unit or militia?' },
+  { key: 'goodCharacter', short: 'Other Character Concerns', q: 'Have you ever been involved in any other activity that might indicate you are not of good character?' }
+];
+function renderCharacterQuestions() {
+  const host = document.getElementById('characterQuestions');
+  host.innerHTML = CHARACTER_QUESTIONS.map(c => `<div class="field full" style="margin-bottom:16px"><label>${c.q}</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="char_${c.key}" id="char_${c.key}Yes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="char_${c.key}" id="char_${c.key}No" value="No"> No</label></div><div class="conditional-field" id="char_${c.key}Field"><div class="field full"><label>Please give full details (what, when, where, and the outcome)</label><textarea id="char_${c.key}Explain" name="char_${c.key}Explain"></textarea></div></div></div>`).join('');
+  CHARACTER_QUESTIONS.forEach(c => watchRadio('char_' + c.key, 'char_' + c.key + 'Yes', 'char_' + c.key + 'Field'));
+}
+renderCharacterQuestions();
+
 /* ── RADIO CONDITIONALS ── */
 function watchRadio(name, yesId, targetId) {
   document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
@@ -849,6 +1002,47 @@ watchRadio('familyRemainingHome','familyRemainingHomeYes','familyRemainingHomeFi
 watchRadio('overstayed','overstayedYes','overstayedField');
 watchRadio('criminalHistory','criminalHistoryYes','criminalHistoryField');
 watchRadio('deportationHistory','deportationHistoryYes','deportationHistoryField');
+watchRadio('otherNationality','otherNationalityYes','otherNationalityField');
+watchRadio('correspondence','correspondenceNo','correspondenceField');
+watchRadio('prevAddressNeeded','prevAddressNeededYes','prevAddressNeededField');
+watchRadio('hasNationalId','hasNationalIdYes','hasNationalIdField');
+watchRadio('otherPassports','otherPassportsYes','otherPassportsField');
+watchRadio('tourUkContact','tourUkContactYes','tourUkContactField');
+watchRadio('friendMetInPerson','friendMetInPersonYes','friendMetInPersonField');
+watchRadio('gradOthersAttending','gradOthersAttendingYes','gradOthersAttendingField');
+watchRadio('bizPaidByUk','bizPaidByUkYes','bizPaidByUkField');
+watchRadio('bizPrevVisits','bizPrevVisitsYes','bizPrevVisitsField');
+bindDynamic('travelCompanions','travelCompanionsYes',DYN.companion,'companionsField');
+watchRadio('visitOtherCountries','visitOtherCountriesYes','visitOtherCountriesField');
+watchRadio('plansMedical','plansMedicalYes','plansMedicalField');
+watchRadio('plansWorkStudy','plansWorkStudyYes','plansWorkStudyField');
+watchRadio('spouseTravel','spouseTravelYes','spouseTravelField');
+bindDynamic('hasChildren','hasChildrenYes',DYN.child,'childrenField');
+watchRadio('ownsProperty','ownsPropertyYes','ownsPropertyField');
+watchRadio('ownsBusiness','ownsBusinessYes','ownsBusinessField');
+watchRadio('ukRelatives','ukRelativesYes','ukRelativesField');
+watchRadio('visitedUkBefore','visitedUkBeforeYes','visitedUkBeforeField');
+watchRadio('heldUkVisa','heldUkVisaYes','heldUkVisaField');
+bindDynamic('otherTravel','otherTravelYes',DYN.travel,'otherTravelDetailsField');
+
+/* ── SELECT-DRIVEN SHOW/HIDE ── */
+function updateSpouseBlock() {
+  const v = document.getElementById('maritalStatus').value;
+  document.getElementById('spouseBlock').style.display = ['Married', 'Civil Partnership', 'Unmarried Partner'].includes(v) ? 'block' : 'none';
+}
+function updateEmploymentFields() {
+  const v = document.getElementById('employmentStatus').value;
+  document.getElementById('selfEmployedField').style.display = v === 'Self-Employed' ? 'block' : 'none';
+  document.getElementById('studentField').style.display = v === 'Student' ? 'block' : 'none';
+  document.getElementById('notWorkingField').style.display = ['Retired', 'Unemployed', 'Other'].includes(v) ? 'block' : 'none';
+}
+function updateSponsorField() {
+  const v = document.getElementById('tripFundedBy').value;
+  document.getElementById('tripSponsorField').style.display = (v && v !== 'Myself') ? 'block' : 'none';
+}
+document.getElementById('maritalStatus').addEventListener('change', updateSpouseBlock);
+document.getElementById('employmentStatus').addEventListener('change', updateEmploymentFields);
+document.getElementById('tripFundedBy').addEventListener('change', updateSponsorField);
 
 document.querySelectorAll('input[name="visaRefused"]').forEach(r => r.addEventListener('change', () => {
   const show = document.getElementById('visaRefusedYes').checked;
@@ -874,12 +1068,12 @@ function removeEntry(id) { const el = document.getElementById(id); if (el) { el.
 
 /* ── SMART DOCUMENT CHECKLIST ── */
 const DOC_REQ_VIS = {
-  tourism: { label:'Tourism', docs:['Passport','Account Statement','Employment Evidence','Travel Itinerary','Accommodation Booking','Passport Photo'] },
-  family: { label:'Visiting Family', docs:['Passport','Account Statement','Employment Evidence','Invitation Letter',"Host's Passport / UK Status",'Accommodation Evidence','Passport Photo'] },
-  friends: { label:'Visiting Friends', docs:['Passport','Account Statement','Employment Evidence','Invitation Letter','Accommodation Evidence','Passport Photo'] },
-  graduation: { label:'Attending a Graduation', docs:['Passport','Account Statement','Employment Evidence','Graduation Invitation','University Confirmation Letter',"Student's Passport / UK Status",'Relationship Evidence','Accommodation Evidence','Passport Photo'] },
-  business: { label:'Business Visit', docs:['Passport','Account Statement','Employment Evidence','Business Invitation Letter','Company Registration Documents','Accommodation Evidence','Passport Photo'] },
-  other: { label:'Other', docs:['Passport','Account Statement','Employment Evidence','Accommodation Evidence','Passport Photo'] }
+  tourism: { label:'Tourism', docs:['Passport','Account Statement','Employment Evidence','Travel Itinerary','Accommodation Booking','Proof of Ties to Home Country','Passport Photo'] },
+  family: { label:'Visiting Family', docs:['Passport','Account Statement','Employment Evidence','Invitation Letter',"Host's Passport / UK Status",'Accommodation Evidence','Sponsor Financial Evidence','Proof of Ties to Home Country','Passport Photo'] },
+  friends: { label:'Visiting Friends', docs:['Passport','Account Statement','Employment Evidence','Invitation Letter','Accommodation Evidence','Sponsor Financial Evidence','Proof of Ties to Home Country','Passport Photo'] },
+  graduation: { label:'Attending a Graduation', docs:['Passport','Account Statement','Employment Evidence','Graduation Invitation','University Confirmation Letter',"Student's Passport / UK Status",'Relationship Evidence','Accommodation Evidence','Sponsor Financial Evidence','Proof of Ties to Home Country','Passport Photo'] },
+  business: { label:'Business Visit', docs:['Passport','Account Statement','Employment Evidence','Business Invitation Letter','Company Registration Documents','Accommodation Evidence','Proof of Ties to Home Country','Passport Photo'] },
+  other: { label:'Other', docs:['Passport','Account Statement','Employment Evidence','Accommodation Evidence','Sponsor Financial Evidence','Proof of Ties to Home Country','Passport Photo'] }
 };
 const DOC_DETAIL_VIS = {
   'Passport':{purpose:'Identification and travel record',requirements:['Clear coloured scan of the data page.','Valid for at least 6 months beyond intended travel.']},
@@ -887,6 +1081,8 @@ const DOC_DETAIL_VIS = {
   'Employment Evidence':{purpose:'Proof of ties to your home country and income',requirements:['Employment/reference letter on official letterhead.','Should confirm role, salary, and approved leave dates.']},
   'Travel Itinerary':{purpose:'Shows your planned movements in the UK',requirements:['Flight bookings, planned activities and dates.']},
   'Accommodation Booking':{purpose:'Proof of where you will stay',requirements:['Hotel confirmation or rental booking with dates and address.']},
+  'Proof of Ties to Home Country':{purpose:'Shows you have strong reasons to return home after your visit',requirements:['Property deeds, business registration, or tenancy agreement in your home country.','Evidence of family, study or community commitments.','Employer letter confirming you are expected back at work.']},
+  'Sponsor Financial Evidence':{purpose:'Shows the person paying for your trip can afford to',requirements:['Their last 6 months of bank statements and recent payslips or business accounts.','A signed letter confirming exactly which costs they will cover.','Copy of their passport or ID.']},
   'Passport Photo':{purpose:'Identification photo',requirements:['45mm x 35mm, plain background, taken in the last 6 months.']},
   'Invitation Letter':{purpose:'Confirms you are expected by your host',requirements:['Written by your UK host, including their address and contact details.','Should state the purpose and length of your visit.']},
   "Host's Passport / UK Status":{purpose:"Confirms your host's identity and right to be in the UK",requirements:['Copy of passport data page and, if applicable, BRP/eVisa/visa.']},
@@ -1056,23 +1252,27 @@ function _buildPDF() {
   function getVal(id) { const el=document.getElementById(id); if(!el) return 'Not provided'; if(el.type==='date'&&el.value) return new Date(el.value).toLocaleDateString('en-GB'); return el.value?.trim()||'Not provided'; }
   function isVisible(id) { const el = document.getElementById(id); return el && el.style.display !== 'none' && window.getComputedStyle(el).display !== 'none'; }
 
+  function subhead(t) { ensureSpace(22); doc.setFont('helvetica','bolditalic'); doc.setFontSize(9); doc.setTextColor(...BLUE); doc.text(t,ml+8,y); y+=14; doc.setFont('helvetica','normal'); doc.setTextColor(...NAVY); }
+  function dynList(cfg,label) { for (let n=1;n<=(window[cfg.count]||0);n++) { if(!document.getElementById(cfg.prefix+'-'+n)) continue; const lines=cfg.fields.map(f=>{ const fid=cfg.prefix+n+f.id; return (f.short||f.label)+': '+(f.type==='yn'?getRadio(fid):getVal(fid)); }); field(label+' '+n,lines.join('\n'),12); } }
+
   renderSection('Purpose of Visit',()=>{field('Purpose',purposeLabel);});
-  renderSection('Personal Information',()=>{field('Given Name(s)',getVal('givenNames'));field('Family Name',getVal('familyName'));field('Date of Birth',getVal('dob'));field('Place of Birth',getVal('placeOfBirth'));field('Other Name?',getRadio('otherName'));if(isVisible('previousNamesField'))field('Previous Name(s)',getVal('previousNames'),12);field('Nationality',getVal('nationality'));field('Marital Status',getVal('maritalStatus'));field('Current Address',getVal('currentAddress'));field('Telephone',getVal('telephone'));field('Email',getVal('email'));field('Passport Number',getVal('passportNumber'));field('Passport Issuing Country',getVal('passportIssuingCountry'));field('Passport Issue Date',getVal('passportIssueDate'));field('Passport Expiry Date',getVal('passportExpiryDate'));});
+  renderSection('Personal Information',()=>{field('Given Name(s)',getVal('givenNames'));field('Family Name',getVal('familyName'));field('Date of Birth',getVal('dob'));field('Place of Birth',getVal('placeOfBirth'));field('Country of Birth',getVal('countryOfBirth'));field('Gender',getVal('gender'));field('Other Name?',getRadio('otherName'));if(isVisible('previousNamesField'))field('Previous Name(s)',getVal('previousNames'),12);field('Nationality',getVal('nationality'));field('Marital Status',getVal('maritalStatus'));field('Other Nationality?',getRadio('otherNationality'));if(isVisible('otherNationalityField')){field('Other Nationality',getVal('otherNationalityDetails'),12);}field('Current Address',getVal('currentAddress'));field('Telephone',getVal('telephone'));field('Email',getVal('email'));field('Time at Address',getVal('addressDuration'));field('Correspondence Address Same?',getRadio('correspondence'));if(isVisible('correspondenceField')){field('Correspondence Address',getVal('correspondenceAddress'),12);}field('Home Ownership',getRadio('homeOwnership'));field('At Address < 2 Years?',getRadio('prevAddressNeeded'));if(isVisible('prevAddressNeededField')){field('Previous Address',getVal('previousAddress'),12);field('Time at Previous Address',getVal('previousAddressDuration'),12);}field('National ID Card?',getRadio('hasNationalId'));if(isVisible('hasNationalIdField')){field('National ID Number',getVal('nationalIdNumber'),12);}field('Passport Number',getVal('passportNumber'));field('Passport Issuing Country',getVal('passportIssuingCountry'));field('Passport Issue Date',getVal('passportIssueDate'));field('Passport Expiry Date',getVal('passportExpiryDate'));field('Passport Issued By',getVal('passportPlaceOfIssue'));field('Other Passports?',getRadio('otherPassports'));if(isVisible('otherPassportsField')){field('Other Passport Details',getVal('otherPassportDetails'),12);}});
   renderSection('UK Contact / Sponsor',()=>{
     const g = window.currentGroup;
-    if (g === 'tourism') { field('Organised Tour Package?',getRadio('tourPackage')); field('Pre-Booked Tours',getVal('preBookedTours')); }
-    else if (g === 'family') { field('Family Member Name',getVal('famHostName')); field('Relationship',getVal('famHostRelationship')); field('Their UK Status',getVal('famHostStatus')); field('Length of Stay',getVal('famLengthOfStay')); field('Their UK Address',getVal('famHostAddress')); field('Accommodation Arrangement',getVal('famAccommodationArrangement')); }
-    else if (g === 'friends') { field('Friend Name',getVal('friendHostName')); field('How Known',getVal('friendHowKnown')); field('Their UK Address',getVal('friendHostAddress')); field('Length of Stay',getVal('friendLengthOfStay')); }
-    else if (g === 'graduation') { field('Who Is Graduating',getVal('gradPersonName')); field('Relationship',getVal('gradRelationship')); field('University',getVal('gradUniversity')); field('Graduation Date',getVal('gradDate')); field('Student UK Status',getVal('gradStudentStatus')); field('Where You Will Stay',getVal('gradWhereStay')); field('Who Pays for Trip',getVal('gradWhoPays')); }
-    else if (g === 'business') { field('Inviting Company',getVal('bizCompanyName')); field('Contact Person',getVal('bizContactPerson')); field('Their Role',getVal('bizContactRole')); field('Company UK Address',getVal('bizCompanyAddress')); field('Purpose of Visit',getVal('bizPurposeDetail')); field('Letter of Invitation?',getRadio('bizInviteLetter')); }
-    else { field('Visit Description',getVal('otherPurposeDescribe')); field('UK Contact Name',getVal('otherContactName')); field('UK Contact Address',getVal('otherContactAddress')); }
+    if (g === 'tourism') { field('Organised Tour Package?',getRadio('tourPackage')); field('Pre-Booked Tours',getVal('preBookedTours'));field('Reason for Choosing UK',getVal('tourReason'));field('Knows Anyone in UK?',getRadio('tourUkContact'));if(isVisible('tourUkContactField')){field('UK Contact Name',getVal('tourUkContactName'),12);field('UK Contact Relationship',getVal('tourUkContactRelationship'),12);field('UK Contact Address',getVal('tourUkContactAddress'),12);} }
+    else if (g === 'family') { field('Family Member Name',getVal('famHostName')); field('Relationship',getVal('famHostRelationship')); field('Their UK Status',getVal('famHostStatus')); field('Length of Stay',getVal('famLengthOfStay')); field('Their UK Address',getVal('famHostAddress')); field('Accommodation Arrangement',getVal('famAccommodationArrangement'));field('Host Date of Birth',getVal('famHostDob'));field('Host Nationality',getVal('famHostNationality'));field('Host Passport / ID No.',getVal('famHostPassport'));field('Host Occupation',getVal('famHostOccupation'));field('Host Telephone',getVal('famHostPhone'));field('Host Email',getVal('famHostEmail'));field('Last Met In Person',getVal('famLastMet'));field('Host Paying Any Costs?',getRadio('famHostPays')); }
+    else if (g === 'friends') { field('Friend Name',getVal('friendHostName')); field('How Known',getVal('friendHowKnown')); field('Their UK Address',getVal('friendHostAddress')); field('Length of Stay',getVal('friendLengthOfStay'));field('Host UK Status',getVal('friendHostStatus'));field('Host Date of Birth',getVal('friendHostDob'));field('Host Nationality',getVal('friendHostNationality'));field('Host Occupation',getVal('friendHostOccupation'));field('Host Telephone',getVal('friendHostPhone'));field('Host Email',getVal('friendHostEmail'));field('Known For',getVal('friendKnownDuration'));field('Met In Person?',getRadio('friendMetInPerson'));if(isVisible('friendMetInPersonField')){field('First Met',getVal('friendFirstMet'),12);}field('Host Paying Any Costs?',getRadio('friendHostPays')); }
+    else if (g === 'graduation') { field('Who Is Graduating',getVal('gradPersonName')); field('Relationship',getVal('gradRelationship')); field('University',getVal('gradUniversity')); field('Graduation Date',getVal('gradDate')); field('Student UK Status',getVal('gradStudentStatus')); field('Where You Will Stay',getVal('gradWhereStay')); field('Who Pays for Trip',getVal('gradWhoPays'));field('Course / Degree',getVal('gradCourse'));field('Student ID Number',getVal('gradStudentId'));field('Student UK Address',getVal('gradStudentAddress'));field('Student Telephone',getVal('gradStudentPhone'));field('Official Invitation/Ticket?',getRadio('gradTickets'));field('Others Attending?',getRadio('gradOthersAttending'));if(isVisible('gradOthersAttendingField')){field('Who Else Attending',getVal('gradOthersWho'),12);} }
+    else if (g === 'business') { field('Inviting Company',getVal('bizCompanyName')); field('Contact Person',getVal('bizContactPerson')); field('Their Role',getVal('bizContactRole')); field('Company UK Address',getVal('bizCompanyAddress')); field('Purpose of Visit',getVal('bizPurposeDetail')); field('Letter of Invitation?',getRadio('bizInviteLetter'));field('Company Telephone',getVal('bizCompanyPhone'));field('Company Email',getVal('bizCompanyEmail'));field('Company Website',getVal('bizCompanyWebsite'));field('Contact Email',getVal('bizContactEmail'));field('Business Activity',getVal('bizActivity'));field('Paid By UK Source?',getRadio('bizPaidByUk'));if(isVisible('bizPaidByUkField')){field('Payment Details',getVal('bizPaidDetails'),12);}field('Previous Business Visits?',getRadio('bizPrevVisits'));if(isVisible('bizPrevVisitsField')){field('Previous Visit Details',getVal('bizPrevVisitsDetails'),12);} }
+    else { field('Visit Description',getVal('otherPurposeDescribe')); field('UK Contact Name',getVal('otherContactName')); field('UK Contact Address',getVal('otherContactAddress'));field('UK Contact Telephone',getVal('otherContactPhone'));field('Relationship to Contact',getVal('otherContactRelationship')); }
   });
-  renderSection('Travel Plans',()=>{field('Arrival Date',getVal('arrivalDate'));field('Departure Date',getVal('departureDate'));field('Duration of Stay',getVal('stayDuration'));field('Point of Entry',getVal('entryPoint'));field('Itinerary Outline',getVal('itineraryOutline'));});
-  renderSection('Accommodation',()=>{field('Accommodation Type',getRadio('accommodationType'));field('Booking Confirmation?',getRadio('hasBooking'));field('Accommodation Address',getVal('accommodationAddress'));});
-  renderSection('Financial Information',()=>{field('Trip Funded By',getVal('tripFundedBy'));field('Estimated Trip Cost',getVal('estimatedTripCost'));field('Sufficient Funds?',getRadio('hasSufficientFunds'));if(isVisible('sufficientFundsAmountField'))field('Amount Held',getVal('sufficientFundsAmount'),12);});
-  renderSection('Employment & Income',()=>{field('Employment Status',getVal('employmentStatus'));field('Job Title',getVal('jobTitle'));field('Employer',getVal('employerNameAddress'));field('Income',getVal('incomeAmount'));field('Leave Approved?',getRadio('leaveApproved'));});
-  renderSection('Family Information',()=>{field('Family Status',getVal('familyStatus'));field('Number of Children',getVal('childrenCount'));field('Family Remaining Home?',getRadio('familyRemainingHome'));if(isVisible('familyRemainingHomeField'))field('Details',getVal('familyRemainingHomeDetail'),12);});
-  renderSection('Previous Travel & Immigration History',()=>{field('Visited UK Before?',getRadio('visitedUkBefore'));field('Number of Visits',getVal('ukVisitCount'));field('Visa Ever Refused?',getRadio('visaRefused'));for(let n=1;n<=window.refusalCount;n++){field('Refusal/Issue '+n,`${getVal('ref'+n+'Explain')} (${getVal('ref'+n+'Date')})`,12);}field('Ever Overstayed?',getRadio('overstayed'));if(isVisible('overstayedField'))field('Explanation',getVal('overstayedExplain'),12);});
+  renderSection('Travel Plans',()=>{field('Arrival Date',getVal('arrivalDate'));field('Departure Date',getVal('departureDate'));field('Duration of Stay',getVal('stayDuration'));field('Point of Entry',getVal('entryPoint'));field('Itinerary Outline',getVal('itineraryOutline'));field('Travelling From',getVal('departCity'));field('Returning To',getVal('returnCountry'));field('Return Travel Booked?',getRadio('returnTicket'));field('Travelling With Others?',getRadio('travelCompanions'));if(isVisible('companionsField')){dynList(DYN.companion,'Companion');}field('Visiting Other Countries?',getRadio('visitOtherCountries'));if(isVisible('visitOtherCountriesField')){field('Other Countries',getVal('otherCountriesList'),12);}subhead('Activities During Your Visit');field('Medical Treatment in UK?',getRadio('plansMedical'));if(isVisible('plansMedicalField')){field('Treatment Details',getVal('plansMedicalDetails'),12);}field('Marriage / Partnership in UK?',getRadio('plansMarriage'));field('Work / Study in UK?',getRadio('plansWorkStudy'));if(isVisible('plansWorkStudyField')){field('Work / Study Details',getVal('plansWorkStudyDetails'),12);}});
+  renderSection('Accommodation',()=>{field('Accommodation Type',getRadio('accommodationType'));field('Booking Confirmation?',getRadio('hasBooking'));field('Accommodation Address',getVal('accommodationAddress'));field('Accommodation Name',getVal('accommodationName'));field('Accommodation Cost',getVal('accommodationCost'));field('Accommodation Paid By',getRadio('accommodationPaidBy'));});
+  renderSection('Financial Information',()=>{field('Trip Funded By',getVal('tripFundedBy'));field('Estimated Trip Cost',getVal('estimatedTripCost'));if(isVisible('tripSponsorField')){field('Sponsor Name',getVal('sponsorName'),12);field('Sponsor Relationship',getVal('sponsorRelationship'),12);field('Sponsor Address',getVal('sponsorAddress'),12);field('Sponsor Telephone',getVal('sponsorPhone'),12);field('Sponsor Amount',getVal('sponsorAmount'),12);field('Costs Covered / Method',getVal('sponsorHow'),12);}field('Sufficient Funds?',getRadio('hasSufficientFunds'));if(isVisible('sufficientFundsAmountField'))field('Amount Held',getVal('sufficientFundsAmount'),12);field('Total Savings',getVal('savingsAmount'));field('Main Source of Funds',getVal('fundsSource'));field('Bank Account Holder',getVal('accountHolderName'));field('Funds Held 28+ Days?',getRadio('funds28Days'));});
+  renderSection('Employment & Income',()=>{field('Employment Status',getVal('employmentStatus'));field('Job Title',getVal('jobTitle'));field('Employer',getVal('employerNameAddress'));field('Employment Start Date',getVal('employmentStartDate'));field('Employer Telephone',getVal('employerPhone'));field('Income',getVal('incomeAmount'));field('Leave Approved?',getRadio('leaveApproved'));if(isVisible('selfEmployedField')){field('Business Name / Nature',getVal('businessName'),12);field('Business Running For',getVal('businessAge'),12);field('Business Reg. Number',getVal('businessRegNumber'),12);}if(isVisible('studentField')){field('Institution',getVal('studentInstitution'),12);field('Course',getVal('studentCourse'),12);field('Term / Holiday Dates',getVal('studentLeaveDates'),12);}if(isVisible('notWorkingField')){field('Support / Daily Activity',getVal('notWorkingSupport'),12);}});
+  renderSection('Family Information & Ties',()=>{field('Marital Status',getVal('maritalStatus'));if(isVisible('spouseBlock')){subhead('Spouse / Partner');field('Spouse - Given Name(s)',getVal('spouseGivenNames'));field('Spouse - Family Name',getVal('spouseFamilyName'));field('Spouse - Date of Birth',getVal('spouseDob'));field('Spouse - Nationality',getVal('spouseNationality'));field('Spouse - Occupation',getVal('spouseOccupation'));field('Spouse Lives With You?',getRadio('spouseLive'));field('Spouse Travelling?',getRadio('spouseTravel'));if(isVisible('spouseTravelField')){field('Spouse Passport No.',getVal('spousePassport'),12);}}subhead('Mother');field('Mother - Given Name(s)',getVal('motherGivenNames'));field('Mother - Family Name',getVal('motherFamilyName'));field('Mother - Date of Birth',getVal('motherDob'));field('Mother - Nationality',getVal('motherNationality'));subhead('Father');field('Father - Given Name(s)',getVal('fatherGivenNames'));field('Father - Family Name',getVal('fatherFamilyName'));field('Father - Date of Birth',getVal('fatherDob'));field('Father - Nationality',getVal('fatherNationality'));subhead('Children');field('Has Children?',getRadio('hasChildren'));if(isVisible('childrenField')){dynList(DYN.child,'Child');}subhead('Ties to Your Home Country');field('Family Remaining at Home?',getRadio('familyRemainingHome'));if(isVisible('familyRemainingHomeField')){field('Family Remaining - Details',getVal('familyRemainingHomeDetail'),12);}field('Owns Property?',getRadio('ownsProperty'));if(isVisible('ownsPropertyField')){field('Property Details',getVal('propertyDetails'),12);}field('Owns Business?',getRadio('ownsBusiness'));if(isVisible('ownsBusinessField')){field('Business Details',getVal('businessDetails'),12);}field('Other Ties to Home Country',getVal('homeTies'));subhead('Other Family in the UK');field('Other UK Family?',getRadio('ukRelatives'));if(isVisible('ukRelativesField')){field('UK Family - Name',getVal('ukRelName'),12);field('UK Family - Relationship',getVal('ukRelRelationship'),12);field('UK Family - Status',getVal('ukRelStatus'),12);field('UK Family - Address',getVal('ukRelAddress'),12);}});
+  renderSection('Previous Travel & Immigration History',()=>{field('Visited UK Before?',getRadio('visitedUkBefore'));if(isVisible('visitedUkBeforeField')){field('Number of Visits',getVal('ukVisitCount'),12);field('Last UK Visit',getVal('lastUkVisitDate'),12);field('Last Visit Purpose',getVal('lastUkVisitPurpose'),12);field('Last Visit Length',getVal('lastUkVisitLength'),12);}field('Held UK Visa Before?',getRadio('heldUkVisa'));if(isVisible('heldUkVisaField')){field('Previous Visa Type',getVal('heldUkVisaType'),12);field('Previous Visa Dates',getVal('heldUkVisaDates'),12);}field('Travelled to Other Countries?',getRadio('otherTravel'));if(isVisible('otherTravelDetailsField')){dynList(DYN.travel,'Travel Entry');}field('Visa Ever Refused?',getRadio('visaRefused'));for(let n=1;n<=window.refusalCount;n++){if(!document.getElementById('ref-'+n))continue;field('Refusal/Issue '+n,`${getVal('ref'+n+'Explain')} (${getVal('ref'+n+'Date')})`,12);}field('Ever Overstayed?',getRadio('overstayed'));if(isVisible('overstayedField')){field('Explanation',getVal('overstayedExplain'),12);}});
+  renderSection('Character & Security',()=>{CHARACTER_QUESTIONS.forEach(c=>{field(c.short,getRadio('char_'+c.key));if(isVisible('char_'+c.key+'Field'))field('Details',getVal('char_'+c.key+'Explain'),12);});});
   renderSection('Additional Information',()=>{field('Criminal Convictions?',getRadio('criminalHistory'));if(isVisible('criminalHistoryField'))field('Explanation',getVal('criminalHistoryExplain'),12);field('Deportation / Refused Entry?',getRadio('deportationHistory'));if(isVisible('deportationHistoryField'))field('Explanation',getVal('deportationHistoryExplain'),12);field('Other Information',getVal('additionalOther'));});
   renderSection('Personal Statement',()=>{ensureSpace(30);const stmt=(document.getElementById('personalStatement').value||'Not provided').trim();doc.setFontSize(9.5);doc.setTextColor(...NAVY);doc.setFont('helvetica','normal');wrapText(stmt,ml+8,usable-16,14);});
   renderSection('Declaration',()=>{ensureSpace(30);doc.setFontSize(9);doc.setTextColor(...GREY);doc.setFont('helvetica','italic');wrapText('I confirm that the details provided are correct and I take full responsibility for their accuracy.',ml+8,usable-16,13);y+=6;doc.setFont('helvetica','normal');doc.setTextColor(...NAVY);field('Name',getVal('declarationName'));field('Date',getVal('signatureDate'));ensureSpace(95);doc.setFontSize(8);doc.setTextColor(...GREY);doc.setFont('helvetica','bold');doc.text('SIGNATURE',ml,y);y+=8;const sigBoxW=220,sigBoxH=65;doc.setDrawColor(...BORDER);doc.setLineWidth(0.5);doc.setFillColor(250,252,255);doc.rect(ml,y,sigBoxW,sigBoxH,'FD');const hasSig=window.signaturePad&&!window.signaturePad.isEmpty();if(hasSig){try{const sigImg=window.signaturePad.toDataURL('image/png');if(sigImg&&sigImg.startsWith('data:image/png;base64,')&&sigImg.length>100)doc.addImage(sigImg,'PNG',ml+2,y+2,sigBoxW-4,sigBoxH-4);}catch(e){}}else{doc.setFontSize(8);doc.setTextColor(190,200,210);doc.setFont('helvetica','italic');doc.text('No signature captured',ml+8,y+sigBoxH/2+3);}y+=sigBoxH+12;});

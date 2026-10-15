@@ -325,6 +325,9 @@
       <div class="field"><label>Family Name</label><input type="text" id="familyName" name="familyName" placeholder="e.g. Smith"></div>
       <div class="field"><label>Date of Birth</label><input type="date" id="dob" name="dob"></div>
       <div class="field"><label>Place of Birth</label><input type="text" id="placeOfBirth" name="placeOfBirth"></div>
+      <div class="field"><label>Country of Birth</label><input type="text" id="countryOfBirth" name="countryOfBirth"></div>
+        <div class="field"><label>Gender</label><select id="gender" name="gender"><option value="">Select&#8230;</option><option>Male</option><option>Female</option><option>Other</option><option>Prefer not to say</option></select></div>
+        <div class="field"><label>Your Marital Status</label><select id="maritalStatus" name="maritalStatus"><option value="">Select&#8230;</option><option>Single</option><option>Married</option><option>Civil Partnership</option><option>Unmarried Partner</option><option>Divorced</option><option>Separated</option><option>Widowed</option></select></div>
       <div class="field full">
         <label>Have you ever been known by any other name?</label>
         <div class="radio-group">
@@ -350,6 +353,11 @@
       <div class="field"><label>How long at this address?</label><input type="text" id="addressDuration" name="addressDuration" placeholder="e.g. 2 years"></div>
       <div class="field"><label>Telephone Number</label><input type="tel" id="telephone" name="telephone"></div>
       <div class="field"><label>Email Address</label><input type="email" id="email" name="email"></div>
+      <div class="field full"><label>Is this address also your correspondence address?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="correspondence" id="correspondenceYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="correspondence" id="correspondenceNo" value="No"> No</label></div><div class="conditional-field" id="correspondenceField"><div class="field-grid"><div class="field full"><label>Correspondence Address</label><input type="text" id="correspondenceAddress" name="correspondenceAddress"></div></div></div></div>
+        <div class="field full"><label>Home Ownership Status</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="homeOwnership" value="Owned"> Owned</label><label class="radio-pill"><input type="radio" name="homeOwnership" value="Rented"> Rented</label><label class="radio-pill"><input type="radio" name="homeOwnership" value="Living with Family"> Living with Family</label><label class="radio-pill"><input type="radio" name="homeOwnership" value="Other"> Other</label></div></div>
+        <div class="field full"><label>Have you lived at your current address for less than 2 years?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="prevAddressNeeded" id="prevAddressNeededYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="prevAddressNeeded" id="prevAddressNeededNo" value="No"> No</label></div><div class="conditional-field" id="prevAddressNeededField"><div class="field-grid"><div class="field full"><label>Previous Address</label><input type="text" id="previousAddress" name="previousAddress"></div>
+        <div class="field"><label>How long did you live there?</label><input type="text" id="previousAddressDuration" name="previousAddressDuration"></div></div></div></div>
+        <div class="field full"><label>Do you have a national identity card?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="hasNationalId" id="hasNationalIdYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="hasNationalId" id="hasNationalIdNo" value="No"> No</label></div><div class="conditional-field" id="hasNationalIdField"><div class="field-grid"><div class="field"><label>National Identity Card Number</label><input type="text" id="nationalIdNumber" name="nationalIdNumber"></div></div></div></div>
       <div class="subsection full" style="grid-column:1/-1">
         <div class="subsection-title">Passport &amp; Nationality</div>
       </div>
@@ -357,6 +365,8 @@
       <div class="field"><label>Passport Issuing Country</label><input type="text" id="passportIssuingCountry" name="passportIssuingCountry"></div>
       <div class="field"><label>Passport Issue Date</label><input type="date" id="passportIssueDate" name="passportIssueDate"></div>
       <div class="field"><label>Passport Expiry Date</label><input type="date" id="passportExpiryDate" name="passportExpiryDate"></div>
+      <div class="field"><label>Passport Issuing Authority / Place of Issue</label><input type="text" id="passportPlaceOfIssue" name="passportPlaceOfIssue"></div>
+        <div class="field full"><label>Do you hold any other valid passport or travel document?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="otherPassports" id="otherPassportsYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="otherPassports" id="otherPassportsNo" value="No"> No</label></div><div class="conditional-field" id="otherPassportsField"><div class="field-grid"><div class="field full"><label>Details (type, number, issuing country)</label><input type="text" id="otherPassportDetails" name="otherPassportDetails"></div></div></div></div>
     </div>
   </div>
 </div>
@@ -390,6 +400,11 @@
       <div class="field"><label>Date Entered / Will Enter the UK</label><input type="date" id="mainEntryDate" name="mainEntryDate"></div>
       <div class="field full"><label>Current UK Address</label><input type="text" id="mainUkAddress" name="mainUkAddress"></div>
       <div class="field"><label>Occupation in the UK</label><input type="text" id="mainOccupation" name="mainOccupation"></div>
+      <div class="field"><label>Main Applicant's Passport Number</label><input type="text" id="mainPassportNumber" name="mainPassportNumber"></div>
+        <div class="field"><label>Main Applicant's Telephone</label><input type="tel" id="mainTelephone" name="mainTelephone"></div>
+        <div class="field"><label>Main Applicant's Email</label><input type="email" id="mainEmail" name="mainEmail"></div>
+        <div class="field full"><label>Does the main applicant's visa or status allow them to bring dependants?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="mainVisaAllowsDependants" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="mainVisaAllowsDependants" value="No"> No</label><label class="radio-pill"><input type="radio" name="mainVisaAllowsDependants" value="Not sure"> Not sure</label></div></div>
+        <div class="field full"><label>Status of the main applicant's own visa / application</label><select id="mainApplicationStatus" name="mainApplicationStatus"><option value="">Select&#8230;</option><option>Already granted - living in the UK</option><option>Already granted - currently outside the UK</option><option>Application pending</option><option>Not yet applied</option></select></div>
       <div class="field full">
         <label>Will the main applicant be financially responsible for you?</label>
         <div class="radio-group">
@@ -453,6 +468,22 @@
             <div class="field"><label>Number of Children Together</label><input type="number" id="childrenTogetherCount" name="childrenTogetherCount" min="0"></div>
           </div>
         </div>
+        <div class="field full"><label>Have you met in person?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="metInPerson" id="metInPersonYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="metInPerson" id="metInPersonNo" value="No"> No</label></div><div class="conditional-field" id="metInPersonField"><div class="field-grid"><div class="field"><label>Date you first met in person</label><input type="date" id="firstMetDate" name="firstMetDate"></div></div></div></div>
+        <div class="field full"><label>Do you both intend to live together permanently in the UK?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="intendLiveTogether" id="intendLiveTogetherYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="intendLiveTogether" id="intendLiveTogetherNo" value="No"> No</label></div></div>
+        <div class="field full"><label>Is the marriage / partnership legally recognised where it took place?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="marriageRecognised" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="marriageRecognised" value="No"> No</label><label class="radio-pill"><input type="radio" name="marriageRecognised" value="Not applicable"> Not applicable</label></div></div>
+        <div class="subsection full" style="grid-column:1/-1"><div class="subsection-title">English Language Requirement</div></div>
+        <div class="field full"><label>How do you meet the English language requirement?</label><select id="englishRoute" name="englishRoute"><option value="">Select&#8230;</option><option>Passed an approved English test (CEFR A1 or above)</option><option>Degree taught in English</option><option>National of a majority English-speaking country</option><option>Exempt (age / disability / medical)</option><option>Not yet met - will take a test</option></select></div>
+        <div class="field"><label>Test Provider (e.g. IELTS, Trinity)</label><input type="text" id="englishTestProvider" name="englishTestProvider"></div>
+        <div class="field"><label>Test Date</label><input type="date" id="englishTestDate" name="englishTestDate"></div>
+        <div class="field"><label>Test Reference Number</label><input type="text" id="englishTestRef" name="englishTestRef"></div>
+        <div class="field"><label>Level / Score Achieved</label><input type="text" id="englishLevel" name="englishLevel"></div>
+        <div class="conditional-block" id="partnerOnlyBlock" style="grid-column:1/-1">
+          <div class="subsection"><div class="subsection-title">Unmarried Partner - Living Together</div></div>
+          <div class="field-grid">
+            <div class="field"><label>Date you started living together</label><input type="date" id="cohabStartDate" name="cohabStartDate"></div>
+        <div class="field full"><label>Have you lived together in a relationship akin to marriage for at least 2 years?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="cohab2Years" id="cohab2YearsYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="cohab2Years" id="cohab2YearsNo" value="No"> No</label></div><div class="conditional-field" id="cohab2YearsField"><div class="field-grid"><div class="field full"><label>Address(es) you shared during this period</label><input type="text" id="cohabAddress" name="cohabAddress"></div></div></div></div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -471,8 +502,11 @@
             <div class="field full"><label>Who has sole responsibility for you, and why?</label><textarea id="soleCustodyExplain" name="soleCustodyExplain"></textarea></div>
           </div>
         </div>
-        <div class="field"><label>Name of Consenting Adult (if you are under 18)</label><input type="text" id="consentingAdultName" name="consentingAdultName"></div>
+        <div class="field full"><label>Nature of your relationship with the parent in the UK</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="childRelType" value="Biological child"> Biological child</label><label class="radio-pill"><input type="radio" name="childRelType" value="Adopted child"> Adopted child</label><label class="radio-pill"><input type="radio" name="childRelType" value="Step-child"> Step-child</label><label class="radio-pill"><input type="radio" name="childRelType" value="Other"> Other</label></div></div>
+        <div class="field full"><label>Are you under 18 years old?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="childUnder18" id="childUnder18Yes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="childUnder18" id="childUnder18No" value="No"> No</label></div><div class="conditional-field" id="childUnder18Field"><div class="field-grid"><div class="field"><label>Name of Consenting Adult</label><input type="text" id="consentingAdultName" name="consentingAdultName"></div>
         <div class="field"><label>Relationship of Consenting Adult to You</label><input type="text" id="consentingAdultRelationship" name="consentingAdultRelationship"></div>
+        <div class="field full"><label>Current School / College</label><input type="text" id="currentSchool" name="currentSchool"></div></div></div></div>
+        <div class="field full"><label>Are you financially dependent on your parent in the UK?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="childDependent" id="childDependentYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="childDependent" id="childDependentNo" value="No"> No</label></div></div>
         <div class="field full">
           <label>Are you currently living with your other parent / guardian?</label>
           <div class="radio-group">
@@ -506,6 +540,12 @@
             <label class="radio-pill"><input type="radio" name="mainCanSupport" id="mainCanSupportNo" value="No"> No</label>
           </div>
         </div>
+        <div class="field full"><label>Describe your medical condition(s) and the everyday tasks you need help with</label><textarea id="healthCondition" name="healthCondition"></textarea></div>
+        <div class="field full"><label>What type of care do you need?</label><select id="careType" name="careType"><option value="">Select&#8230;</option><option>Personal care (washing, dressing, eating)</option><option>Domestic help</option><option>Medical / nursing care</option><option>Supervision / companionship</option><option>A combination</option></select></div>
+        <div class="field full"><label>Do you have other children or close relatives in your home country?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="otherRelativesHome" id="otherRelativesHomeYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="otherRelativesHome" id="otherRelativesHomeNo" value="No"> No</label></div><div class="conditional-field" id="otherRelativesHomeField"><div class="field-grid"><div class="field full"><label>Who are they, and why can they not provide your care or support?</label><textarea id="otherRelativesExplain" name="otherRelativesExplain"></textarea></div></div></div></div>
+        <div class="field full"><label>Are you currently financially dependent on the main applicant?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="dependentOnMain" id="dependentOnMainYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="dependentOnMain" id="dependentOnMainNo" value="No"> No</label></div><div class="conditional-field" id="dependentOnMainField"><div class="field-grid"><div class="field"><label>Since when / for how long?</label><input type="text" id="dependencyDuration" name="dependencyDuration"></div>
+        <div class="field full"><label>How do they currently support you?</label><input type="text" id="dependencySupportDesc" name="dependencySupportDesc"></div></div></div></div>
+        <div class="field full"><label>How are your living costs currently met? (pension, family, savings...)</label><input type="text" id="currentLivingCosts" name="currentLivingCosts"></div>
       </div>
     </div>
 
@@ -516,7 +556,71 @@
         <div class="field full"><label>Describe your exact relationship to the main applicant</label><textarea id="otherRelationshipDescribe" name="otherRelationshipDescribe"></textarea></div>
         <div class="field full"><label>Explain why you are applying to join or accompany them</label><textarea id="otherRelationshipReason" name="otherRelationshipReason"></textarea></div>
         <div class="field full"><label>What evidence will you provide of this relationship?</label><textarea id="otherRelationshipEvidence" name="otherRelationshipEvidence"></textarea></div>
+        <div class="field full"><label>Are you financially dependent on the main applicant?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="otherDependent" id="otherDependentYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="otherDependent" id="otherDependentNo" value="No"> No</label></div></div>
+        <div class="field full"><label>Have you lived in the same household as the main applicant?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="otherSameHousehold" id="otherSameHouseholdYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="otherSameHousehold" id="otherSameHouseholdNo" value="No"> No</label></div></div>
       </div>
+    </div>
+  </div>
+</div>
+
+<div class="form-card" id="card-parents">
+  <div class="section-header collapsed" onclick="toggleSection('parents')">
+    <div class="section-icon">&#128106;</div><h2>Your Parents' Details</h2>
+    <span class="section-number">05</span><span class="chevron">&#9660;</span>
+  </div>
+  <div class="section-body hidden" id="body-parents">
+    <div class="field-grid">
+        <div class="subsection full" style="grid-column:1/-1"><div class="subsection-title">Mother</div></div>
+        <div class="field"><label>Given Name(s)</label><input type="text" id="motherGivenNames" name="motherGivenNames"></div>
+        <div class="field"><label>Family Name</label><input type="text" id="motherFamilyName" name="motherFamilyName"></div>
+        <div class="field"><label>Date of Birth</label><input type="date" id="motherDob" name="motherDob"></div>
+        <div class="field"><label>Country of Birth</label><input type="text" id="motherCountryOfBirth" name="motherCountryOfBirth"></div>
+        <div class="field"><label>Country of Nationality</label><input type="text" id="motherNationality" name="motherNationality"></div>
+        <div class="field full"><label>Has she always had the same nationality?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="motherNationalitySame" id="motherNationalitySameYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="motherNationalitySame" id="motherNationalitySameNo" value="No"> No</label></div><div class="conditional-field" id="motherNationalitySameField"><div class="field-grid"><div class="field"><label>Previous Nationality</label><input type="text" id="motherPreviousNationality" name="motherPreviousNationality"></div></div></div></div>
+        <div class="subsection full" style="grid-column:1/-1"><div class="subsection-title">Father</div></div>
+        <div class="field"><label>Given Name(s)</label><input type="text" id="fatherGivenNames" name="fatherGivenNames"></div>
+        <div class="field"><label>Family Name</label><input type="text" id="fatherFamilyName" name="fatherFamilyName"></div>
+        <div class="field"><label>Date of Birth</label><input type="date" id="fatherDob" name="fatherDob"></div>
+        <div class="field"><label>Country of Birth</label><input type="text" id="fatherCountryOfBirth" name="fatherCountryOfBirth"></div>
+        <div class="field"><label>Country of Nationality</label><input type="text" id="fatherNationality" name="fatherNationality"></div>
+        <div class="field full"><label>Has he always had the same nationality?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="fatherNationalitySame" id="fatherNationalitySameYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="fatherNationalitySame" id="fatherNationalitySameNo" value="No"> No</label></div><div class="conditional-field" id="fatherNationalitySameField"><div class="field-grid"><div class="field"><label>Previous Nationality</label><input type="text" id="fatherPreviousNationality" name="fatherPreviousNationality"></div></div></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="form-card" id="card-dependents">
+  <div class="section-header collapsed" onclick="toggleSection('dependents')">
+    <div class="section-icon">&#128122;</div><h2>Your Dependants &amp; Other UK Family</h2>
+    <span class="section-number">06</span><span class="chevron">&#9660;</span>
+  </div>
+  <div class="section-body hidden" id="body-dependents">
+    <div class="field-grid">
+        <div class="field full"><label>Do you have children or other dependants of your own?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="dependents" id="dependentsYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="dependents" id="dependentsNo" value="No"> No</label></div><div class="conditional-field" id="dependentsSection"><div class="field-grid"><div class="field full"><div id="dependentsList"></div><button class="btn btn-add" type="button" id="addDependentBtn" onclick="addDynamicEntry(DYN.dependent)">+ Add Dependant</button></div></div></div></div>
+        <div class="field full"><label>Do you have any other family members in the UK (apart from the main applicant)?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="ukFamily" id="ukFamilyYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="ukFamily" id="ukFamilyNo" value="No"> No</label></div><div class="conditional-field" id="ukFamilyField"><div class="field-grid"><div class="field full"><label>Full Name of Family Member</label><input type="text" id="ukFamilyFullName" name="ukFamilyFullName"></div>
+        <div class="field"><label>Relationship to You</label><input type="text" id="ukFamilyRelationship" name="ukFamilyRelationship"></div>
+        <div class="field"><label>Their UK Immigration Status</label><input type="text" id="ukFamilyVisaType" name="ukFamilyVisaType"></div>
+        <div class="field full"><label>Their Full UK Address</label><input type="text" id="ukFamilyAddress" name="ukFamilyAddress"></div>
+        <div class="field full"><label>List any other family members in the UK</label><textarea id="ukFamilyOther" name="ukFamilyOther"></textarea></div></div></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="form-card" id="card-travelplans">
+  <div class="section-header collapsed" onclick="toggleSection('travelplans')">
+    <div class="section-icon">&#128197;</div><h2>Travel Plans &amp; Intended Stay</h2>
+    <span class="section-number">07</span><span class="chevron">&#9660;</span>
+  </div>
+  <div class="section-body hidden" id="body-travelplans">
+    <div class="field-grid">
+        <div class="field"><label>Intended Date of Arrival in the UK</label><input type="date" id="intendedArrival" name="intendedArrival"></div>
+        <div class="field"><label>Intended Length of Stay</label><select id="intendedStay" name="intendedStay"><option value="">Select&#8230;</option><option>Same as main applicant's visa</option><option>Under 6 months</option><option>6-12 months</option><option>1-2 years</option><option>2-5 years</option><option>Permanent settlement</option><option>Other</option></select></div>
+        <div class="field"><label>Country / City You Will Travel From</label><input type="text" id="departureCity" name="departureCity"></div>
+        <div class="field"><label>Intended Port of Entry (Airport / Port)</label><input type="text" id="entryPoint" name="entryPoint"></div>
+        <div class="field full"><label>Will you travel to the UK with the main applicant?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="travelWithMain" id="travelWithMainYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="travelWithMain" id="travelWithMainNo" value="No"> No</label></div><div class="conditional-field" id="travelWithMainField"><div class="field-grid"><div class="field full"><label>Who will you travel with, or when will the main applicant arrive?</label><input type="text" id="travelAlone" name="travelAlone"></div></div></div></div>
+        <div class="field full"><label>Do you intend to work in the UK?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="intendWork" id="intendWorkYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="intendWork" id="intendWorkNo" value="No"> No</label></div><div class="conditional-field" id="intendWorkField"><div class="field-grid"><div class="field full"><label>Intended Occupation / Employer</label><input type="text" id="intendedJob" name="intendedJob"></div></div></div></div>
+        <div class="field full"><label>Do you intend to study in the UK?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="intendStudy" id="intendStudyYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="intendStudy" id="intendStudyNo" value="No"> No</label></div><div class="conditional-field" id="intendStudyField"><div class="field-grid"><div class="field full"><label>Course / Institution</label><input type="text" id="intendedStudy" name="intendedStudy"></div></div></div></div>
+        <div class="field full"><label>Do you expect to rely on public funds (benefits or housing assistance) in the UK?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="publicFunds" id="publicFundsYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="publicFunds" id="publicFundsNo" value="No"> No</label></div></div>
+        <div class="field full"><label>Do you have a medical condition for which you expect to receive treatment in the UK?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="needsMedical" id="needsMedicalYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="needsMedical" id="needsMedicalNo" value="No"> No</label></div><div class="conditional-field" id="needsMedicalField"><div class="field-grid"><div class="field full"><label>Please give details</label><textarea id="medicalDetails" name="medicalDetails"></textarea></div></div></div></div>
     </div>
   </div>
 </div>
@@ -525,7 +629,7 @@
 <div class="form-card" id="card-immigration">
   <div class="section-header collapsed" onclick="toggleSection('immigration')">
     <div class="section-icon">&#128220;</div><h2>Immigration History</h2>
-    <span class="section-number">05</span><span class="chevron">&#9660;</span>
+    <span class="section-number">08</span><span class="chevron">&#9660;</span>
   </div>
   <div class="section-body hidden" id="body-immigration">
     <div class="field-grid">
@@ -568,6 +672,8 @@
         </div>
       </div>
       <div class="field"><label>Number of Previous UK Visits</label><input type="number" id="ukVisitCount" name="ukVisitCount" min="0"></div>
+      <div class="field"><label>Date of Your Last UK Visit</label><input type="date" id="lastUkVisitDate" name="lastUkVisitDate"></div>
+        <div class="field"><label>Purpose of Your Last UK Visit</label><input type="text" id="lastUkVisitPurpose" name="lastUkVisitPurpose"></div>
     </div>
   </div>
 </div>
@@ -576,7 +682,7 @@
 <div class="form-card" id="card-financial">
   <div class="section-header collapsed" onclick="toggleSection('financial')">
     <div class="section-icon">&#128176;</div><h2>Financial Information</h2>
-    <span class="section-number">06</span><span class="chevron">&#9660;</span>
+    <span class="section-number">09</span><span class="chevron">&#9660;</span>
   </div>
   <div class="section-body hidden" id="body-financial">
     <div class="field-grid">
@@ -603,6 +709,16 @@
       </div>
       <div class="field"><label>Your Employment Status (home country)</label><input type="text" id="ownEmploymentStatus" name="ownEmploymentStatus"></div>
       <div class="field full"><label>Employer Name &amp; Address (if employed)</label><input type="text" id="employerNameAddress" name="employerNameAddress"></div>
+      <div class="field"><label>Your Job Title / Occupation</label><input type="text" id="ownJobTitle" name="ownJobTitle"></div>
+        <div class="field"><label>Your Monthly Income</label><input type="text" id="monthlyIncome" name="monthlyIncome"></div>
+        <div class="field"><label>Main Source of Your Funds</label><select id="fundsSource" name="fundsSource"><option value="">Select&#8230;</option><option>Salary / Employment</option><option>Savings</option><option>Main Applicant / Sponsor</option><option>Pension</option><option>Business Income</option><option>Family Gift</option><option>Other</option></select></div>
+        <div class="field"><label>Name on the Bank Account</label><input type="text" id="fundsAccountHolder" name="fundsAccountHolder"></div>
+        <div class="field full"><label>Have the funds been held for at least 28 consecutive days?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="funds28Days" id="funds28DaysYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="funds28Days" id="funds28DaysNo" value="No"> No</label></div></div>
+        <div class="subsection full" style="grid-column:1/-1"><div class="subsection-title">Main Applicant's Finances</div></div>
+        <div class="field full"><label>Main Applicant's Employer Name &amp; Address</label><input type="text" id="mainEmployerName" name="mainEmployerName"></div>
+        <div class="field"><label>Date Main Applicant Started Current Job</label><input type="date" id="mainEmploymentStart" name="mainEmploymentStart"></div>
+        <div class="field"><label>Main Applicant's Savings</label><input type="text" id="mainSavings" name="mainSavings"></div>
+        <div class="field"><label>Number of People the Main Applicant Supports</label><input type="number" id="mainDependantsSupported" name="mainDependantsSupported"></div>
     </div>
   </div>
 </div>
@@ -611,7 +727,7 @@
 <div class="form-card" id="card-accommodation">
   <div class="section-header collapsed" onclick="toggleSection('accommodation')">
     <div class="section-icon">&#127968;</div><h2>Accommodation</h2>
-    <span class="section-number">07</span><span class="chevron">&#9660;</span>
+    <span class="section-number">10</span><span class="chevron">&#9660;</span>
   </div>
   <div class="section-body hidden" id="body-accommodation">
     <div class="field-grid">
@@ -637,6 +753,8 @@
       </div>
       <div class="field"><label>Number of Bedrooms</label><input type="number" id="bedroomCount" name="bedroomCount" min="0"></div>
       <div class="field"><label>Number of People Who Will Live There</label><input type="number" id="occupantCount" name="occupantCount" min="0"></div>
+      <div class="field"><label>Monthly Rent / Mortgage Cost</label><input type="text" id="accommodationMonthlyCost" name="accommodationMonthlyCost"></div>
+        <div class="field full"><label>Do you have a tenancy agreement, mortgage statement or host letter?</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="accommodationEvidence" id="accommodationEvidenceYes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="accommodationEvidence" id="accommodationEvidenceNo" value="No"> No</label></div></div>
     </div>
   </div>
 </div>
@@ -645,7 +763,7 @@
 <div class="form-card" id="card-travel">
   <div class="section-header collapsed" onclick="toggleSection('travel')">
     <div class="section-icon">&#9992;&#65039;</div><h2>Travel History</h2>
-    <span class="section-number">08</span><span class="chevron">&#9660;</span>
+    <span class="section-number">11</span><span class="chevron">&#9660;</span>
   </div>
   <div class="section-body hidden" id="body-travel">
     <div class="field-grid">
@@ -664,11 +782,22 @@
   </div>
 </div>
 
+<div class="form-card" id="card-character">
+  <div class="section-header collapsed" onclick="toggleSection('character')">
+    <div class="section-icon">&#128737;&#65039;</div><h2>Character &amp; Security</h2>
+    <span class="section-number">12</span><span class="chevron">&#9660;</span>
+  </div>
+  <div class="section-body hidden" id="body-character">
+    <div class="notice-box" style="margin-bottom:18px"><strong>Please answer every question honestly.</strong> Answering "Yes" does not automatically mean refusal, but giving false or incomplete information can.</div>
+    <div id="characterQuestions"></div>
+  </div>
+</div>
+
 <!-- SECTION 9: ADDITIONAL INFORMATION -->
 <div class="form-card" id="card-additional">
   <div class="section-header collapsed" onclick="toggleSection('additional')">
     <div class="section-icon">&#128204;</div><h2>Additional Information</h2>
-    <span class="section-number">09</span><span class="chevron">&#9660;</span>
+    <span class="section-number">13</span><span class="chevron">&#9660;</span>
   </div>
   <div class="section-body hidden" id="body-additional">
     <div class="field-grid">
@@ -701,7 +830,7 @@
 <div class="form-card" id="card-statement">
   <div class="section-header collapsed" onclick="toggleSection('statement')">
     <div class="section-icon">&#9997;&#65039;</div><h2>Personal Statement</h2>
-    <span class="section-number">10</span><span class="chevron">&#9660;</span>
+    <span class="section-number">14</span><span class="chevron">&#9660;</span>
   </div>
   <div class="section-body hidden" id="body-statement">
     <div class="field full">
@@ -715,7 +844,7 @@
 <div class="form-card" id="card-declaration">
   <div class="section-header collapsed" onclick="toggleSection('declaration')">
     <div class="section-icon">&#9997;&#65039;</div><h2>Declaration</h2>
-    <span class="section-number">11</span><span class="chevron">&#9660;</span>
+    <span class="section-number">15</span><span class="chevron">&#9660;</span>
   </div>
   <div class="section-body hidden" id="body-declaration">
     <div class="notice-box"><strong>Declaration:</strong> By signing below, you confirm that all information provided in this application is true, complete and accurate to the best of your knowledge.</div>
@@ -748,7 +877,7 @@
 <div class="form-card" id="card-documents">
   <div class="section-header collapsed" onclick="toggleSection('documents')">
     <div class="section-icon">&#128194;</div><h2>Document Requirements</h2>
-    <span class="section-number">12</span><span class="chevron">&#9660;</span>
+    <span class="section-number">16</span><span class="chevron">&#9660;</span>
   </div>
   <div class="section-body hidden" id="body-documents">
     <p style="font-size:13px;color:var(--text-muted);margin-bottom:14px" id="docChecklistIntro">Select a relationship above to see your personalised document checklist. Click any document below to view its requirements.</p>
@@ -795,6 +924,8 @@ function setRelationshipPath(value) {
   document.querySelectorAll('[data-show-if]').forEach(el => {
     el.style.display = (el.dataset.showIf === group) ? 'block' : 'none';
   });
+  const partnerBlock = document.getElementById('partnerOnlyBlock');
+  if (partnerBlock) partnerBlock.style.display = (value === 'Partner') ? 'block' : 'none';
   const heading = document.getElementById('mainApplicantHeading');
   if (heading) heading.textContent = RELATIONSHIP_HEADINGS[group] || 'Main Applicant Information';
   localStorage.setItem('uk_visa_type', 'Dependant');
@@ -809,6 +940,13 @@ function setRelationshipPath(value) {
 const STORAGE_KEY = 'uk_visa_dependant_form_data';
 let saveTimeout;
 
+const DYNAMIC_LISTS = [
+  { count: 'priorMarriageCount', wrap: 'priorMarriageListField', add: () => addPriorMarriage() },
+  { count: 'refusalCount', wrap: 'refusalListField', add: () => addRefusalEntry() },
+  { count: 'travelEntryCount', wrap: 'otherTravelDetailsField', add: () => addTravelEntry() },
+  { count: 'dependentCount', wrap: 'dependentsSection', add: () => addDynamicEntry(DYN.dependent) }
+];
+
 function autoSaveForm() {
   clearTimeout(saveTimeout);
   saveTimeout = setTimeout(() => {
@@ -822,9 +960,7 @@ function autoSaveForm() {
     document.querySelectorAll('[id^="body-"]').forEach(b => { ss[b.id] = b.classList.contains('hidden'); });
     formData._sectionStates = ss;
     formData._group = window.currentGroup;
-    formData._priorMarriageCount = window.priorMarriageCount || 0;
-    formData._refusalCount = window.refusalCount || 0;
-    formData._travelEntryCount = window.travelEntryCount || 0;
+    DYNAMIC_LISTS.forEach(l => { formData['_' + l.count] = window[l.count] || 0; });
     if (window.signaturePad && !window.signaturePad.isEmpty()) formData._signature = window.signaturePad.toDataURL('image/png');
     localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
   }, 1000);
@@ -835,6 +971,12 @@ function restoreFormData() {
   if (!saved) return;
   try {
     const fd = JSON.parse(saved);
+    /* 1. rebuild repeating entries first, so their saved values have somewhere to go */
+    DYNAMIC_LISTS.forEach(l => {
+      const n = fd['_' + l.count] || 0;
+      if (n > 0) { document.getElementById(l.wrap).style.display = 'block'; for (let i = 0; i < n; i++) l.add(); }
+    });
+    /* 2. restore values */
     Object.keys(fd).forEach(k => {
       if (k.startsWith('_')) return;
       const el = document.getElementById(k);
@@ -853,11 +995,10 @@ function restoreFormData() {
         else { b.classList.remove('hidden'); b.previousElementSibling?.classList.remove('collapsed'); }
       });
     }
+    /* 3. re-run the show/hide logic */
     if (fd.mainApplicantRelationship) setRelationshipPath(fd.mainApplicantRelationship);
-    if (fd._priorMarriageCount > 0) { document.getElementById('priorMarriageListField').style.display='block'; for (let i=0;i<fd._priorMarriageCount;i++) addPriorMarriage(); }
-    if (fd._refusalCount > 0) { document.getElementById('refusalListField').style.display='block'; for (let i=0;i<fd._refusalCount;i++) addRefusalEntry(); }
-    if (fd._travelEntryCount > 0) { document.getElementById('otherTravelDetailsField').style.display='block'; for (let i=0;i<fd._travelEntryCount;i++) addTravelEntry(); }
     document.querySelectorAll('input[type="radio"]:checked').forEach(el => el.dispatchEvent(new Event('change', {bubbles:true})));
+    document.querySelectorAll('select').forEach(el => el.dispatchEvent(new Event('change', {bubbles:true})));
     updateProgress();
   } catch(e) { console.warn('Restore failed:', e); }
 }
@@ -888,6 +1029,58 @@ window.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('change', autoSaveForm);
 });
 
+/* ── DYNAMIC ENTRY ENGINE ── */
+const DYN = {
+  dependent: {"count": "dependentCount", "list": "dependentsList", "btn": "addDependentBtn", "prefix": "dep", "title": "Dependant", "fields": [{"id": "Name", "label": "Full Name", "short": "Name"}, {"id": "Dob", "label": "Date of Birth", "type": "date", "short": "DOB"}, {"id": "Relationship", "label": "Relationship to You", "short": "Relationship"}, {"id": "Nationality", "label": "Country of Nationality", "short": "Nationality"}, {"id": "Passport", "label": "Passport Number", "short": "Passport"}, {"id": "Applying", "label": "Applying with you?", "type": "yn", "short": "Applying With You"}, {"id": "Live", "label": "Currently lives with you?", "type": "yn", "short": "Lives With You"}]},
+  travel: { count: 'travelEntryCount', list: 'travelEntriesList', btn: 'addTravelEntryBtn', prefix: 'travelEntry', title: 'Travel Entry', max: 8, fields: [
+    { id: 'Country', label: 'Country', short: 'Country' }, { id: 'Date', label: 'Date of Visit', type: 'date', short: 'Date' },
+    { id: 'Reason', label: 'Reason for Travel', short: 'Reason' }, { id: 'Length', label: 'Length of Stay', short: 'Length of Stay' } ] }
+};
+function addDynamicEntry(cfg) {
+  const max = cfg.max || 5;
+  if ((window[cfg.count] || 0) >= max) return;
+  window[cfg.count] = (window[cfg.count] || 0) + 1;
+  const n = window[cfg.count];
+  const fields = cfg.fields.map(f => {
+    const fid = cfg.prefix + n + f.id;
+    if (f.type === 'yn') return `<div class="field full"><label>${f.label}</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="${fid}" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="${fid}" value="No"> No</label></div></div>`;
+    return `<div class="field${f.full ? ' full' : ''}"><label>${f.label}</label><input type="${f.type || 'text'}" id="${fid}" name="${fid}"></div>`;
+  }).join('');
+  const div = document.createElement('div'); div.className = 'dynamic-entry'; div.id = cfg.prefix + '-' + n;
+  div.innerHTML = `<div class="dynamic-entry-header"><span class="dynamic-entry-title">${cfg.title} ${n}</span><button class="btn-remove" onclick="removeEntry('${cfg.prefix}-${n}')" type="button">&#10005; Remove</button></div><div class="field-grid">${fields}</div>`;
+  document.getElementById(cfg.list).appendChild(div);
+  document.getElementById(cfg.btn).disabled = window[cfg.count] >= max;
+  autoSaveForm();
+}
+function bindDynamic(name, yesId, cfg, wrapId) {
+  document.querySelectorAll(`input[name="${name}"]`).forEach(r => r.addEventListener('change', () => {
+    const show = document.getElementById(yesId).checked;
+    document.getElementById(wrapId).style.display = show ? 'block' : 'none';
+    if (show && !window[cfg.count]) addDynamicEntry(cfg);
+    if (!show) { window[cfg.count] = 0; document.getElementById(cfg.list).innerHTML = ''; document.getElementById(cfg.btn).disabled = false; }
+  }));
+}
+
+/* ── CHARACTER & SECURITY QUESTIONS ── */
+const CHARACTER_QUESTIONS = [
+  { key: 'immOffence', short: 'Immigration Offence / Penalty', q: 'Have you ever committed an immigration offence or been given a civil penalty - for example entering illegally, working without permission, or breaking visa conditions - in the UK or any other country?' },
+  { key: 'deception', short: 'Deception in Applications', q: 'Have you ever used deception (false documents, false information or concealed facts) in an application to any government or in dealings with UK immigration?' },
+  { key: 'refusedStay', short: 'Refused Stay / Asylum / Banned', q: 'Have you ever been refused permission to stay, refused asylum, required to leave, excluded or banned from any country?' },
+  { key: 'ukDebts', short: 'UK Debts / NHS Charges', q: 'Do you owe any money to the NHS or any other UK public body, or have any unpaid UK medical or hospital bills?' },
+  { key: 'tbContact', short: 'Tuberculosis (TB)', q: 'Have you ever been diagnosed with tuberculosis (TB), or been in close contact with someone who has?' },
+  { key: 'warCrimes', short: 'War Crimes / Genocide', q: 'Have you ever been involved in, or suspected of involvement in, war crimes, crimes against humanity or genocide?' },
+  { key: 'terrorism', short: 'Terrorism / Proscribed Groups', q: 'Have you ever been involved in, supported or encouraged terrorism, or been a member of - or supported - any organisation involved in terrorism or that is banned or proscribed?' },
+  { key: 'extremism', short: 'Extremist Views', q: 'Have you ever expressed views - by any means (speeches, writing, websites, social media) - that justify or glorify terrorist violence, encourage others to commit terrorist acts, or foster hatred that could lead to violence between communities?' },
+  { key: 'military', short: 'Military / Security Service', q: 'Have you ever served in, or been a member of, a military, paramilitary, police, intelligence or security force, civil defence unit or militia?' },
+  { key: 'goodCharacter', short: 'Other Character Concerns', q: 'Have you ever been involved in any other activity that might indicate you are not of good character?' }
+];
+function renderCharacterQuestions() {
+  const host = document.getElementById('characterQuestions');
+  host.innerHTML = CHARACTER_QUESTIONS.map(c => `<div class="field full" style="margin-bottom:16px"><label>${c.q}</label><div class="radio-group"><label class="radio-pill"><input type="radio" name="char_${c.key}" id="char_${c.key}Yes" value="Yes"> Yes</label><label class="radio-pill"><input type="radio" name="char_${c.key}" id="char_${c.key}No" value="No"> No</label></div><div class="conditional-field" id="char_${c.key}Field"><div class="field full"><label>Please give full details (what, when, where, and the outcome)</label><textarea id="char_${c.key}Explain" name="char_${c.key}Explain"></textarea></div></div></div>`).join('');
+  CHARACTER_QUESTIONS.forEach(c => watchRadio('char_' + c.key, 'char_' + c.key + 'Yes', 'char_' + c.key + 'Field'));
+}
+renderCharacterQuestions();
+
 /* ── RADIO CONDITIONALS ── */
 function watchRadio(name, yesId, targetId) {
   document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
@@ -910,6 +1103,23 @@ watchRadio('hasRequiredFunds','hasRequiredFundsNo','requiredFundsAmountField');
 watchRadio('sameAsMainAddress','sameAsMainAddressNo','whoseAddressField');
 watchRadio('criminalHistory','criminalHistoryYes','criminalHistoryField');
 watchRadio('deportationHistory','deportationHistoryYes','deportationHistoryField');
+watchRadio('correspondence','correspondenceNo','correspondenceField');
+watchRadio('prevAddressNeeded','prevAddressNeededYes','prevAddressNeededField');
+watchRadio('hasNationalId','hasNationalIdYes','hasNationalIdField');
+watchRadio('otherPassports','otherPassportsYes','otherPassportsField');
+watchRadio('metInPerson','metInPersonYes','metInPersonField');
+watchRadio('cohab2Years','cohab2YearsYes','cohab2YearsField');
+watchRadio('childUnder18','childUnder18Yes','childUnder18Field');
+watchRadio('otherRelativesHome','otherRelativesHomeYes','otherRelativesHomeField');
+watchRadio('dependentOnMain','dependentOnMainYes','dependentOnMainField');
+watchRadio('motherNationalitySame','motherNationalitySameNo','motherNationalitySameField');
+watchRadio('fatherNationalitySame','fatherNationalitySameNo','fatherNationalitySameField');
+bindDynamic('dependents','dependentsYes',DYN.dependent,'dependentsSection');
+watchRadio('ukFamily','ukFamilyYes','ukFamilyField');
+watchRadio('travelWithMain','travelWithMainNo','travelWithMainField');
+watchRadio('intendWork','intendWorkYes','intendWorkField');
+watchRadio('intendStudy','intendStudyYes','intendStudyField');
+watchRadio('needsMedical','needsMedicalYes','needsMedicalField');
 
 document.querySelectorAll('input[name="priorMarriage"]').forEach(r => r.addEventListener('change', () => {
   const show = document.getElementById('priorMarriageYes').checked;
@@ -952,19 +1162,10 @@ function addRefusalEntry() {
 window.travelEntryCount = 0;
 function toggleOtherTravelDetails(show) {
   const sec = document.getElementById('otherTravelDetailsField');
-  if (show) { sec.style.display = 'block'; if (window.travelEntryCount === 0) addTravelEntry(); }
-  else { sec.style.display = 'none'; window.travelEntryCount = 0; document.getElementById('travelEntriesList').innerHTML = ''; }
+  if (show) { sec.style.display = 'block'; if (!window.travelEntryCount) addTravelEntry(); }
+  else { sec.style.display = 'none'; window.travelEntryCount = 0; document.getElementById('travelEntriesList').innerHTML = ''; document.getElementById('addTravelEntryBtn').disabled = false; }
 }
-function addTravelEntry() {
-  if (window.travelEntryCount >= 5) return;
-  window.travelEntryCount++;
-  const n = window.travelEntryCount;
-  const div = document.createElement('div'); div.className = 'dynamic-entry'; div.id = 'travel-' + n;
-  div.innerHTML = `<div class="dynamic-entry-header"><span class="dynamic-entry-title">Travel Entry ${n}</span><button class="btn-remove" onclick="removeEntry('travel-${n}')" type="button">&#10005; Remove</button></div><div class="field-grid"><div class="field"><label>Country</label><input type="text" id="travelEntry${n}Country" name="travelEntry${n}Country"></div><div class="field"><label>Date</label><input type="date" id="travelEntry${n}Date" name="travelEntry${n}Date"></div></div>`;
-  document.getElementById('travelEntriesList').appendChild(div);
-  document.getElementById('addTravelEntryBtn').disabled = window.travelEntryCount >= 5;
-  autoSaveForm();
-}
+function addTravelEntry() { addDynamicEntry(DYN.travel); }
 
 function removeEntry(id) { const el = document.getElementById(id); if (el) { el.remove(); autoSaveForm(); } }
 
@@ -972,7 +1173,7 @@ function removeEntry(id) { const el = document.getElementById(id); if (el) { el.
 const DOC_REQ_DEP = {
   spouse: {
     label: 'Spouse / Partner Dependant',
-    docs: ['Passport','Marriage / Partnership Certificate','Main Applicant\'s Passport','Main Applicant\'s UK Visa / eVisa','Relationship Evidence','Account Statement','Accommodation Evidence','TB Test Certificate','Passport Photo']
+    docs: ['Passport','Marriage / Partnership Certificate','Main Applicant\'s Passport','Main Applicant\'s UK Visa / eVisa','Relationship Evidence','English Language Evidence','Account Statement','Accommodation Evidence','TB Test Certificate','Passport Photo']
   },
   parent: {
     label: 'Adult Dependent Relative',
@@ -996,6 +1197,7 @@ const DOC_DETAIL_DEP = {
   'Account Statement':{purpose:'Proof of sufficient funds',requirements:['At least 28 consecutive days of funds shown.','Issued within 31 days of application.','Signed and stamped by the bank.']},
   'Accommodation Evidence':{purpose:'Proof of suitable UK accommodation',requirements:['Tenancy agreement, mortgage statement, or letter from host.','Should show enough space for all occupants.']},
   'TB Test Certificate':{purpose:'Medical clearance',requirements:['Issued by a UKVI-approved clinic.','Valid for 6 months from test date.']},
+  'English Language Evidence':{purpose:'Shows you meet the English language requirement',requirements:['Test certificate from an approved provider (CEFR A1 or above), or degree certificate with Ecctis/UK ENIC confirmation.','Test reference number must match your application.']},
   'Passport Photo':{purpose:'Identification photo',requirements:['45mm x 35mm, plain background, taken in the last 6 months.']},
   'Proof of Financial Dependency':{purpose:'Shows you rely on the main applicant financially',requirements:['Bank transfer records, remittance receipts, or a sworn statement.']},
   'Medical / Care Evidence':{purpose:'Shows your need for long-term personal care',requirements:['A letter from a doctor or medical professional.','Details of the level of care required.']},
@@ -1162,33 +1364,46 @@ function _buildPDF() {
   function getVal(id) { const el=document.getElementById(id); if(!el) return 'Not provided'; if(el.type==='date'&&el.value) return new Date(el.value).toLocaleDateString('en-GB'); return el.value?.trim()||'Not provided'; }
   function isVisible(id) { const el = document.getElementById(id); return el && el.style.display !== 'none' && window.getComputedStyle(el).display !== 'none'; }
 
+  function subhead(t) { ensureSpace(22); doc.setFont('helvetica','bolditalic'); doc.setFontSize(9); doc.setTextColor(...BLUE); doc.text(t,ml+8,y); y+=14; doc.setFont('helvetica','normal'); doc.setTextColor(...NAVY); }
+  function dynList(cfg,label) { for (let n=1;n<=(window[cfg.count]||0);n++) { if(!document.getElementById(cfg.prefix+'-'+n)) continue; const lines=cfg.fields.map(f=>{ const fid=cfg.prefix+n+f.id; return (f.short||f.label)+': '+(f.type==='yn'?getRadio(fid):getVal(fid)); }); field(label+' '+n,lines.join('\n'),12); } }
+
   renderSection('Relationship to Main Applicant',()=>{field('Relationship',relLabel);});
-  renderSection('Your Personal Information',()=>{field('Given Name(s)',getVal('givenNames'));field('Family Name',getVal('familyName'));field('Date of Birth',getVal('dob'));field('Place of Birth',getVal('placeOfBirth'));field('Other Name?',getRadio('otherName'));if(isVisible('previousNamesField'))field('Previous Name(s)',getVal('previousNames'),12);field('Nationality',getVal('nationality'));field('Other Nationality?',getRadio('otherNationality'));if(isVisible('otherNationalityField'))field('Other Nationality',getVal('otherNationalityDetails'),12);field('Current Address',getVal('currentAddress'));field('Time at Address',getVal('addressDuration'));field('Telephone',getVal('telephone'));field('Email',getVal('email'));field('Passport Number',getVal('passportNumber'));field('Passport Issuing Country',getVal('passportIssuingCountry'));field('Passport Issue Date',getVal('passportIssueDate'));field('Passport Expiry Date',getVal('passportExpiryDate'));});
-  renderSection('Main Applicant Information',()=>{field('Given Name(s)',getVal('mainGivenNames'));field('Family Name',getVal('mainFamilyName'));field('Date of Birth',getVal('mainDob'));field('Nationality',getVal('mainNationality'));field('UK Immigration Status',getVal('mainImmigrationStatus'));field('Visa Type / BRP / eVisa',getVal('mainVisaType'));field('Visa Expiry',getVal('mainVisaExpiry'));field('Entry Date',getVal('mainEntryDate'));field('UK Address',getVal('mainUkAddress'));field('Occupation',getVal('mainOccupation'));field('Financially Responsible?',getRadio('mainSponsorFinance'));if(isVisible('mainSponsorIncomeField'))field('Annual Income',getVal('mainAnnualIncome'),12);});
+  renderSection('Your Personal Information',()=>{field('Given Name(s)',getVal('givenNames'));field('Family Name',getVal('familyName'));field('Date of Birth',getVal('dob'));field('Place of Birth',getVal('placeOfBirth'));field('Country of Birth',getVal('countryOfBirth'));field('Gender',getVal('gender'));field('Marital Status',getVal('maritalStatus'));field('Other Name?',getRadio('otherName'));if(isVisible('previousNamesField'))field('Previous Name(s)',getVal('previousNames'),12);field('Nationality',getVal('nationality'));field('Other Nationality?',getRadio('otherNationality'));if(isVisible('otherNationalityField'))field('Other Nationality',getVal('otherNationalityDetails'),12);field('Current Address',getVal('currentAddress'));field('Time at Address',getVal('addressDuration'));field('Telephone',getVal('telephone'));field('Email',getVal('email'));field('Correspondence Address Same?',getRadio('correspondence'));if(isVisible('correspondenceField')){field('Correspondence Address',getVal('correspondenceAddress'),12);}field('Home Ownership',getRadio('homeOwnership'));field('At Address < 2 Years?',getRadio('prevAddressNeeded'));if(isVisible('prevAddressNeededField')){field('Previous Address',getVal('previousAddress'),12);field('Time at Previous Address',getVal('previousAddressDuration'),12);}field('National ID Card?',getRadio('hasNationalId'));if(isVisible('hasNationalIdField')){field('National ID Number',getVal('nationalIdNumber'),12);}field('Passport Number',getVal('passportNumber'));field('Passport Issuing Country',getVal('passportIssuingCountry'));field('Passport Issue Date',getVal('passportIssueDate'));field('Passport Expiry Date',getVal('passportExpiryDate'));field('Passport Issued By',getVal('passportPlaceOfIssue'));field('Other Passports?',getRadio('otherPassports'));if(isVisible('otherPassportsField')){field('Other Passport Details',getVal('otherPassportDetails'),12);}});
+  renderSection('Main Applicant Information',()=>{field('Given Name(s)',getVal('mainGivenNames'));field('Family Name',getVal('mainFamilyName'));field('Date of Birth',getVal('mainDob'));field('Nationality',getVal('mainNationality'));field('UK Immigration Status',getVal('mainImmigrationStatus'));field('Visa Type / BRP / eVisa',getVal('mainVisaType'));field('Visa Expiry',getVal('mainVisaExpiry'));field('Entry Date',getVal('mainEntryDate'));field('UK Address',getVal('mainUkAddress'));field('Occupation',getVal('mainOccupation'));field('Main Applicant Passport No.',getVal('mainPassportNumber'));field('Main Applicant Telephone',getVal('mainTelephone'));field('Main Applicant Email',getVal('mainEmail'));field('Visa Allows Dependants?',getRadio('mainVisaAllowsDependants'));field('Main Applicant Visa Status',getVal('mainApplicationStatus'));field('Financially Responsible?',getRadio('mainSponsorFinance'));if(isVisible('mainSponsorIncomeField'))field('Annual Income',getVal('mainAnnualIncome'),12);});
   renderSection('Relationship & Family Details',()=>{
     field('Known Duration',getVal('relKnownDuration'));field('Live Together?',getRadio('relLiveTogether'));if(isVisible('relLiveApartField'))field('Living Arrangement',getVal('relLiveApartExplain'),12);
     const g = window.currentGroup;
     if (g === 'spouse') {
-      ensureSpace(20);doc.setFont('helvetica','bolditalic');doc.setFontSize(9);doc.setTextColor(...BLUE);doc.text('Marriage / Partnership',ml+8,y);y+=14;doc.setFont('helvetica','normal');doc.setTextColor(...NAVY);
+      subhead('Marriage / Partnership');
       field('Date of Marriage',getVal('marriageDate'));field('Place of Marriage',getVal('marriagePlace'));field('Certificate Number',getVal('marriageCertNumber'));field('Prior Marriage?',getRadio('priorMarriage'));
-      for(let n=1;n<=window.priorMarriageCount;n++){field('Previous Marriage '+n,`${getVal('pm'+n+'Name')} | Married ${getVal('pm'+n+'DateMarried')} | Ended ${getVal('pm'+n+'DateEnded')} | ${getVal('pm'+n+'HowEnded')}`,12);}
+      for(let n=1;n<=window.priorMarriageCount;n++){if(!document.getElementById('pm-'+n))continue;field('Previous Marriage '+n,`${getVal('pm'+n+'Name')} | Married ${getVal('pm'+n+'DateMarried')} | Ended ${getVal('pm'+n+'DateEnded')} | ${getVal('pm'+n+'HowEnded')}`,12);}
       field('Children Together?',getRadio('childrenTogether'));if(isVisible('childrenTogetherCountField'))field('Number of Children',getVal('childrenTogetherCount'),12);
+      field('Met In Person?',getRadio('metInPerson'));if(isVisible('metInPersonField')){field('First Met',getVal('firstMetDate'),12);}field('Intend to Live Together?',getRadio('intendLiveTogether'));field('Legally Recognised?',getRadio('marriageRecognised'));
+      if(relLabel==='Partner'){subhead('Unmarried Partner - Living Together');field('Started Living Together',getVal('cohabStartDate'));field('Lived Together 2+ Years?',getRadio('cohab2Years'));if(isVisible('cohab2YearsField')){field('Shared Address(es)',getVal('cohabAddress'),12);}}
+      subhead('English Language Requirement');field('English Language Route',getVal('englishRoute'));field('English Test Provider',getVal('englishTestProvider'));field('English Test Date',getVal('englishTestDate'));field('English Test Reference',getVal('englishTestRef'));field('English Level / Score',getVal('englishLevel'));
     } else if (g === 'child') {
-      ensureSpace(20);doc.setFont('helvetica','bolditalic');doc.setFontSize(9);doc.setTextColor(...BLUE);doc.text('Parent & Custody',ml+8,y);y+=14;doc.setFont('helvetica','normal');doc.setTextColor(...NAVY);
+      subhead('Parent & Custody');
       field('Parent(s) in UK',getVal('parentsInUkNames'));field('Both Have Custody?',getRadio('bothCustody'));if(isVisible('soleCustodyField'))field('Sole Responsibility',getVal('soleCustodyExplain'),12);
-      field('Consenting Adult',getVal('consentingAdultName'));field('Their Relationship to You',getVal('consentingAdultRelationship'));field('Living with Other Parent?',getRadio('livingOtherParent'));if(isVisible('livingOtherParentField'))field('Care Arrangement',getVal('livingOtherParentExplain'),12);
+      field('Relationship Type',getRadio('childRelType'));field('Under 18?',getRadio('childUnder18'));if(isVisible('childUnder18Field')){field('Consenting Adult',getVal('consentingAdultName'),12);field('Their Relationship to You',getVal('consentingAdultRelationship'),12);field('Current School / College',getVal('currentSchool'),12);}field('Financially Dependent?',getRadio('childDependent'));
+      field('Living with Other Parent?',getRadio('livingOtherParent'));if(isVisible('livingOtherParentField'))field('Care Arrangement',getVal('livingOtherParentExplain'),12);
     } else if (g === 'parent') {
-      ensureSpace(20);doc.setFont('helvetica','bolditalic');doc.setFontSize(9);doc.setTextColor(...BLUE);doc.text('Adult Dependent Relative',ml+8,y);y+=14;doc.setFont('helvetica','normal');doc.setTextColor(...NAVY);
+      subhead('Adult Dependent Relative');
       field('Requires Long-Term Care?',getRadio('requireCare'));field('Current Care Provider',getVal('currentCareProvider'));field('Why Care Not Available',getVal('careNotAvailableExplain'));field('Main Applicant Can Support?',getRadio('mainCanSupport'));
+      field('Health & Care Needs',getVal('healthCondition'));field('Type of Care Needed',getVal('careType'));field('Other Relatives at Home?',getRadio('otherRelativesHome'));if(isVisible('otherRelativesHomeField')){field('Why They Cannot Help',getVal('otherRelativesExplain'),12);}field('Dependent on Main Applicant?',getRadio('dependentOnMain'));if(isVisible('dependentOnMainField')){field('Dependent Since',getVal('dependencyDuration'),12);field('How Supported',getVal('dependencySupportDesc'),12);}field('Living Costs Met By',getVal('currentLivingCosts'));
     } else if (g === 'other') {
-      ensureSpace(20);doc.setFont('helvetica','bolditalic');doc.setFontSize(9);doc.setTextColor(...BLUE);doc.text('Family Relationship',ml+8,y);y+=14;doc.setFont('helvetica','normal');doc.setTextColor(...NAVY);
+      subhead('Family Relationship');
       field('Relationship Description',getVal('otherRelationshipDescribe'));field('Reason for Applying',getVal('otherRelationshipReason'));field('Evidence Provided',getVal('otherRelationshipEvidence'));
+      field('Financially Dependent?',getRadio('otherDependent'));field('Same Household Before?',getRadio('otherSameHousehold'));
     }
   });
-  renderSection('Immigration History',()=>{field('Applied for UK Visa Before?',getRadio('priorUkVisa'));if(isVisible('priorUkVisaField')){field('Visa Type',getVal('priorUkVisaType'),12);field('Date Applied',getVal('priorUkVisaDate'),12);}field('Visa Ever Refused?',getRadio('visaRefused'));for(let n=1;n<=window.refusalCount;n++){field('Refusal/Issue '+n,`${getVal('ref'+n+'Explain')} (${getVal('ref'+n+'Date')})`,12);}field('Ever Overstayed?',getRadio('overstayed'));if(isVisible('overstayedField'))field('Explanation',getVal('overstayedExplain'),12);field('Visited UK Before?',getRadio('visitedUk'));field('Number of Visits',getVal('ukVisitCount'));});
-  renderSection('Financial Information',()=>{field('Financial Responsibility',getVal('financialResponsibility'));field('Own Savings/Income',getVal('ownSavings'));field('Required Funds Held?',getRadio('hasRequiredFunds'));if(isVisible('requiredFundsAmountField'))field('Amount Held',getVal('requiredFundsAmount'),12);field('Employment Status',getVal('ownEmploymentStatus'));field('Employer',getVal('employerNameAddress'));});
-  renderSection('Accommodation',()=>{field('UK Living Address',getVal('ukLivingAddress'));field('Main Applicant\'s Address?',getRadio('sameAsMainAddress'));if(isVisible('whoseAddressField')){field('Address Owner',getVal('addressOwnerName'),12);field('Their Relationship',getVal('addressOwnerRelationship'),12);}field('Accommodation Type',getRadio('accommodationType'));field('Bedrooms',getVal('bedroomCount'));field('Occupants',getVal('occupantCount'));});
-  renderSection('Travel History',()=>{field('Travelled to Other Countries?',getRadio('otherTravel'));for(let n=1;n<=window.travelEntryCount;n++){field('Travel Entry '+n,`${getVal('travelEntry'+n+'Country')} (${getVal('travelEntry'+n+'Date')})`,12);}});
+  renderSection("Parents' Details",()=>{subhead('Mother');field('Mother - Given Name(s)',getVal('motherGivenNames'));field('Mother - Family Name',getVal('motherFamilyName'));field('Mother - Date of Birth',getVal('motherDob'));field('Mother - Country of Birth',getVal('motherCountryOfBirth'));field('Mother - Nationality',getVal('motherNationality'));field('Mother - Always Same Nationality?',getRadio('motherNationalitySame'));if(isVisible('motherNationalitySameField')){field('Mother - Previous Nationality',getVal('motherPreviousNationality'),12);}subhead('Father');field('Father - Given Name(s)',getVal('fatherGivenNames'));field('Father - Family Name',getVal('fatherFamilyName'));field('Father - Date of Birth',getVal('fatherDob'));field('Father - Country of Birth',getVal('fatherCountryOfBirth'));field('Father - Nationality',getVal('fatherNationality'));field('Father - Always Same Nationality?',getRadio('fatherNationalitySame'));if(isVisible('fatherNationalitySameField')){field('Father - Previous Nationality',getVal('fatherPreviousNationality'),12);}});
+  renderSection('Dependants & Other UK Family',()=>{field('Own Dependants?',getRadio('dependents'));if(isVisible('dependentsSection')){dynList(DYN.dependent,'Dependant');}field('Other UK Family?',getRadio('ukFamily'));if(isVisible('ukFamilyField')){field('UK Family - Name',getVal('ukFamilyFullName'),12);field('UK Family - Relationship',getVal('ukFamilyRelationship'),12);field('UK Family - Status',getVal('ukFamilyVisaType'),12);field('UK Family - Address',getVal('ukFamilyAddress'),12);field('Other UK Family Members',getVal('ukFamilyOther'),12);}});
+  renderSection('Travel Plans & Intended Stay',()=>{field('Intended Arrival Date',getVal('intendedArrival'));field('Intended Length of Stay',getVal('intendedStay'));field('Travelling From',getVal('departureCity'));field('Port of Entry',getVal('entryPoint'));field('Travelling With Main Applicant?',getRadio('travelWithMain'));if(isVisible('travelWithMainField')){field('Travel Arrangements',getVal('travelAlone'),12);}field('Intend to Work?',getRadio('intendWork'));if(isVisible('intendWorkField')){field('Intended Work',getVal('intendedJob'),12);}field('Intend to Study?',getRadio('intendStudy'));if(isVisible('intendStudyField')){field('Intended Study',getVal('intendedStudy'),12);}field('Rely on Public Funds?',getRadio('publicFunds'));field('Expect UK Medical Treatment?',getRadio('needsMedical'));if(isVisible('needsMedicalField')){field('Medical Details',getVal('medicalDetails'),12);}});
+  renderSection('Immigration History',()=>{field('Applied for UK Visa Before?',getRadio('priorUkVisa'));if(isVisible('priorUkVisaField')){field('Visa Type',getVal('priorUkVisaType'),12);field('Date Applied',getVal('priorUkVisaDate'),12);}field('Visa Ever Refused?',getRadio('visaRefused'));for(let n=1;n<=window.refusalCount;n++){if(!document.getElementById('ref-'+n))continue;field('Refusal/Issue '+n,`${getVal('ref'+n+'Explain')} (${getVal('ref'+n+'Date')})`,12);}field('Ever Overstayed?',getRadio('overstayed'));if(isVisible('overstayedField'))field('Explanation',getVal('overstayedExplain'),12);field('Visited UK Before?',getRadio('visitedUk'));field('Number of Visits',getVal('ukVisitCount'));field('Last UK Visit',getVal('lastUkVisitDate'));field('Last Visit Purpose',getVal('lastUkVisitPurpose'));});
+  renderSection('Financial Information',()=>{field('Financial Responsibility',getVal('financialResponsibility'));field('Own Savings/Income',getVal('ownSavings'));field('Required Funds Held?',getRadio('hasRequiredFunds'));if(isVisible('requiredFundsAmountField'))field('Amount Held',getVal('requiredFundsAmount'),12);field('Employment Status',getVal('ownEmploymentStatus'));field('Employer',getVal('employerNameAddress'));field('Your Occupation',getVal('ownJobTitle'));field('Your Monthly Income',getVal('monthlyIncome'));field('Main Source of Funds',getVal('fundsSource'));field('Bank Account Holder',getVal('fundsAccountHolder'));field('Funds Held 28+ Days?',getRadio('funds28Days'));subhead('Main Applicant\'s Finances');field('Main Applicant Employer',getVal('mainEmployerName'));field('Job Start Date',getVal('mainEmploymentStart'));field('Main Applicant Savings',getVal('mainSavings'));field('People Supported',getVal('mainDependantsSupported'));});
+  renderSection('Accommodation',()=>{field('UK Living Address',getVal('ukLivingAddress'));field('Main Applicant\'s Address?',getRadio('sameAsMainAddress'));if(isVisible('whoseAddressField')){field('Address Owner',getVal('addressOwnerName'),12);field('Their Relationship',getVal('addressOwnerRelationship'),12);}field('Accommodation Type',getRadio('accommodationType'));field('Bedrooms',getVal('bedroomCount'));field('Occupants',getVal('occupantCount'));field('Monthly Housing Cost',getVal('accommodationMonthlyCost'));field('Accommodation Evidence?',getRadio('accommodationEvidence'));});
+  renderSection('Travel History',()=>{field('Travelled to Other Countries?',getRadio('otherTravel'));dynList(DYN.travel,'Travel Entry');});
+  renderSection('Character & Security',()=>{CHARACTER_QUESTIONS.forEach(c=>{field(c.short,getRadio('char_'+c.key));if(isVisible('char_'+c.key+'Field'))field('Details',getVal('char_'+c.key+'Explain'),12);});});
   renderSection('Additional Information',()=>{field('Criminal Convictions?',getRadio('criminalHistory'));if(isVisible('criminalHistoryField'))field('Explanation',getVal('criminalHistoryExplain'),12);field('Deportation / Refused Entry?',getRadio('deportationHistory'));if(isVisible('deportationHistoryField'))field('Explanation',getVal('deportationHistoryExplain'),12);field('Other Information',getVal('additionalOther'));});
   renderSection('Personal Statement',()=>{ensureSpace(30);const stmt=(document.getElementById('personalStatement').value||'Not provided').trim();doc.setFontSize(9.5);doc.setTextColor(...NAVY);doc.setFont('helvetica','normal');wrapText(stmt,ml+8,usable-16,14);});
   renderSection('Declaration',()=>{ensureSpace(30);doc.setFontSize(9);doc.setTextColor(...GREY);doc.setFont('helvetica','italic');wrapText('I confirm that the details provided are correct and I take full responsibility for their accuracy.',ml+8,usable-16,13);y+=6;doc.setFont('helvetica','normal');doc.setTextColor(...NAVY);field('Name',getVal('declarationName'));field('Date',getVal('signatureDate'));ensureSpace(95);doc.setFontSize(8);doc.setTextColor(...GREY);doc.setFont('helvetica','bold');doc.text('SIGNATURE',ml,y);y+=8;const sigBoxW=220,sigBoxH=65;doc.setDrawColor(...BORDER);doc.setLineWidth(0.5);doc.setFillColor(250,252,255);doc.rect(ml,y,sigBoxW,sigBoxH,'FD');const hasSig=window.signaturePad&&!window.signaturePad.isEmpty();if(hasSig){try{const sigImg=window.signaturePad.toDataURL('image/png');if(sigImg&&sigImg.startsWith('data:image/png;base64,')&&sigImg.length>100)doc.addImage(sigImg,'PNG',ml+2,y+2,sigBoxW-4,sigBoxH-4);}catch(e){}}else{doc.setFontSize(8);doc.setTextColor(190,200,210);doc.setFont('helvetica','italic');doc.text('No signature captured',ml+8,y+sigBoxH/2+3);}y+=sigBoxH+12;});
